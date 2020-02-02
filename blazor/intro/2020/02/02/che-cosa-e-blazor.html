@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Che cos’è Blazor | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Che cos’è Blazor" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Cerchiamo di capire, in questo primo articolo, da dove è nata l’esigenza di un nuovo framework di front-end." />
+<meta property="og:description" content="Cerchiamo di capire, in questo primo articolo, da dove è nata l’esigenza di un nuovo framework di front-end." />
+<link rel="canonical" href="/blazor/intro/2020/02/02/che-cosa-e-blazor.html" />
+<meta property="og:url" content="/blazor/intro/2020/02/02/che-cosa-e-blazor.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/checosaeblazor/che_cosa_e_blazor.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-02T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/intro/2020/02/02/che-cosa-e-blazor.html"},"url":"/blazor/intro/2020/02/02/che-cosa-e-blazor.html","headline":"Che cos’è Blazor","dateModified":"2020-02-02T00:00:00+01:00","datePublished":"2020-02-02T00:00:00+01:00","image":"/assets/articoli/checosaeblazor/che_cosa_e_blazor.png","description":"Cerchiamo di capire, in questo primo articolo, da dove è nata l’esigenza di un nuovo framework di front-end.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /></head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    <h1 class="post-title p-name" itemprop="name headline">Che cos&#39;è Blazor</h1>
+    <h3 class="post-subtitle">Cerchiamo di capire da dove è nata l&#39;esigenza di un nuovo framework di front-end</h3>
+  </header><figure>
+      <img src="/assets/articoli/checosaeblazor/che_cosa_e_blazor.png" alt="Che cos'è Blazor" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Cerchiamo di capire, in questo primo articolo, da dove è nata l’esigenza di un nuovo framework di front-end.</p>
+
+<h2 id="un-po-di-storia">Un po’ di storia</h2>
+
+<p>Con la (presunta) <em>morte del Desktop</em> di qualche anno fa, molti hanno deciso di migrare le proprie applicazioni su tecnologie web, risolvendo il problema della compatibilità cross-platform e della distribuzione degli aggiornamenti dell’applicazione. Spostando però una parte dell’elaborazione dai client al server, sono nati tutta una serie di problemi tecnici, tra cui quello dell’<strong>esperienza utente</strong>, della <strong>connettività</strong> continua al server e del <strong>carico</strong> da gestire.</p>
+
+<p>Niente di insuperabile, ma il passaggio non è stato indolore, anzi, molti si sono resi conto che migrare la propria interfaccia da una tecnologia client, come ad esempio Windows Form, a una tecnologia web, come WebForms o MVC, è spesso un rifacimento totale della propria soluzione software.</p>
+
+<p>Nella maggior parte dei casi i benefici superano gli svantaggi e comunque lo sviluppo software si evolve ad una velocità tale da non poter rimanere troppo indietro. In ogni caso, a un certo punto, è nata l’esigenza di avere una user experience più spinta, fortemente limitata dal <em>rendering server-side</em> di ASP.NET. Ed è qui che è stata evidente l’esigenza di eseguire codice nel browser, utilizzando <strong><em>JavaScript</em></strong>.</p>
+
+<p><img src="/assets/articoli/checosaeblazor/javascript_nightmare.png" alt="JavaScript Nightmare" title="L'incubo JavaScript" /></p>
+
+<p>I programmatori .NET non amano JavaScript per motivi storici, ma con l’aiuto di <strong>jQuery</strong> e ad alcuni helper si è cominciato ad aggiungere funzionalità client alle applicazioni web. Tutto bene fino a quando non si è sentita l’esigenza di spostare sul client tutto il rendering dell’interfaccia, lasciando al server solo le API per il recupero e il salvataggio dei dati.</p>
+
+<p>A quel punto la scelta di una libreria, o addirittura un framework completo è diventanto indispensabile per rendere sostenibile lo sviluppo, e soluzioni come <strong>Angular</strong>, <strong>React</strong> e <strong>Vue</strong> hanno cominciato a diffondersi anche tra gli sviluppatori .NET. Angular, in particolare, si è affermato grazie all’utilizzo di <strong>Typescript</strong> e a un approccio molto vicino ai framework Microsoft.</p>
+
+<p>Con questi strumenti è possibile realizzare quella che viene chiamata una <strong><em>Single Page Application</em></strong>, cioè una singola pagina HTML all’interno della quale l’interfaccia viene creata dinamicamente e la navigazione tra le pagine dell’applicazione avviene senza spostarsi fisicamente.</p>
+
+<h2 id="perchè-blazor">Perchè Blazor</h2>
+
+<p>Dover imparare un linguaggio come JavaScript e un nuovo framework non è certo una passeggiata, anche se aiutati da TypeScript. Molti hanno preferito attendere per capire come si evolveva il mercato, altri per mancanza di tempo per affrontare il tutto.</p>
+
+<p><img src="/assets/articoli/checosaeblazor/blazorserver_vs_blazorwebassembly.png" alt="Blazor Server vs Blazor WebAssembly" title="Blazor Server vs Blazor WebAssembly" /></p>
+
+<p><strong>Blazor</strong> si colloca proprio qui. Risolve esattamente questo problema. E’ possibile, grazie ad esso, riutilizzare le prorie conoscenze del .NET framework per realizzare una Single Page Application. Lo fa in diversi modi, sfruttando diverse tecnologie, e possiamo scegliere la modalità che meglio si adatta alle nostre esigenze.</p>
+
+<p>Con il framework .NET Core 3.0 è stato rilasciato in RTM <strong>Blazor Server</strong>, che sfrutta <strong>SignalR</strong> per inviare al browser gli aggiornamenti da fare all’interfaccia, eseguendo comunque l’elaborazione lato server. Con il .NET Core 3.1 è stato rilasciato in preview <strong>Blazor WebAssembly</strong>, che invece scarica nel browser l’applicazione che realizziamo e la esegue grazie allo standard <strong>WebAssembly</strong>. Approfondiremo la differenza tra i due nel prossimo articolo, per il momento cerchiamo di capire perchè sta avendo tanto successo.</p>
+
+<h2 id="perchè-investire-su-blazor">Perchè investire su Blazor</h2>
+
+<p>Se conoscete ASP.NET Core e Razor, il passaggio a Blazor è davvero semplice: è questa la sua forza. Una volta capito (davvero) il concetto di componente, entrambe le versioni vi permettono di sfruttare tutto quello che già sapete e su cui avete investito. Inoltre c’è già un bel po’ di materiale e tanti componenti già pronti per pensare di sviluppare una vera applicazione da mettere in produzione.</p>
+
+<p>Blazor non è nè <em>Silverlight</em> nè <em>LightSwitch</em>, Microsoft ci crede e ci sta investendo. La community di sviluppatori .NET è fortemente interessata e lo ha dimostrato fin dal primo momento. Non c’è nessun plug-in da installare, è tutto basato su standard web, ed è questo che vi garantisce che non farà la fine degli esperimenti del passato.</p>
+
+<p><img src="/assets/articoli/checosaeblazor/blazor-roadmap.png" alt="Blazor Roadmap" title="Blazor Roadmap" /></p>
+
+<p>Microsoft ci crede così tanto che ha annunciato una roadmap da brividi per Blazor: non solo web, ma anche <strong>Mobile</strong> e <strong>Desktop</strong>. E’ possibile già provare qualcosa di sperimentale su Mobile, grazie ai <strong>Mobile Blazor Bindings</strong> basati su Xamarin.Forms:</p>
+
+<p><a href="https://devblogs.microsoft.com/aspnet/mobile-blazor-bindings-experiment/">https://devblogs.microsoft.com/aspnet/mobile-blazor-bindings-experiment/</a></p>
+
+<h2 id="installazione">Installazione</h2>
+
+<p>Se avete Visual Studio 2019 (la versione community è scaricabile gratuitamente [qui] (https://visualstudio.microsoft.com/it/vs/community/)) e avete installato il supporto allo sviluppo ASP.NEt e Web, avete già tutto quello che vi serve: create un nuovo progetto Blazor e lanciate l’applicazione per cominciare a prenderci confidenza.</p>
+
+<p>Se siete appassionati di Visual Studio Code e della riga di comando, vi basta installare i template per blazor con il seguente comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">dotnet new <span class="nt">-i</span> Microsoft.AspNetCore.Blazor.Templates::3.2.0-preview1.20073.1</code></pre></figure>
+
+<p>In questo modo potete creare una applicazione Blazor Server con il comando</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">dotnet new blazorserver</code></pre></figure>
+
+<p>Oppure una applicazione Blazor WebAssembly con il comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">dotnet new blazorwasm</code></pre></figure>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>In questo prima articolo abbiamo solo scaldato i motori, cercando di capire dove si colloca Blazor e perchè è la scelta da fare in questo momento per gli sviluppatori .NET. Nei prossimi articoli andremo a fondo nell’utilizzo del framework e cercheremo di toccare con mano la potenza di questo strumento.</p>
+
+
+  </div><a class="u-url" href="/blazor/intro/2020/02/02/che-cosa-e-blazor.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li><li><a class="u-email" href="mailto:blazordevita@hotmail.com">blazordevita@hotmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/blazordevita"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">blazordevita</span></a></li><li><a href="https://www.twitter.com/blazordevita"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">blazordevita</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>La prima community italiana dedicata allo sviluppo di applicazioni con Blazor, il framework Microsoft per la realizzazione di Single Page Application con .NET Core, SignalR, WebAssembly e Razor</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
