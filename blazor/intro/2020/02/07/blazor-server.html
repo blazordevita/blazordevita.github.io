@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Da Web Forms a Blazor Server | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Da Web Forms a Blazor Server" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione." />
+<meta property="og:description" content="Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione." />
+<link rel="canonical" href="/blazor/intro/2020/02/07/blazor-server.html" />
+<meta property="og:url" content="/blazor/intro/2020/02/07/blazor-server.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/blazorserver/blazorserver.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-07T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/intro/2020/02/07/blazor-server.html"},"url":"/blazor/intro/2020/02/07/blazor-server.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Da Web Forms a Blazor Server","dateModified":"2020-02-07T00:00:00+01:00","datePublished":"2020-02-07T00:00:00+01:00","image":"/assets/articoli/blazorserver/blazorserver.png","description":"Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+  </head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Da Web Forms a Blazor Server</h1>
+    <h3 class="post-subtitle">Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0</h3>
+  </header><figure>
+      <img src="/assets/articoli/blazorserver/blazorserver.png" alt="Da Web Forms a Blazor Server" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione.</p>
+
+<h2 id="cera-una-volta-aspnet-web-forms">C’era una volta ASP.NET Web Forms</h2>
+
+<p>Ricordate come funzionava (e funziona ancora…) <strong>ASP.NET Web Forms</strong>? Una pagina HTML, all’interno di una grande form, con un campo nascosto (il famoso <strong>ViewState</strong>) contenente una stringa crittografata rappresentante lo stato della pagina, cioè il valore corrente di tutti i controlli server nella pagina. Questa form, mandata al server ogni volta che l’interazione dell’utente richiedesse un aggiornamento dell’interfaccia, scatenava l’esecuzione del motore di ASP.NET Web Forms, che aggiornava l’HTML e il valore del ViewState in base agli handler del code behind. Il nuovo HTML, comprensivo del nuovo ViewState, veniva rimandando indietro (processo chiamato <strong>Postback</strong>) alla stessa pagina.</p>
+
+<p>Alla fine dei conti, lo sviluppo web è basato su questo meccanismo: catturo l’interazione dell’utente, faccio una richiesta HTTP al server e ottengo una risposta HTTP che uso per aggiornare l’interfaccia. Web Forms cercava solo di automatizzare questo processo, per nascondere i dettagli di funzionamento del protocollo ai programmatori Microsoft che venivano dal mondo Desktop, che erano abituati a ragionare in termini di Form, controlli e Handler di eventi nel <em>code behind</em>.</p>
+
+<p><img src="/assets/articoli/blazorserver/bici.jpg" alt="Da WebForms a MVC: togliere le rotelle alla bici" title="Da WebForms a MVC: togliere le rotelle alla bici" /></p>
+
+<p>Questa astrazione portava con se però una grossa inefficenza in termini di scambio dati e di esperienza utente, visto che nella maggior parte dei casi viene spostata avanti e indietro tutta la pagina, con un refresh dell’interfaccia ad ogni interazione. La cosa fu mitigata con l’arrivo dell’ <strong>Update Panel</strong>, che rendeva asincrono lo scambio utilizzando <em>AJAX</em> in maniera trasparente al programmatore, risolvendo il problema del refresh.</p>
+
+<p>Quando questa astrazione è diventata ingombrante e abbiamo accettato l’idea di doverci scrivere l’HTML (anzichè generarlo dai controlli server) e controllare l’interazione con il server, utilizzando JavaScript dove necessario, siamo passati a <strong>ASP.NET MVC</strong>: è stato un po’ come togliere le rotelle alla bici, all’inizio ci siamo demoralizzati per qualche caduta, ma poi abbiamo scoperto che potevamo correre senza limitazioni.</p>
+
+<h2 id="aspnet-core-razor-e-signalr">ASP.NET Core, Razor e SignalR</h2>
+
+<p>Se conoscete già ASP.NET Core, SignalR e Razor, avete già tutti gli elementi per utilizzare Blazor Server. Questa è probabilmente una delle principali ragioni che ha creato tanto entusiasmo attorno al framework. Facciamo un piccolo recap per chi non ha ancora avuto la possibilità di apprezzare il nuovo framework Microsoft.</p>
+
+<h3 id="da-aspnet-a-aspnet-core">Da ASP.NET a ASP.NET Core</h3>
+
+<p>Con l’introduzione di ASP.NET MVC nel 2008, gli sviluppatori Microsoft cominciarono (pian piano…) ad apprezzare il nuovo modello di sviluppo web, basato su un adattamento del pattern <em>MVC</em>. Qualche anno dopo fu aggiunto al framework un gemello per la realizzazione di <strong>API REST</strong>, <strong>ASP.NET WEB API</strong>. Il tutto strettamente legato a <strong>IIS</strong>, l’application framework di Microsoft distribuito principalmente con le versioni server di Windows. Quindi per un periodo abbastanza lungo abbiamo avuto il nostro <em>Windows Server</em>, sul quale installavamo IIS e il .NET Framework che forniva ASP.NET come base di integrazione con IIS, che ci metteva a disposizione 3 framework tra cui scegliere: ASP.NET Web Forms, ASP.NET MVC e ASP.NET WEB API. Una infrastruttura un po’ ridondante in alcuni punti, ma che serviva allo scopo.</p>
+
+<p><img src="/assets/articoli/blazorserver/aspnet-stack.png" alt="ASP.NET STACK" title="ASP.NET STACK" /></p>
+
+<p>A un certo punto però, per ragioni che avremmo compreso fino in fondo solo anni dopo, il legame tra ASP.NET e IIS è cominciato ad andare un po’ stretto. Questo portò all’introduzione di <strong><a href="http://owin.org/">OWIN</a></strong>, uno standard aperto che definisce una interfaccia tra un web server .NET e una applicazione web. Insieme allo standard venne fornito anche una implementazione, chiamata <strong><a href="https://github.com/aspnet/AspNetKatana/">Katana</a></strong>, che contrattualizzava il legame tra ASP.NET e IIS. Il tutto fu introdotto con la versione 4 di MVC, fornendo di fatto la possibilità di far girare applicazioni ASP.NET MVC su web server diversi da IIS.</p>
+
+<p>Aggiungiamo che in quel periodo i rilasci di ASP.NET seguivano quelli del .NET Framework, nonostante il web si evolvesse ad una velocità più alta del framework di base. Ma la vera ragione che portò a un momento di rottura fu il fatto che ASP.NET non era stato creato pensando agli scenari <em>Cloud</em>, e Microsoft stava per puntare tutto sul suo Cloud: <strong>Microsoft Azure</strong>.</p>
+
+<p>Nel 2016 fu rilasciata la prima versione di <strong>ASP.NET Core</strong>, basata su un nuovo framework .NET <strong><em>cross-platform</em></strong> che fu chiamato <strong>.NET Core</strong>. Gli aggiornamenti di ASP.NET non dovevano più essere legati al framework sottostante, quindi tutto è stato basato su <strong>NuGet</strong>. Con l’occasione sono stati unificati i framework MVC e WEB API, abbandonando definitivamente Web Forms. Il framework fornisce di base strumenti integrati per configurazione, logging e <strong><em>Dependency Injection</em></strong>,  e ci si può costruire la propria pipeline HTTP, utilizzando i middleware Owin: una vera e propria rivoluzione. Grazie al rilascio contestuale di <strong>Kestrel</strong>, un web server cross-platform compatibile OWIN, è possibile far girare .NET Core su Windows, Linux e MacOS, aprendo scenari incredibili.</p>
+
+<p><img src="/assets/articoli/blazorserver/net-netcore.png" alt=".NET e .NET Core Stack" title=".NET e .NET Core Stack]" /></p>
+
+<p>Il .NET Framework è ancora lì (per il momento), accanto a .NET Core, utilizzando le Standard Libraries per condividere il codice tra i due mondi. Il prossimo passo sarà <strong><a href="https://devblogs.microsoft.com/dotnet/introducing-net-5/">.NET 5</a></strong>, che unificherà tutto lo stack tecnologico Microsoft.</p>
+
+<p><img src="/assets/articoli/blazorserver/dotnet5.png" alt="Il futuro di .NET: .NET 5" title="Il futuro di .NET: .NET 5" /></p>
+
+<h3 id="razor">Razor</h3>
+
+<p>In ASP.NET il rendering server-side delle pagine web è sempre stato affidato al <strong>View Engine</strong>, il motore che analizza il misto tra markup, codice .NET, direttive e componenti custom e li traduce in HTML per il browser.</p>
+
+<p>In ASP.NET Web Forms il View Engine di default era <strong>ASPX</strong>, che utilizzava i simboli  <code class="highlighter-rouge">&lt;%</code> e <code class="highlighter-rouge">%&gt;</code> per introdurre nel markup il codice C# o Visual Basic:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">&lt;</span><span class="n">ul</span><span class="p">&gt;</span>
+<span class="p">&lt;%</span> <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">prodotto</span> <span class="k">in</span> <span class="n">Prodotti</span><span class="p">)</span>
+   <span class="p">{</span> <span class="p">%&gt;</span>
+    <span class="p">&lt;%</span> <span class="k">if</span> <span class="p">(</span><span class="n">prodotto</span><span class="p">.</span><span class="n">Disponibile</span><span class="p">)</span>
+       <span class="p">{</span> <span class="p">%&gt;</span>
+       <span class="p">&lt;</span><span class="n">li</span><span class="p">&gt;&lt;%=</span><span class="n">prodotto</span><span class="p">.</span><span class="n">NomeProdotto</span><span class="p">%&gt;</span> <span class="n">disponibile</span><span class="p">&lt;/</span><span class="n">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;%</span> <span class="p">}</span>
+       <span class="k">else</span>
+       <span class="p">{</span> <span class="p">%&gt;</span>
+       <span class="p">&lt;</span><span class="n">li</span><span class="p">&gt;&lt;%=</span><span class="n">prodotto</span><span class="p">.</span><span class="n">NomeProdotto</span><span class="p">%&gt;</span> <span class="n">non</span> <span class="n">disponibile</span><span class="p">&lt;/</span><span class="n">li</span><span class="p">&gt;</span>
+    <span class="p">&lt;%</span> <span class="p">}</span> <span class="p">%&gt;</span>
+<span class="p">&lt;%</span> <span class="p">}</span> <span class="p">%&gt;</span>
+<span class="p">&lt;/</span><span class="n">ul</span><span class="p">&gt;</span></code></pre></figure>
+
+<p>Nel passaggio a MVC fu introdotto un nuovo View Engine chiamato <strong>Razor</strong>, con una sintassi meno invasiva di ASPX e che utilizza il simbolo <code class="highlighter-rouge">@</code> per introdurre nel markup il codice C# o Visual Basic:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">&lt;</span><span class="n">ul</span><span class="p">&gt;</span>
+<span class="nf">@foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">prodotto</span> <span class="k">in</span> <span class="n">Prodotti</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nf">@if</span> <span class="p">(</span><span class="n">prodotto</span><span class="p">.</span><span class="n">Disponibile</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">&lt;</span><span class="n">li</span><span class="p">&gt;</span><span class="n">@prodotto</span><span class="p">.</span><span class="n">NomeProdotto</span> <span class="n">disponibile</span><span class="p">&lt;/</span><span class="n">li</span><span class="p">&gt;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+    <span class="p">&lt;</span><span class="n">li</span><span class="p">&gt;</span><span class="n">@prodotto</span><span class="p">.</span><span class="n">NomeProdotto</span> <span class="n">non</span> <span class="n">disponibile</span><span class="p">&lt;/</span><span class="n">li</span><span class="p">&gt;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="n">ul</span><span class="p">&gt;</span></code></pre></figure>
+
+<p>Razor diventò il default per i progetti MVC e la sua semplicità di utilizzo lo ha portato a diventare parte integrante di una versione semplificata di ASP.NET MVC chiamata <strong>Razor Pages</strong>, un modello nel quale al posto di Controller e View viene introdotto il concetto di <em>Page</em> che contiene sia il markup che il codice che la gestisce.</p>
+
+<h3 id="signalr">SignalR</h3>
+
+<p>Nello sviluppo web di solito è il client che apre una connessione al server, fa una richiesta HTTP e ottiene una risposta HTTP, con la quale la connessione viene chiusa. Spesso però abbiamo bisogno di sapere se lato server è cambiato qualcosa.</p>
+
+<p>Possiamo sicuramente fare delle richieste periodiche in maniera automatica per verificare se qualcosa è cambiato, ma questa operazione, che viene chiamata <strong>Polling</strong>, è decisamente dispendiosa. Una possibile alternativa è il <strong>Long Polling</strong>, che consiste nel mantenere attiva una connesione dal client al server in uno stato <em>Pending</em>: quando ci sarà un aggiornamento lato server, questo potrà essere comunicato utilizzando la connessione aperta. La risposta chiuderà la connessione, sarà quindi compito del client aprirne un’altra, ripetendo il processo. Sicuramente meno dispendioso del Polling, ma i browser moderni supportano delle valide alternative.</p>
+
+<p>Una di queste è l’utilizzo dei <strong>Server-Sent Event</strong>, che ci permette di ricevere aggiornamenti dal server restando in ascolto su un particolare <em>endpoint</em>. In pratica registriamo una callback JavaScript utilizzando uno speciale oggetto chiamato <strong>EventSource</strong>, a quel punto il sever, utilizzando il content-type <em>text/event-stream</em> può invocare questa callback senza che ci siano attese lato client. I Server-Sent Event sono però monodirezionali (dal server al client), se abbiamo bisogno di connessioni bidirezionali senza attese possiamo utilizzare la specificica <strong><a href="https://tools.ietf.org/html/rfc6455">WebSocket</a></strong>.</p>
+
+<p>Tutto bello, ma abbiamo bisogno di sapere se browser e server supportano la scelta che facciamo. Ed è proprio qui che entra in gioco <strong>SignalR</strong>: in maniera completamente trasparente al programmatore permette di utilizzare lo strumento migliore messo a disposizione da client e server. Questo significa che, se disponibile, SignalR utilizzerà le WebSocket, altrimenti proverà con i Server-Sent Events. Nel caso nessuno dei due sia disponibile, verrà utilizzato il Long Polling. Questa operazione di scelta del trasporto è automatica e non impatta sull’API messa a disposizione da SignalR.</p>
+
+<p>Il programmatore deve solo preoccuparsi di definire una o più classi <strong>Hub</strong>, che verranno utilizzate come endpoint per la comunicazione. Trovate maggiori informazioni <a href="https://dotnet.microsoft.com/apps/aspnet/signalr">qui</a>.</p>
+
+<h2 id="blazor-server">Blazor Server</h2>
+
+<p>Adesso che sappiamo come siamo arrivati ad oggi e quali sono le tecnologie che abbiamo a disposizione, siamo pronti per analizzare come funziona Blazor Server: si tratta di un nuovo framework per la realizzazione dell’interfaccia utente delle nostre applicazioni ASP.NET Core, definita utilizzando HTML e CSS e sfruttando Razor e C# per il suo aggiornamento dinamico.</p>
+
+<p>Gli aggiornamenti dell’interfaccia avvengono lato server, e vengono inviati al client utilizzando SignalR. Vediamolo in funzione lanciando l’applicazione che abbiamo creato nell’<a href="/blazor/intro/2020/02/02/che-cosa-e-blazor.html">articolo precedente</a>, utilizzando il comando della .NET CLI <code class="highlighter-rouge">dotnet run</code>, o il classico F5 di Visual Studio.</p>
+
+<p>Aprite Chrome o una versione del nuovo <a href="https://www.microsoft.com/en-us/edge">EDGE</a>, nel mio caso EDGE per MAC, che come probabilmente saprete utilizza l’engine di Chromium. Aprite il pannello degli stumenti per gli sviluppatori, selezionate il TAB Network, Filter All e andate all’indirizzo https://localhost:5001:</p>
+
+<p><img src="/assets/articoli/blazorserver/traffico-rete-blazor-server.png" alt="Traffico di rete di Blazor Server" title="Traffico di rete di Blazor Server" /></p>
+
+<p>Quello che vedete è il template di base di Blazor Server. Nel TAB Network potete vedere il traffico di rete, tra cui la WebSocket inizializzata da SignalR durante la negoziazione del trasporto. Se cliccate sul Filtro WS (WebSockets) del TAB Network, selezionate la WebSocket <code class="highlighter-rouge">_blazor</code>, cliccate sulla voce di menu <em>Counter</em> e poi sul pulsante <em>Click me</em>, vedrete quanto segue:</p>
+
+<p><img src="/assets/articoli/blazorserver/traffico-websocket-blazor-server.png" alt="Traffico WebSocket di Blazor Server" title="Traffico WebSocket di Blazor Server" /></p>
+
+<p>Nel Tab <code class="highlighter-rouge">Messages</code>, potete vedere lo scambio dati bidirezionale tra il client e il server: il click sul pulsante ha inviato tramite la WebSocket la richiesta al server, che ha aggiornato il valore di un contatore, rigenerato l’HTML, confrontato con l’HTML precedente e inviato il differenziale al client mediante la WebSocket. A quel punto il codice presente nello script <code class="highlighter-rouge">blazor.server.js</code> ha aggiornato il DOM del browser!</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>Per oggi ci fermiamo qui, ma siamo riusciti ad analizzare il funzionamento di Blazor Server, ripercorrendo velocemente la storia che ha portato alla sua nascita e sottolineando come sia possibile riutilizzare tutte le conoscenze che abbiamo dello stack .NET Core per realizzare un front-end con la user experience di una Single Page Application.</p>
+
+<p>La sfida tecnologica si gioca però sul tavolo <strong>WebAssembly</strong>, e nel prossimo articolo vedremo come sia possibile far girare il .NET Core Framework direttamente nel browser, senza nessun plug-in aggiuntivo.</p>
+
+
+  </div><a class="u-url" href="/blazor/intro/2020/02/07/blazor-server.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
