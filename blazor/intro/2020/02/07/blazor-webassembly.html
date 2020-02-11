@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Blazor WebAssembly | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Blazor WebAssembly" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview ma già sperimentabile in attesa del rilascio di Maggio 2020." />
+<meta property="og:description" content="Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview ma già sperimentabile in attesa del rilascio di Maggio 2020." />
+<link rel="canonical" href="/blazor/intro/2020/02/07/blazor-webassembly.html" />
+<meta property="og:url" content="/blazor/intro/2020/02/07/blazor-webassembly.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/blazorwebassembly/blazorwebassembly.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-07T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/intro/2020/02/07/blazor-webassembly.html"},"url":"/blazor/intro/2020/02/07/blazor-webassembly.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Blazor WebAssembly","dateModified":"2020-02-07T00:00:00+01:00","datePublished":"2020-02-07T00:00:00+01:00","image":"/assets/articoli/blazorwebassembly/blazorwebassembly.png","description":"Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview ma già sperimentabile in attesa del rilascio di Maggio 2020.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+  </head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Blazor WebAssembly</h1>
+    <h3 class="post-subtitle">Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview.</h3>
+  </header><figure>
+      <img src="/assets/articoli/blazorwebassembly/blazorwebassembly.png" alt="Blazor WebAssembly" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview ma già sperimentabile in attesa del rilascio di Maggio 2020.</p>
+
+<h2 id="webassembly-non-di-solo-javascript-vive-il-browser">WebAssembly: non di solo JavaScript vive il browser</h2>
+
+<p>Lo sviluppo web ci ha abituato a pensare che l’unico modo di eseguire codice nel browser sia JavaScript, ed è stato così fino all’arrivo della specifica <strong>WebAssembly</strong> e della sua adozione nei principali browser moderni.</p>
+
+<p>Il primo annuncio fu nel 2015, ma abbiamo dovuto attendere fino al 2017 per una prima preview. Nel Febbraio 2018 il <strong><em>WebAssembly Working Group</em></strong>, di cui <strong>Microsoft</strong> è parte attiva insieme a <strong>Mozilla</strong>, <strong>Google</strong> e <strong>Apple</strong>, coordinati dal <strong>W3C (World Wide Web Consortium)</strong>, ha pubblicato le bozze della parte <a href="https://webassembly.github.io/spec/core/bikeshed/index.html">Core</a> della specifica, insieme a quelle di <a href="https://webassembly.github.io/spec/js-api/index.html">interoperabilità con JavaScript</a> e <a href="https://webassembly.github.io/spec/web-api/index.html">Web API</a>.</p>
+
+<p>Ad altissimo livello, possiamo immaginare il browser come un contenitore in cui possiamo definire la nostra interfaccia utilizzando HTML e CSS, interagendo tramite JavaScript con le API del browser (DOM, WebSocket, File API, Web Storage, ecc.). JavaScript viene eseguito all’interno di un ambiente controllato, chiamato <strong>JavaScript Runtime</strong>, che fornisce <strong><em>un unico thread</em></strong> per ogni tab o dominio che viene visualizzato.</p>
+
+<p><img src="/assets/articoli/blazorwebassembly/webassembly_browser.png" alt="WebAssembly nel browser" title="WebAssembly nel browser" /></p>
+
+<p>WebAssembly si piazza esattamente nello stesso runtime, condividendo quindi gioie e dolori di questo ambiente e la possibilità di interagire con JavaScript. Questo significa che WebAssembly ci permette di fare tutto quello che facciamo con JavaScript e, laddove ci serva integrare codice legacy o utilizzare librerie JavaScript già pronte, è possibile invocare una funzione JavaScript da un metodo C#. Sicuramente interessante anche la possibilità di fare il contrario, invocare cioè da JavaScript una funzione esposta da WebAssembly.</p>
+
+<h2 id="da-net-a-wasm-cosa-cè-veramente-sotto">Da .NET a WASM: cosa c’è veramente sotto?</h2>
+
+<p>Prima che si faccia confusione cerchiamo di capire davvero come funziona Blazor WebAssembly.</p>
+
+<p>Lo standard WebAssembly, detto anche <strong>WASM</strong>, fornisce un formato binario nato con lo scopo di eseguire nel browser codice ad una velocità simile a quella del codice nativo. E’ possibile generare questo codice a partire da linguaggi ad alto livello, come C++, ma al momento <strong>non esiste un compilatore da C# a WASM</strong>.</p>
+
+<p><img src="/assets/articoli/blazorwebassembly/da_csharp_a_webassembly.png" alt="Da C# a WebAssembly" title="Da C# a WebAssembly" /></p>
+
+<p>Blazor ci permette di eseguire nel browser codice <strong>IL (Intermediate Language)</strong>, generato a partire da C#, grazie al porting del <strong>runtime di <a href="https://github.com/mono/mono">mono</a></strong> allo standard WASM. I file contententi codice WebAssembly hanno estensione WASM, il runtime di mono compilato per WebAssembly aveva il nome <em>mono.wasm</em>, rinominato nell’ultima versione a <em>dotnet.wasm</em>.</p>
+
+<p>Se ad esempio il nostro progetto si chiama <em>MyBlazorApp</em>, non ci sarà un <em>MyBlazoApp.WASM</em>, ma un <em>MyBlazorApp.DLL</em>, che potete facilmente ispezione con un inspector di codice IL, come l’estensione per Visual Studio Code <a href="https://marketplace.visualstudio.com/items?itemName=icsharpcode.ilspy-vscode">ILSpy</a>.</p>
+
+<p><img src="/assets/articoli/blazorwebassembly/blazorapp_ILSpy.png" alt="Ispezione IL Blazor App" title="Ispezione IL Blazor App" /></p>
+
+<h2 id="dal-template-al-browser">Dal template al browser</h2>
+
+<p>Passiamo alla pratica! Creiamo un progetto Blazor WebAssembly e chiamiamolo <code class="highlighter-rouge">MyBlazorApp</code> con il comando <code class="highlighter-rouge">dotnet new blazorwasm -o MyBlazorApp</code>.</p>
+
+<p>Con gli ultimi aggiornamenti, in questo tipo di progetto è stata notevolmente semplificata la configurazione, eliminando la classe <code class="highlighter-rouge">Startup.cs</code> tipica dei progetti ASP.NET Core. Ha molto senso perchè il compilato di una applicazione WebAssembly è un insieme di file statici, che possono essere distribuiti con un qualsiasi web server, senza nessun bisogno di .NET. Quello che vediamo nel file <code class="highlighter-rouge">Program.cs</code> è la configurazione del web server che servirà i file e la registrazione del componente principale.</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+   <span class="k">public</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+   <span class="p">{</span>
+      <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="n">WebAssemblyHostBuilder</span><span class="p">.</span><span class="nf">CreateDefault</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+      <span class="n">builder</span><span class="p">.</span><span class="n">RootComponents</span><span class="p">.</span><span class="n">Add</span><span class="p">&lt;</span><span class="n">App</span><span class="p">&gt;(</span><span class="s">"app"</span><span class="p">);</span>
+
+      <span class="k">await</span> <span class="n">builder</span><span class="p">.</span><span class="nf">Build</span><span class="p">().</span><span class="nf">RunAsync</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Eseguendo il progetto con il comando <code class="highlighter-rouge">dotnet run</code> o con il classico <code class="highlighter-rouge">F5</code> di Visual Studio, possiamo vedere il risultato all’indirizzo <code class="highlighter-rouge">http://localhost:5000</code>: lanciate il browser e aprite i tool per gli sviluppatori sulla sezione Network, per verificare cosa viene scaricato.</p>
+
+<p><img src="/assets/articoli/blazorwebassembly/blazor_webassembly_file_scaricati.png" alt="File scaricati con Blazor WebAssembly" title="File scaricati con Blazor WebAssembly" /></p>
+
+<p>Sì, non ci sono errori, quelle che vedete sono delle DLL scaricate nel browser! Non lasciate venire alla mente ricordi molesti (non è Silverlight…), ma grazie a <strong>dotnet.wasm</strong> possiamo eseguire le librerie .NET standard del progetto, compreso il nostro <em>MyBlazorApp.dll</em>. Nel file <code class="highlighter-rouge">blazor.boot.json</code> trovate l’elenco degli assembly che devono essere caricati, utilizzato dallo script <code class="highlighter-rouge">blazor.webassembly.js</code> per inizializzare l’applicazione.</p>
+
+<p><img src="/assets/articoli/blazorwebassembly/blazor_webassembly_httpclient.png" alt="Blazor WebAssembly HTTP Client" title="Blazor WebAssembly HTTP Client" /></p>
+
+<p>L’applicazione sta girando nel client, niente WebSocket e niente back-end. Se pulite la sezione Network e cliccate sul counter dell’applicazione, vedrete che nessuna chiamata al server viene fatta. Se invece vi spostate su Fetch data, potete vedere la chiamata HTTP per il recupero dei dati visualizzati nella tabella, ma il rendering dell’HTML viene fatto client-side.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>Per oggi ci fermiamo qui. In questo articolo abbiamo analizzato le peculiarità di Blazor WebAssembly, cercando di capire le principali differenze di funzionamento con Blazor Server. Nel prossimo articolo faremo un confronto tra i due, analizzando pro e contro di ogni versione e in quali contesti una delle due risponde meglio ai nostri requisiti.</p>
+
+  </div><a class="u-url" href="/blazor/intro/2020/02/07/blazor-webassembly.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
