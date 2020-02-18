@@ -295,8 +295,12 @@ table td { border: 1px solid #e8e8e8; }
 .t40 { margin-top: 40px; }
 .sponsor-image-list { float: left; height: 105px;  margin-right: 20px;  margin-top: 4px; }
 .center { display: block; margin-left: auto;  margin-right: auto; }
+.events-box { display: block;  width: 50%; float: left;}
+.blazor-tour { display: block; float: right; width: 50%; margin-top: -67px; }
 
 @media screen and (max-width: 800px) {
   .home-box { display: block; float: left; width: 100%;}
   .list-width { width: 100%; }
+  .events-box { display: block;  width: 100%; float: none;}
+  .blazor-tour { display: block; float: none; width: 100%; margin-top: 0; }
 }
