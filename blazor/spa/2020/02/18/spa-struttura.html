@@ -73,7 +73,7 @@
   </figure><div class="post-content e-content" itemprop="articleBody">
     <p>Cominciamo a mettere le mani sul codice, creando la struttura della nostra Single Page Application. L’idea è quella di guidarvi nella realizzazione di una applicazione enterprise con Blazor, partendo da una classica CRUD (Create, Read, Update e Delete) di una entità e rifattorizzando man mano il codice, fino a renderlo riutilizzabile e condivisibile tra diversi progetti.</p>
 
-<p>Come avete potuto leggere negli articoli precedenti, c’è una differenza di fondo tra Blazor Server e Blazor WebAssembly, quindi dove necessario faremo le poche ma dovute differenze tra i due. Assicuratevi di aver installato i template di Blazor, come spiegato nel <a href="/blazor/intro/2020/02/02/che-cosa-e-blazor.html">primo articolo</a>: si parte!</p>
+<p>Come avete potuto leggere negli articoli precedenti, c’è una differenza di fondo tra Blazor Server e Blazor WebAssembly, quindi dove necessario faremo le poche ma dovute distinzioni tra i due. Assicuratevi di aver installato i template di Blazor, come spiegato nel <a href="/blazor/intro/2020/02/02/che-cosa-e-blazor.html">primo articolo</a>: si parte!</p>
 
 <h2 id="la-struttura-del-progetto-con-blazor-server">La struttura del progetto con Blazor Server</h2>
 
@@ -81,7 +81,7 @@
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">dotnet new blazorserver <span class="nt">-o</span> event-manager-server</code></pre></figure>
 
-<p>Se non preferite la riga di comando potete usare il classico wizard di creazione di un nuovo progetto in Visual Studio. In entrambi i casi sarà creto un progetto ASP.NET Core preconfigurato per l’uso di Blazor Server. Se andiamo a guardare il file <code class="highlighter-rouge">Program.cs</code> possiamo notare una classica configurazione di una applicazione ASP.NET Core:</p>
+<p>Se non preferite la riga di comando potete usare il classico wizard di creazione di un nuovo progetto in Visual Studio. In entrambi i casi sarà creato un progetto ASP.NET Core preconfigurato per l’uso di Blazor Server. Se andiamo a guardare il file <code class="highlighter-rouge">Program.cs</code> possiamo notare una classica configurazione di una applicazione ASP.NET Core:</p>
 
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">Program</span>
 <span class="p">{</span>
@@ -270,7 +270,7 @@
 
 <p><img src="/assets/articoli/spa-struttura-progetto/blazor-spa-struttura-base.png" alt="Struttura base progetto SPA con Blazor" title="Struttura base progetto SPA con Blazor" /></p>
 
-<p>La tipica bellezza estetica di cui è capace uno sviluppatore… ma funziona! Trovate il codice sorgente, organizzato in brach per ogni articolo della serie, <a href="https://github.com/blazordevita/BlazorSPA">qui</a>.</p>
+<p>La tipica bellezza estetica di cui è capace uno sviluppatore… ma funziona! Trovate il codice sorgente, organizzato in branch per ogni articolo della serie, <a href="https://github.com/blazordevita/BlazorSPA">qui</a>.</p>
 
 <h2 id="conclusioni">Conclusioni</h2>
 
