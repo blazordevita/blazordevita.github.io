@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Creare una SPA: componenti | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Creare una SPA: componenti" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Probabilmente il concetto più importante dei moderni framework di front-end è quello di componente, che nonostante la sua semplicità è spesso causa di fraintendimenti sugli scopi e gli utilizzi. Cerchiamo di capire in questo articolo di cosa si tratta e come definire componenti in Blazor." />
+<meta property="og:description" content="Probabilmente il concetto più importante dei moderni framework di front-end è quello di componente, che nonostante la sua semplicità è spesso causa di fraintendimenti sugli scopi e gli utilizzi. Cerchiamo di capire in questo articolo di cosa si tratta e come definire componenti in Blazor." />
+<link rel="canonical" href="/blazor/spa/2020/02/21/spa-componenti.html" />
+<meta property="og:url" content="/blazor/spa/2020/02/21/spa-componenti.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/spa-componenti/spa-componenti.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-21T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/spa/2020/02/21/spa-componenti.html"},"url":"/blazor/spa/2020/02/21/spa-componenti.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Creare una SPA: componenti","dateModified":"2020-02-21T00:00:00+01:00","datePublished":"2020-02-21T00:00:00+01:00","image":"/assets/articoli/spa-componenti/spa-componenti.png","description":"Probabilmente il concetto più importante dei moderni framework di front-end è quello di componente, che nonostante la sua semplicità è spesso causa di fraintendimenti sugli scopi e gli utilizzi. Cerchiamo di capire in questo articolo di cosa si tratta e come definire componenti in Blazor.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+  </head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Creare una SPA: componenti</h1>
+    <h3 class="post-subtitle">Creiamo i mattoni con cui costruiremo la nostra interfaccia</h3>
+  </header><figure>
+      <img src="/assets/articoli/spa-componenti/spa-componenti.png" alt="Creare una SPA: componenti" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Probabilmente il concetto più importante dei moderni framework di front-end è quello di <em>componente</em>, che nonostante la sua semplicità è spesso causa di fraintendimenti sugli scopi e gli utilizzi. Cerchiamo di capire in questo articolo di cosa si tratta e come definire componenti in Blazor.</p>
+
+<h2 id="che-cosè-un-componente">Che cos’è un componente</h2>
+
+<p>Immaginiamo come sarà fatta l’interfaccia della nostra applicazione, analizziamola e proviamo a vederla invece che come un blocco unico, come un insieme di tanti pezzi, come in un <em>puzzle</em>. Ogni elemento di questo puzzle è un <strong>componente</strong>, quindi, molto semplicemente, un componente è un pezzo della nostra interfaccia. Probabilmente ci sarà un’area con il menu, un footer, un header, un’area in cui visualizziamo i nostri dati: tutte queste aree sono potenziali componenti.</p>
+
+<p><img src="/assets/articoli/spa-componenti/scomposizione-interfaccia-in-componenti.png" alt="Suddivisione in componenti dell'interfaccia utente" title="Suddivisione in componenti dell'interfaccia utente" /></p>
+
+<p>Detta così sembra semplicissimo, e lo è, ma un componente deve anche avere alcune fondamentali caratteristiche:</p>
+<ul>
+  <li>avere l’unica responsabilità di gestire la sua parte di interazione con l’utente e reagire ad essa</li>
+  <li>poter contenere altri componenti, al fine di formare un <strong>albero</strong> di componenti</li>
+  <li>essere correttamente <strong>dimensionato</strong></li>
+  <li>essere potenzialmente <strong>riutilizzabile</strong> e <strong>non accoppiato</strong> con altri componenti</li>
+</ul>
+
+<h3 id="una-questione-di-responsabilità">Una questione di responsabilità</h3>
+
+<p>Un componente conterrà la definizione del pezzo di interfaccia che lo interessa, l’HTML nel caso di applicazioni Web, e definirà il codice per gestire questo pezzo di interfaccia, limitandosi a visualizzare i dati richiesti e catturare l’input dell’utente. Questo significa che in un componente non ci dovrebbe mai essere logica applicativa, ma solo logica di interfaccia, demandando tutti il resto ad altri elementi dell’applicazione. Questo punto è importante, perchè ci permette di rispondere a una domanda che tutti noi ci facciamo quando scegliamo un framework di front-end:</p>
+
+<blockquote>
+  <p>Chi mi garantisce che tra 6 mesi questo framework sia ancora la scelta giusta per me?</p>
+</blockquote>
+
+<p>La risposta è <strong>nessuno</strong>! Ma se ho messo il grosso della logica della mia applicazione in un layer separato, sostituire la tecnologie di front-end smette di diventare un <strong>bagno di sangue</strong>. Quante volte in Windows Form abbiamo messo i nostri algoritmi e le nostre query direttamente nel <em>code-behind</em>, <em>spiattellandoli</em> in un <em>event-handler</em>? Quante volte nel passaggio a <em>Web Forms</em> abbiamo fatto la stessa cosa? E’ vero che questi framework portavano in maniera naturale a scrivere il codice in questo modo, ma nessuno ci ha mai obbligati a farlo ed è soprattutto questa la ragione per la quale siamo rimasti su quella tecnologia per 10 anni, lamentandoci di non riuscire a stare dietro alle continue evoluzioni.</p>
+
+<p>Nel mondo front-end questa cosa è particolarmente vera, ma rassegniamoci al fatto di avere continuamente framework nuovi, scriviamo il nostro codice perchè sia facile migrarlo, e decidiamo se per i nostri requisiti, funzionali e non, ha ancora senso restare su quella tecnologia.</p>
+
+<p>In .NET Core è particolarmente semplice creare quello che in Ingegneria del Softwatare viene detto <strong>basso accoppiamento</strong>, perchè abbiamo un motore di Dependency Injection già integrato ed estendibile: applichiamo il principio di separazione delle responsabiità, creiamo il giusto numero di classi e layer per gestire la complessità della nostra applicazione e iniettiamo le dipendenze senza creare accoppiamento. Se non avete mai sentito parlare di Dependency Injection, Inversion of Controls e gestione delle dipendenze, date un occhio <strong><a href="https://docs.microsoft.com/it-it/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1">qui</a></strong>. In ogni caso vedremo degli esempi pratici costruendo la nostra applicazione.</p>
+
+<h3 id="il-nostro-albero-di-componenti">Il nostro albero di componenti</h3>
+
+<p>Come abbiamo visto negli articoli precedenti, sia in Blazor Server che Blazor WebAssembly, il rendering della UI parte da una singola pagina HTML in cui c’è un primo componente. Quel componente è detto solitamente componente radice, perchè è la radice dell’albero di componenti che costituirà la nostra interfaccia.</p>
+
+<p><img src="/assets/articoli/spa-componenti/albero-elementi-html.png" alt="Albero di elementi HTML" title="Albero di elementi HTML" /></p>
+
+<p>Di solito si parla di legami di parentela tra i componenti: il componente contenitore è il padre, i componenti contenuti i figli. Questo significa che un componente può contentere altri componenti, ma non ci possono essere <strong>cicli</strong>: non posso cioè contenere un componente che è mio parente nella ramificazione.</p>
+
+<p>Se già lavorate nel mondo WEB è lo stesso concetto su cui è basato HTML, se avete lavorato con WPF o similari, è lo stesso concetto su cui è basato XAML. In realtà è lo stesso concetto che lega tutti i linguaggi di markup, che derivando dal metalinguaggio XML, ne ereditano le regole.</p>
+
+<h3 id="trovare-la-giusta-dimensione">Trovare la giusta dimensione</h3>
+
+<p>Probabilmente la parte più difficile nella definizione di un componente è capire quanto deve essere grande o piccolo. Possiamo passare da un componente che contiene tutta l’inferfaccia a definire un componente che rappresenta la singola etichetta di testo. Qual è la giusta dimensione per un componente?</p>
+
+<p>Non c’è una regola generale, perchè dipende molto dai requisiti dell’applicazione, e con l’esperienza diventeremo sempre più bravi a trovare il giusto equilibrio nel dimensionare i componenti. Ci sono però un po’ di indicatori che possono aiutarci a capire se stiamo andando nella giusta direzione.</p>
+
+<p>Se il vostro componente svolge più di una funzione, ha cioè più di una responsabilità, è potenzialmente un componente troppo grande. Quindi un indicatore può essere proprio il principio di singola responsabilità. Se avete un componente in cui ad esempio gestite una griglia e una form di dettaglio, potenzialmente potreste dividerlo in 3 componenti: la griglia, il dettaglio e il componenbte che li contiene e li mette in comunicazione.</p>
+
+<p>Un indicatore più preciso è invece la caratteristica di riutilizzabilità di un componente: se dobbiamo usare quel pezzo di interfaccia in più punti della nostra applicazione, allora è sicuramente un componente indipendente.</p>
+
+<p>Un altro indicatore è l’assenza di logica applicativa, quei componenti che cioè hanno solo il markup: è uno spreco di risorse, specie se siete nel browser, perchè tecnicamente stiamo creando un oggetto per ogni componente, che occupa memoria ed entra a far parte degli elementi che il framework tiene sotto controllo per reagire quando interagite con essi. Per la stessa ragione è potenzialmente dannoso fare componmenti piccolissimi, come una etichetta o un pulsante.</p>
+
+<p>Una buona strategia, in caso non si sia sicuri di come dimensionare un componente, è quella di partire dal crearne uno e poi rifattorizzarlo in più componenti man mano che cresce.</p>
+
+<h3 id="usateli-insieme-ma-non-accoppiateli">Usateli insieme ma non accoppiateli!</h3>
+
+<p>E’ possibile quindi mettere un componente all’interno di un altro componente, ma come li faccio comunicare tra loro senza creare accoppiamento? E perchè non dovrei accoppiarli?</p>
+
+<p>Nello sviluppo software è sempre un male accoppiare elementi applicativi, perchè questo, tra le altre cose, ne ostacola il riutilizzo. Ed è esattamente questa la ragione per la quale non dobbiamo farlo con i componenti. Se creiamo un componente che è accoppiato con suo padre, l’unico modo in cui potremo riutilizzarlo è usare il padre. Se invece il legame con il padre non è diretto, ma basato su una buona <strong>parametrizzazione</strong>, potrò riutilizzare direttamente il componente dove voglio.</p>
+
+<p>Tutti i framework di front-end, compreso Blazor, ci permettono di creare componenti parametrizzabili, in modo da non dover avere nessun riferimento esplicito al componente che lo ospita, ma solo ricevere da esso <strong>dati in input</strong> ed emettere <strong>eventi in output</strong> a cui potrà eventualmente sottoscriversi.</p>
+
+<h2 id="componenti-in-blazor">Componenti in Blazor</h2>
+
+<p>Passiamo alla pratica e vediamo come creare un componente in Blazor. Il template base da cui siamo partiti ha già creato dei componenti per noi, alcuni dei quali hanno un ruolo molto specifico e si trovano nella cartella Pages. Vedremo che cosa sono le pagine in Blazor nel seguito, perchè abbiamo bisogno di introdurre dei concetti preliminari per comprenderne il ruolo, ma per il momento immaginiamoli come degli speciali componenti contenitori che rappresentano una pagina della nostra applicazione.</p>
+
+<p>Tecnicamente in Blazor un componente è un file con estensione <code class="highlighter-rouge">.razor</code>, che contiene il markup, le direttive Razor per la gestione del markup e il binding dei dati, e, <strong><em>opzionalmente</em></strong>, il codice. Il nome del file definisce anche il <strong>selettore</strong> con cui possiamo chiedere al framework di istanziare per noi il componente e renderizzarlo nel punto in cui abbiamo utilizzato il selettore.</p>
+
+<p>Il file <code class="highlighter-rouge">NavMenu.razor</code>, che abbiamo già visto nell’articolo precedente, è un ottimo esempio: contiene il markup (HTML e classi CSS per la definizione della classica <a href="https://getbootstrap.com/docs/4.0/components/navbar/">Navbar</a> di Bootstrap), le direttiva e le istruzioni Razor (quelle con il simbolo <code class="highlighter-rouge">@</code> per capirci) e il blocco <code class="highlighter-rouge">@code</code> dove è definito il codice del componente. Per poter utilizzare questo componente, nel file <code class="highlighter-rouge">MainLayout.razor</code> troviamo il selettore <code class="highlighter-rouge">&lt;NavMenu /&gt;</code>:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">...
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"sidebar"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;NavMenu</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+...</code></pre></figure>
+
+<p>Creiamo un nuovo componente da zero, in modo da seguire tutti i passaggi necessari. Creiamo nella root del progetto una cartella <code class="highlighter-rouge">Components</code> che useremo per i componenti non condivisi (per quelli condivisi esiste già la cartella Shared): in questo modo sarà più semplice individuarli e spostarli se necessario.</p>
+
+<p>La nostra applicazione ha lo scopo di gestire eventi, quindi potremmo realizzare un componente che visualizza la lista degli eventi in formato tabellare. Una classica griglia a cui siamo sicuramente tutti abituati. Creaimo quindi un file ListaEventi.razor nella cartella Components e creiamo la nostra <code class="highlighter-rouge">table</code>:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h2&gt;</span>Lista Eventi<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Id<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Nome<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Località<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Data<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    @foreach(var evento in ListaElementi)
+    {
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Id<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Nome<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Localita<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Data<span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    }
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaElementi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span>
+            <span class="p">{</span>
+                <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">Nome</span><span class="p">=</span><span class="s">"DevDay Benevento - Blazor"</span><span class="p">,</span> <span class="n">Localita</span><span class="p">=</span><span class="s">"Benvento"</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DateTime</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span><span class="m">8</span><span class="p">)},</span>
+                <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">Nome</span><span class="p">=</span><span class="s">"DotNetSide Bari - Blazor"</span><span class="p">,</span> <span class="n">Localita</span><span class="p">=</span><span class="s">"Bari"</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DateTime</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">21</span><span class="p">)}</span>
+            <span class="p">};</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Un semplice <code class="highlighter-rouge">for</code> ci permette di ciclare sugli eventi per creare le nostre righe. La lista degli eventi è una proprietà di tipo <code class="highlighter-rouge">List&lt;ElementoListaEventi&gt;</code>(per il momento riempita degli elementi fake), dove <code class="highlighter-rouge">ElementoListaEventi</code> è una classe C# creata in una cartella <code class="highlighter-rouge">Models</code> nella root del progetto:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">event_manager_server.Models</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">ElementoListaEventi</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Localita</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Si tratta di una classe con le sole proprietà che voglio mostrare nella griglia, quindi pensata ad uso e consumo di questo caso d’uso. Solitamente queste classi vengono dette ViewModel, perchè rappresentano la parte di modello dati ad uso e consumo di una particolare View.</p>
+
+<p>Per il componente, dietro le quinte sarà creata una classe in un namespace che rispecchia la cartella in cui si trova, dobbiamo quindi aggiungere una <code class="highlighter-rouge">using</code> del namespace <code class="highlighter-rouge">&lt;nomeprogetto&gt;.Components</code> ogni volta che vogliamo usare il componente. In alternativa possiamo aggiungere la using nel file <code class="highlighter-rouge">_Imports.razor</code>, facendo lo stesso anche per il namespace <code class="highlighter-rouge">Models</code> della classe creata:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@using</span> <span class="n">System</span><span class="p">.</span><span class="n">Net</span><span class="p">.</span><span class="n">Http</span>
+<span class="n">@using</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">AspNetCore</span><span class="p">.</span><span class="n">Authorization</span>
+<span class="n">@using</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">AspNetCore</span><span class="p">.</span><span class="n">Components</span><span class="p">.</span><span class="n">Authorization</span>
+<span class="n">@using</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">AspNetCore</span><span class="p">.</span><span class="n">Components</span><span class="p">.</span><span class="n">Forms</span>
+<span class="n">@using</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">AspNetCore</span><span class="p">.</span><span class="n">Components</span><span class="p">.</span><span class="n">Routing</span>
+<span class="n">@using</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">AspNetCore</span><span class="p">.</span><span class="n">Components</span><span class="p">.</span><span class="n">Web</span>
+<span class="n">@using</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">JSInterop</span>
+<span class="n">@using</span> <span class="n">event_manager_server</span>
+<span class="n">@using</span> <span class="n">event_manager_server</span><span class="p">.</span><span class="n">Shared</span>
+
+<span class="n">@using</span> <span class="n">event_manager_server</span><span class="p">.</span><span class="n">Models</span>
+<span class="n">@using</span> <span class="n">event_manager_server</span><span class="p">.</span><span class="n">Components</span></code></pre></figure>
+
+<p>A questo punto posso richiamare il componente da qualsiasi punto dell’applicazione mediante il selettore <code class="highlighter-rouge">&lt;ListaEventi /&gt;</code>, facciamolo ad esempio dalla pagina <code class="highlighter-rouge">Index.razor</code>:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/"
+<span class="nt">&lt;h1&gt;</span>Event Manager<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Benvenuti nella Single Page Application scritta in Blazor per la gestione degli eventi.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Selezionare dal menu laterale l'opzione desiderata.<span class="nt">&lt;/p&gt;</span>
+
+<span class="nt">&lt;ListaEventi</span> <span class="nt">/&gt;</span></code></pre></figure>
+
+<p>Ecco il risultato:</p>
+
+<p><img src="/assets/articoli/spa-componenti/componente-blazor.png" alt="Componente Blazor" title="Componente Blazor" /></p>
+
+<p>Abbiamo creato e utilizzato il nostro primo <strong><em>Blazor Component</em></strong>! Trovate il codice aggiornato <a href="https://github.com/blazordevita/BlazorSPA">qui</a>, nella branch 02-componenti.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>Per oggi ci fermiamo qui, nel prossimo articolo vedremo come parametrizzare il componente che abbiamo realizzato per renderlo più generico e riutilizzabile, in modo da poterlo poi usare in contesti differenti.</p>
+
+  </div><a class="u-url" href="/blazor/spa/2020/02/21/spa-componenti.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
