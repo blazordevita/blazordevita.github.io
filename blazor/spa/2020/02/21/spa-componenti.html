@@ -34,7 +34,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-21T00:00:00+01:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/spa/2020/02/21/spa-componenti.html"},"url":"/blazor/spa/2020/02/21/spa-componenti.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Creare una SPA: componenti","dateModified":"2020-02-21T00:00:00+01:00","datePublished":"2020-02-21T00:00:00+01:00","image":"/assets/articoli/spa-componenti/spa-componenti.png","description":"Probabilmente il concetto più importante dei moderni framework di front-end è quello di componente, che nonostante la sua semplicità è spesso causa di fraintendimenti sugli scopi e gli utilizzi. Cerchiamo di capire in questo articolo di cosa si tratta e come definire componenti in Blazor.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/spa/2020/02/21/spa-componenti.html"},"author":{"@type":"Person","name":"Michele Aponte"},"url":"/blazor/spa/2020/02/21/spa-componenti.html","headline":"Creare una SPA: componenti","dateModified":"2020-02-21T00:00:00+01:00","datePublished":"2020-02-21T00:00:00+01:00","image":"/assets/articoli/spa-componenti/spa-componenti.png","description":"Probabilmente il concetto più importante dei moderni framework di front-end è quello di componente, che nonostante la sua semplicità è spesso causa di fraintendimenti sugli scopi e gli utilizzi. Cerchiamo di capire in questo articolo di cosa si tratta e come definire componenti in Blazor.","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -99,7 +99,7 @@
 
 <p>Nel mondo front-end questa cosa è particolarmente vera, ma rassegniamoci al fatto di avere continuamente framework nuovi, scriviamo il nostro codice perchè sia facile migrarlo, e decidiamo se per i nostri requisiti, funzionali e non, ha ancora senso restare su quella tecnologia.</p>
 
-<p>In .NET Core è particolarmente semplice creare quello che in Ingegneria del Softwatare viene detto <strong>basso accoppiamento</strong>, perchè abbiamo un motore di Dependency Injection già integrato ed estendibile: applichiamo il principio di separazione delle responsabiità, creiamo il giusto numero di classi e layer per gestire la complessità della nostra applicazione e iniettiamo le dipendenze senza creare accoppiamento. Se non avete mai sentito parlare di Dependency Injection, Inversion of Controls e gestione delle dipendenze, date un occhio <strong><a href="https://docs.microsoft.com/it-it/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1">qui</a></strong>. In ogni caso vedremo degli esempi pratici costruendo la nostra applicazione.</p>
+<p>In .NET Core è particolarmente semplice creare quello che in Ingegneria del Software viene detto <strong>basso accoppiamento</strong>, perchè abbiamo un motore di Dependency Injection già integrato ed estendibile: applichiamo il principio di separazione delle responsabiità, creiamo il giusto numero di classi e layer per gestire la complessità della nostra applicazione e iniettiamo le dipendenze senza creare accoppiamento. Se non avete mai sentito parlare di Dependency Injection, Inversion of Controls e gestione delle dipendenze, date un occhio <strong><a href="https://docs.microsoft.com/it-it/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1">qui</a></strong>. In ogni caso vedremo degli esempi pratici costruendo la nostra applicazione.</p>
 
 <h3 id="il-nostro-albero-di-componenti">Il nostro albero di componenti</h3>
 
@@ -107,7 +107,7 @@
 
 <p><img src="/assets/articoli/spa-componenti/albero-elementi-html.png" alt="Albero di elementi HTML" title="Albero di elementi HTML" /></p>
 
-<p>Di solito si parla di legami di parentela tra i componenti: il componente contenitore è il padre, i componenti contenuti i figli. Questo significa che un componente può contentere altri componenti, ma non ci possono essere <strong>cicli</strong>: non posso cioè contenere un componente che è mio parente nella ramificazione.</p>
+<p>Di solito si parla di legami di parentela tra i componenti: il componente contenitore è il padre, i componenti contenuti i figli. Questo significa che un componente può contenere altri componenti, ma non ci possono essere <strong>cicli</strong>: non posso cioè contenere un componente che è mio parente nella ramificazione.</p>
 
 <p>Se già lavorate nel mondo WEB è lo stesso concetto su cui è basato HTML, se avete lavorato con WPF o similari, è lo stesso concetto su cui è basato XAML. In realtà è lo stesso concetto che lega tutti i linguaggi di markup, che derivando dal metalinguaggio XML, ne ereditano le regole.</p>
 
@@ -117,11 +117,11 @@
 
 <p>Non c’è una regola generale, perchè dipende molto dai requisiti dell’applicazione, e con l’esperienza diventeremo sempre più bravi a trovare il giusto equilibrio nel dimensionare i componenti. Ci sono però un po’ di indicatori che possono aiutarci a capire se stiamo andando nella giusta direzione.</p>
 
-<p>Se il vostro componente svolge più di una funzione, ha cioè più di una responsabilità, è potenzialmente un componente troppo grande. Quindi un indicatore può essere proprio il principio di singola responsabilità. Se avete un componente in cui ad esempio gestite una griglia e una form di dettaglio, potenzialmente potreste dividerlo in 3 componenti: la griglia, il dettaglio e il componenbte che li contiene e li mette in comunicazione.</p>
+<p>Se il vostro componente svolge più di una funzione, ha cioè più di una responsabilità, è potenzialmente un componente troppo grande. Quindi un indicatore può essere proprio il principio di singola responsabilità. Se avete un componente in cui ad esempio gestite una griglia e una form di dettaglio, potenzialmente potreste dividerlo in 3 componenti: la griglia, il dettaglio e il componente che li contiene e li mette in comunicazione.</p>
 
 <p>Un indicatore più preciso è invece la caratteristica di riutilizzabilità di un componente: se dobbiamo usare quel pezzo di interfaccia in più punti della nostra applicazione, allora è sicuramente un componente indipendente.</p>
 
-<p>Un altro indicatore è l’assenza di logica applicativa, quei componenti che cioè hanno solo il markup: è uno spreco di risorse, specie se siete nel browser, perchè tecnicamente stiamo creando un oggetto per ogni componente, che occupa memoria ed entra a far parte degli elementi che il framework tiene sotto controllo per reagire quando interagite con essi. Per la stessa ragione è potenzialmente dannoso fare componmenti piccolissimi, come una etichetta o un pulsante.</p>
+<p>Un altro indicatore è l’assenza di logica applicativa, quei componenti che cioè hanno solo il markup: è uno spreco di risorse, specie se siete nel browser, perchè tecnicamente stiamo creando un oggetto per ogni componente, che occupa memoria ed entra a far parte degli elementi che il framework tiene sotto controllo per reagire quando interagite con essi. Per la stessa ragione è potenzialmente dannoso fare componenti piccolissimi, come una etichetta o un pulsante.</p>
 
 <p>Una buona strategia, in caso non si sia sicuri di come dimensionare un componente, è quella di partire dal crearne uno e poi rifattorizzarlo in più componenti man mano che cresce.</p>
 
