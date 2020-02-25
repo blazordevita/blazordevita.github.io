@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Creare una SPA: componenti riutilizzabili | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Creare una SPA: componenti riutilizzabili" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Nel precedente articolo abbiamo parlato di componenti e di come andrebbero progettati, passando poi alla pratica e a come realizzare un primo componente in Blazor. Abbiamo sottolineato come uno dei fattori di successo nella realizzazione di un componente sia la sua riusabilità, ma questo argomento richiede un approfondimento perchè impatta notevolmente su come realizziamo il nostro progetto." />
+<meta property="og:description" content="Nel precedente articolo abbiamo parlato di componenti e di come andrebbero progettati, passando poi alla pratica e a come realizzare un primo componente in Blazor. Abbiamo sottolineato come uno dei fattori di successo nella realizzazione di un componente sia la sua riusabilità, ma questo argomento richiede un approfondimento perchè impatta notevolmente su come realizziamo il nostro progetto." />
+<link rel="canonical" href="http://localhost:4000/blazor/spa/2020/02/25/spa-componenti-riutilizzabili.html" />
+<meta property="og:url" content="http://localhost:4000/blazor/spa/2020/02/25/spa-componenti-riutilizzabili.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="http://localhost:4000/assets/articoli/spa-componenti-riutilizzabili/spa-componenti-riutilizzabili.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-25T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blazor/spa/2020/02/25/spa-componenti-riutilizzabili.html"},"url":"http://localhost:4000/blazor/spa/2020/02/25/spa-componenti-riutilizzabili.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Creare una SPA: componenti riutilizzabili","dateModified":"2020-02-25T00:00:00+01:00","datePublished":"2020-02-25T00:00:00+01:00","image":"http://localhost:4000/assets/articoli/spa-componenti-riutilizzabili/spa-componenti-riutilizzabili.png","description":"Nel precedente articolo abbiamo parlato di componenti e di come andrebbero progettati, passando poi alla pratica e a come realizzare un primo componente in Blazor. Abbiamo sottolineato come uno dei fattori di successo nella realizzazione di un componente sia la sua riusabilità, ma questo argomento richiede un approfondimento perchè impatta notevolmente su come realizziamo il nostro progetto.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+  </head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Rendiamo riutilizzabili i nostri componenti</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Creare una SPA: componenti riutilizzabili</h1>
+    <h4>Data pubblicazione: 25-02-2020 - Autore: Michele Aponte</h4>
+  </header><figure>
+      <img src="/assets/articoli/spa-componenti-riutilizzabili/spa-componenti-riutilizzabili.png" alt="Creare una SPA: componenti riutilizzabili" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Nel precedente articolo abbiamo parlato di componenti e di come andrebbero progettati, passando poi alla pratica e a come realizzare un primo componente in Blazor. Abbiamo sottolineato come uno dei fattori di successo nella realizzazione di un componente sia la sua riusabilità, ma questo argomento richiede un approfondimento perchè impatta notevolmente su come realizziamo il nostro progetto.</p>
+
+<h2 id="fateli-ma-non-accoppiateli">Fateli, ma non accoppiateli</h2>
+
+<p>Il basso accoppiamento tra i componenti è l’ingrediente fondamentale per la riusabilità in contesti differenti, che vanno dalla stessa applicazione ma casi d’uso differenti, fino alla creazione di librerie di componenti riutilizzabili in diverse applicazioni. Per fare in modo che questo sia possibile è necessario che un componente sia parametrizzabile, infatti se possiamo personalizzarlo per contesti differenti, potremo riutilizzarlo dove vogliamo. A breve vedremo come questo sia possibile in Blazor, ma è necessario sottolineare che la parametrizzazione non garantisce necessariamente il disaccoppiamento tra due componenti, che potrebbero usare i parametri per <em>passarsi</em> un riferimento alla propria istanza.</p>
+
+<p>Se due componenti si trovano in relazioni padre-figlio, il padre potrebbe passare al figlio, come parametro, l’oggetto <code class="highlighter-rouge">this</code>, un riferimento a se stesso. In questo modo il figlio ha visibilità su tutti gli elementi pubblici della classe del padre, e potrebbe invocare metodi o impostare valori alle proprietà esposte. Perchè dovremmo fare un cosa del genere? Perchè i componenti a un certo punto avranno bisogno di comunicare tra loro e la facilità con cui questa tecnica risolve il problema potrebbe rendere la tentazione molto forte. In questo modo però l’unico modo di riutilizzare il componente figlio e portarsi dietro anche il padre.</p>
+
+<p>Come risolviamo allora il problema? Basta progettare i nostri componenti per essere trattati come delle <strong>Black Box</strong> che prendono <strong>in Input i dati</strong> con cui devono lavorare e forniscano <strong>in Output eventi</strong> a cui sottoscriversi per poter <strong>reagire</strong> all’interazione dell’utente. In questo modo è il componente stesso a <strong>esporre il contratto</strong> di comunicazione, rendendosi autonomo dal suo utilizzatore. Vediamo come questo può essere fatto in Blazor.</p>
+
+<h2 id="parametrizzazione-dati-in-ingresso-eventi-in-uscita">Parametrizzazione: dati in ingresso, eventi in uscita</h2>
+
+<p>In un componente Blazor i parametri sono delle proprietà pubbliche decorate con l’attributo <code class="highlighter-rouge">[Parameter]</code>, senza differenza tra parametri di input e parametri di output in termini dichiarativi (come ad esempio in Angular con i decoratori @Input() e Output()): la differenza la fa il tipo della proprietà che andiamo a definire.</p>
+
+<p>Partiamo dall’esempio dell’ultima volta, la nostra lista di eventi. Per come è definito questo componente visualizzerà sempre la stessa lista di elementi, quindi se abbiamo bisogno di visualizzare esattamente quella lista, possiamo utilizzare il selettore <ListaEventi></ListaEventi> in tutti i punti dell’applicazione in cui ci serve. Se invece vogliamo poter cambiare la lista degli elementi visualizzati possiamo rendere la proprietà <code class="highlighter-rouge">ListaElementi</code> un parametro, e magari rendere personalizzabile anche il titolo ma fornire un valore di default:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h2&gt;</span>@Titolo<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Id<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Nome<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Località<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Data<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    @foreach(var evento in ListaElementi)
+    {
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Id<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Nome<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Localita<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Data<span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    }
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Titolo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">"Lista Eventi"</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaElementi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>A questo punto potremmo, ad esempio, mostrare gli eventi passati e gli eventi futuri in due liste differenti, utilizzando le proprietà definite come attributi del selettore del componente:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/"
+<span class="nt">&lt;h1&gt;</span>Event Manager<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Benvenuti nella Single Page Application scritta in Blazor per la gestione degli eventi.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Selezionare dal menu laterale l'opzione desiderata.<span class="nt">&lt;/p&gt;</span>
+
+<span class="nt">&lt;ListaEventi</span> <span class="na">ListaElementi=</span><span class="s">"ListaEventi"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;ListaEventi</span> <span class="na">Titolo=</span><span class="s">"Eventi Passati"</span> <span class="na">ListaElementi=</span><span class="s">"ListaEventiPassati"</span> <span class="nt">/&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaEventiPassati</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> 
+        <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span>
+            <span class="p">{</span>
+                <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">Nome</span><span class="p">=</span><span class="s">"DevDay Benevento - Blazor"</span><span class="p">,</span> <span class="n">Localita</span><span class="p">=</span><span class="s">"Benvento"</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DateTime</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span><span class="m">8</span><span class="p">)},</span>
+                <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">Nome</span><span class="p">=</span><span class="s">"DotNetSide Bari - Blazor"</span><span class="p">,</span> <span class="n">Localita</span><span class="p">=</span><span class="s">"Bari"</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DateTime</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">21</span><span class="p">)}</span>
+            <span class="p">};</span>
+
+    <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaEventi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> 
+        <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span>
+            <span class="p">{</span>
+                <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">Nome</span><span class="p">=</span><span class="s">"Mercoledi del Palazzo - Blazor"</span><span class="p">,</span> <span class="n">Localita</span><span class="p">=</span><span class="s">"Salerno"</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DateTime</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">11</span><span class="p">)},</span>
+                <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">Nome</span><span class="p">=</span><span class="s">"Visual Studio Tour - Blazor"</span><span class="p">,</span> <span class="n">Localita</span><span class="p">=</span><span class="s">"Cagliari"</span><span class="p">,</span> <span class="n">Data</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DateTime</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">21</span><span class="p">)}</span>
+            <span class="p">};</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Ecco il risultato:</p>
+
+<p><img src="/assets/articoli/spa-componenti-riutilizzabili/lista-eventi-parametrizzata.png" alt="Lista Eventi Parametrizzata" title="Lista Eventi Parametrizzata" /></p>
+
+<p>Supponiamo adesso di volere aggiungere, per ogni riga, un pulsante per eliminare l’evento corrispondente. Aggiungiamo l’HTML necessario e andiamo a eseguire il <strong><em>binding</em></strong> dell’evento click sul pulsante con un metodo <code class="highlighter-rouge">EliminaElemento()</code>, che semplicemente rimuove l’elemento dalla lista:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h2&gt;</span>@Titolo<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span> ... <span class="nt">&lt;/tr&gt;</span>
+    @foreach(var evento in ListaElementi)
+    {
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Id<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Nome<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Localita<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Data<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;th&gt;&lt;button</span> <span class="na">class=</span><span class="s">"btn btn-danger"</span> <span class="err">@</span><span class="na">onclick=</span><span class="s">"e =&gt; EliminaElemento(evento)"</span><span class="nt">&gt;</span>Elimina<span class="nt">&lt;/button&gt;&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    }
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Titolo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">"Lista Eventi"</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaElementi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">EliminaElemento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">ListaElementi</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="n">evento</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Niente di complesso, la direttiva <code class="highlighter-rouge">@onclick</code> ci permette di andare a catturare il click del mouse e di invocare un metodo, che in questo caso è una <strong>lambda expression</strong>, perchè abbiamo bisogno di passare un parametro. L’evento di click ci fornisce un oggetto <code class="highlighter-rouge">MouseEventArgs</code> (<code class="highlighter-rouge">e =&gt;</code>) con le informazioni sull’evento scatenante l’azione, in questo caso non lo utilizziamo ma potrebbe tornare utile in scenari differenti (volendo possiamo sostiture <code class="highlighter-rouge">e =&gt;</code> con <code class="highlighter-rouge">() =&gt;</code>). Eseguendo il codice vedremo funzionare il nostro pulsante:</p>
+
+<p><img src="/assets/articoli/spa-componenti-riutilizzabili/binding-evento-pulsante.gif" alt="Binding Evento Pulsante" title="Binding Evento Pulsante" /></p>
+
+<p>Ma c’è qualcosa che non va, non dal punto di vista funzionale, ma dal punto di vista progettuale. Sto facendo accesso diretto alla lista che mi è stata passata per eseguire l’eliminazione, lista di cui, come componente, non so nulla. Sto eseguendo una operazione predefinita, senza dare la possibilità all’utilizzatore del componente di poter intervenire e magari chiedere all’utente se è sicuro di voler continuare con l’operazione, oppure fare una chiamata al back-end invece di eliminare localmente l’elemento.</p>
+
+<p>Il problema qui è che mi sto sostituendo al mio utilizzatore, quando invece potrei semplicemente fargli sapere che l’utente ha cliccato sul pulsante elimina, in modo da lasciarli la possibilità di intervenire come meglio crede. Posso ottenere questo risultato creando un altro parametro del componente, utilizzando il tipo <code class="highlighter-rouge">EventCallback&lt;T&gt;</code>, una struttura offerta dal framework che permette al componene di sollevare un evento e al suo utilizzatore (il componente padre) di sottoscriversi al verificarsi dello stesso:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h2&gt;</span>@Titolo<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span> ... <span class="nt">&lt;/tr&gt;</span>
+    @foreach(var evento in ListaElementi)
+    {
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Id<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Nome<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Localita<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>@evento.Data<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;th&gt;</span>
+            <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"btn btn-danger"</span> 
+                <span class="err">@</span><span class="na">onclick=</span><span class="s">"e =&gt; OnElimina.InvokeAsync(evento)"</span><span class="nt">&gt;</span>
+                Elimina
+            <span class="nt">&lt;/button&gt;</span>
+        <span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    }
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+
+    <span class="p">...</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">EventCallback</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">OnElimina</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>E’ consuetudine utilizzare la nomenclatura <code class="highlighter-rouge">On&lt;nome evento&gt;</code> per definire gli eventi del componente, nel nostro caso <code class="highlighter-rouge">OnElimina</code>. Il tipo <code class="highlighter-rouge">EventCallback&lt;T&gt;</code> ci espone il metodo <code class="highlighter-rouge">InvokeAsync(T)</code> grazie al quale al click del pulsante possiamo sollevare l’evento definito, in questo modo tutti i sottoscrittori saranno invocati:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/"
+
+<span class="nt">&lt;h1&gt;</span>Event Manager<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Benvenuti nella Single Page Application scritta in Blazor per la gestione degli eventi.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;</span>Selezionare dal menu laterale l'opzione desiderata.<span class="nt">&lt;/p&gt;</span>
+
+<span class="nt">&lt;ListaEventi</span> <span class="na">ListaElementi=</span><span class="s">"ListaEventi"</span> 
+    <span class="na">OnElimina=</span><span class="s">"EliminaEvento"</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;ListaEventi</span> <span class="na">Titolo=</span><span class="s">"Eventi Passati"</span> <span class="na">ListaElementi=</span><span class="s">"ListaEventiPassati"</span> 
+    <span class="na">OnElimina=</span><span class="s">"EliminaEventoPassato"</span> <span class="nt">/&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+
+    <span class="p">...</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">EliminaEvento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">ListaEventi</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="n">evento</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">EliminaEventoPassato</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">ListaEventiPassati</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="n">evento</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Eseguendo il codice vedremo che il risultato non cambia, ma dal punto di vista della parametrizzazione il nostro componente ListaEventi è sempre più vicino a un generico elemento lista che possiamo riutilizzare in più contesti. Il codice descritto è disponibile <a href="https://github.com/blazordevita/BlazorSPA">qui</a>, nella branch 03-componenti-riutilizzabili.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>Per oggi ci fermiamo qui, abbiamo messo un po’ di carne sul fuoco ma c’è ancora tanto da scoprire sugli strumenti messi a disposizione da Blazor per generalizzare i componenti e renderli sempre più riutilizzabili. Non preoccupatevi, ne parleremo, ma per il momento procediamo con gli strumenti base per la nostra Single Page Application e in particolare nel prossimo articolo vedremo come gestire la navigazione delle pagine pur utilizzando una <em>Single Page</em>.</p>
+
+  </div><a class="u-url" href="/blazor/spa/2020/02/25/spa-componenti-riutilizzabili.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
