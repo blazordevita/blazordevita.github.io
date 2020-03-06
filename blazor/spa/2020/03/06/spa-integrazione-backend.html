@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Creare una SPA: integrazione back-end con Blazor Server | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Creare una SPA: integrazione back-end con Blazor Server" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Per ultimare la nostra prima CRUD ci siamo concentrati sul front-end, utilizzando dei dati in memoria per verificare il corretto funzionamento delle operazioni. In un’applicazione reale i dati sono gestiti dal back-end, che può ad esempio leggerli e scriverli su un database. Vediamo come sia semplice in Blazor integrare un back-end .NET, sia nel caso di Blazor Server che con Blazor WebAssembly." />
+<meta property="og:description" content="Per ultimare la nostra prima CRUD ci siamo concentrati sul front-end, utilizzando dei dati in memoria per verificare il corretto funzionamento delle operazioni. In un’applicazione reale i dati sono gestiti dal back-end, che può ad esempio leggerli e scriverli su un database. Vediamo come sia semplice in Blazor integrare un back-end .NET, sia nel caso di Blazor Server che con Blazor WebAssembly." />
+<link rel="canonical" href="/blazor/spa/2020/03/06/spa-integrazione-backend.html" />
+<meta property="og:url" content="/blazor/spa/2020/03/06/spa-integrazione-backend.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/spa-integrazione-backend/spa-integrazione-backend.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-06T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/spa/2020/03/06/spa-integrazione-backend.html"},"author":{"@type":"Person","name":"Michele Aponte"},"url":"/blazor/spa/2020/03/06/spa-integrazione-backend.html","headline":"Creare una SPA: integrazione back-end con Blazor Server","dateModified":"2020-03-06T00:00:00+01:00","datePublished":"2020-03-06T00:00:00+01:00","image":"/assets/articoli/spa-integrazione-backend/spa-integrazione-backend.png","description":"Per ultimare la nostra prima CRUD ci siamo concentrati sul front-end, utilizzando dei dati in memoria per verificare il corretto funzionamento delle operazioni. In un’applicazione reale i dati sono gestiti dal back-end, che può ad esempio leggerli e scriverli su un database. Vediamo come sia semplice in Blazor integrare un back-end .NET, sia nel caso di Blazor Server che con Blazor WebAssembly.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Integriamo front-end e back-end</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Creare una SPA: integrazione back-end con Blazor Server</h1>
+    <h4>Data pubblicazione: 06-03-2020 - Autore: Michele Aponte</h4>
+  </header><figure>
+      <img src="/assets/articoli/spa-integrazione-backend/spa-integrazione-backend.png" alt="Creare una SPA: integrazione back-end con Blazor Server" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Per ultimare la nostra prima CRUD ci siamo concentrati sul front-end, utilizzando dei dati in memoria per verificare il corretto funzionamento delle operazioni. In un’applicazione reale i dati sono gestiti dal back-end, che può ad esempio leggerli e scriverli su un database. Vediamo come sia semplice in Blazor integrare un back-end .NET, sia nel caso di Blazor Server che con Blazor WebAssembly.</p>
+
+<h2 id="blazor-server-vs-blazor-webassembly-vs-javascript">Blazor Server vs Blazor WebAssembly vs JavaScript</h2>
+
+<p>L’integrazione con il back-end è uno dei fattori discriminanti tra le due versioni di Blazor, dato che nella versione server ci troviamo già sul back-end, o quanto meno in un ambiente relativamente sicuro dove abbiamo accesso diretto a risorse che sul front-end non abbiamo. In Blazor WebAssembly invece ci troviamo sul client dell’utente, nel browser in particolare, con la limitazione di non poter accedere ne alla macchina dell’utente, ne direttamente alle risorse server.</p>
+
+<p>Se decidiamo ad esempio di utilizzar <em>Entity Framework</em> per l’accesso ai dati, in Blazor Server potremmo iniettare il <em>DbContext</em> direttamente nella pagina e utilizzarlo senza limitazioni. Nel caso invece di Blazor WebAssembly, restando sempre nel mondo .NET, avremmo bisogno di un Controller ASP.NET Core, che ci esponga delle API REST da poter invocare dal browser, proprio come faremmo con qualsiasi framework di front-end. A quel punto nel controller possiamo utilizzare il DbContext per implementare le operazioni sui dati.</p>
+
+<p>Rispetto però a framework come Angular, Blazor, grazie a .NET Core, ci da notevoli vantaggi. Possiamo ad esempio condividere con il back-end, utilizzando una DLL .NET Standard 2.1, gli oggetti di scambio che sono parte del contratto di comunicazione. Questo significa che se uno di questi oggetti cambia, sia il back-end che il front-end sono allineati, e il compilatore può indicarci gli errori dovuti al cambiamento. Quante volte ci sarà capitato di aggiungere o togliere una proprietà o modificarne il nome: adesso possiamo non riporare le modifiche su entrambi i lati.</p>
+
+<p>Inoltre, come abbiamo visto nell’articolo prededente, la validazione in Blazor è basata su Data Annotations, che è lo stesso meccanismo su cui è basata la validazione per ASP.NET Core. Questo significa che con un solo oggetto riusciamo ad implementare gratis la validazione sia lato client che lato server e lasciare che siano i due framework a farla per noi.</p>
+
+<p>Ultima, ma non per importanza, è la disponibilità di un HTTPClient già pronto che si occuperà in automatico della serializzazione da e verso JSON, esponendoci i metodi asincroni per tutti i verbi HTTP, che possiamo utilizzare con la consuenta notazione <code class="highlighter-rouge">async</code>/<code class="highlighter-rouge">await</code>.</p>
+
+<h2 id="aggiungiamo-la-persistenza-dei-dati-a-blazor-server">Aggiungiamo la persistenza dei dati a Blazor Server</h2>
+
+<p>Per ottimizzare il lavoro che faremo sulle due versioni di Blazor, andiamo ad aggiungere al nostro progetto una libreria che si occuperà della persistenza dei dati, alla quale aggiungeremo un <em>DbContext</em> EntityFramework e una classe che rappresenterà l’entità da persistere sul database. Dal nostro terminale possiamo utilizzare i seguenti comandi:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">dotnet new classlib <span class="nt">-o</span> event-manager-data
+dotnet sln add event-manager-data/event-manager-data.csproj 
+<span class="nb">cd </span>event-manager-data
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package System.ComponentModel.Annotations</code></pre></figure>
+
+<p>In alternativa possiamo usare il wizard di Visual Studio per aggiungere un progetto libreria di classi alla solution, e da NuGet aggiungere EntityFramework core e la librerie delle DataAnnotations. Eliminiamo il file <code class="highlighter-rouge">Class1.cs</code> creato dal template e creiamo invece una classe <code class="highlighter-rouge">DatiEvento</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">DatiEvento</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">50</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Localita</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Descrizione</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Note</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In questo caso semplice la classe è identica alla classe Evento già realizzata precedentemente, in casi reali molto probabilmente le due entità avranno proprietà differenti, che non riguardano il front-end o un particolare caso d’uso. Possiamo adesso creare il nostro <em>EventManagerDbContext</em> a cui aggiungiamo il <em>DbSet</em> degli eventi:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">EventManagerDbContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">DatiEvento</span><span class="p">&gt;</span> <span class="n">Eventi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    
+    <span class="k">public</span> <span class="nf">EventManagerDbContext</span><span class="p">(</span><span class="n">DbContextOptions</span> <span class="n">options</span><span class="p">)</span>
+        <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Aggiungiamo al progetto Blazor Server la libreria appena creata e la dipendenza da EntityFramework Core e SqlLite:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> ../event-manager-server/
+dotnet add reference ../event-manager-data/event-manager-data.csproj 
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite</code></pre></figure>
+
+<p>Aggiungiamo la configurazione di EntityFramework alla class <strong>Startup</strong>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">services</span><span class="p">.</span><span class="nf">AddRazorPages</span><span class="p">();</span>
+    <span class="n">services</span><span class="p">.</span><span class="nf">AddServerSideBlazor</span><span class="p">();</span>
+    
+    <span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="p">&lt;</span><span class="n">EventManagerDbContext</span><span class="p">&gt;(</span>
+        <span class="n">opt</span> <span class="p">=&gt;</span> <span class="n">opt</span><span class="p">.</span><span class="nf">UseSqlite</span><span class="p">(</span><span class="s">"DataSource=eventmanager.db"</span><span class="p">));</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>A questo punto non ci resta che creare la migration e applicarla al nostro database, per la quale ci serve il pacchetto 
+<em>Microsoft.EntityFrameworkCore.Design</em>:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet ef migrations add DatiEvento <span class="nt">--project</span> ../event-manager-data
+dotnet ef database update</code></pre></figure>
+
+<p>L’approccio migliore adesso sarebbe quello di creare una classe di servizio che ci nasconda le chiamate a Entity Framework, ma affronteremo nel dettaglio la dependency injection e le best practices in un prossimo articolo. In questo caso, ai fini del funzionamento, iniettiamo direttamente il DbContext nella pagina e utilizziamolo per la gestione dei dati. Per comodità aggiungiamo al file <code class="highlighter-rouge">_Imports.razor</code> la libreria dati che abbiamo creato (<code class="highlighter-rouge">@using event_manager_data</code>), mentre nella pagina <code class="highlighter-rouge">Eventi.razor</code>, iniettiamo il DbContext:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@page</span> <span class="s">"/eventi"</span>
+<span class="n">@inject</span> <span class="n">EventManagerDbContext</span> <span class="n">context</span><span class="p">;</span></code></pre></figure>
+
+<p>I dati finti non ci servono più, andiamo invece a crearci un metodo CaricaEventi(), che richiamiamo appena la pagina è stata inizializzata, utilizzando l’override del metodo OnInitialized():</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnInitialized</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nf">CaricaEventi</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">private</span> <span class="k">void</span> <span class="nf">CaricaEventi</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">ListaEventi</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">Eventi</span>
+        <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Id</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Nome</span><span class="p">,</span>
+            <span class="n">Localita</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Localita</span><span class="p">,</span>
+            <span class="n">Data</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Data</span>
+        <span class="p">}).</span><span class="nf">ToList</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>A questo punto non ci resta che reimplementare i metodi della pagina usando Linq per interrogare i dati:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="nf">ModificaEvento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">Eventi</span>
+        <span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">evento</span><span class="p">.</span><span class="n">Id</span><span class="p">)</span>
+        <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">Evento</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Id</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Nome</span><span class="p">,</span>
+            <span class="n">Localita</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Localita</span><span class="p">,</span>
+            <span class="n">Data</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Data</span><span class="p">,</span>
+            <span class="n">Descrizione</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Descrizione</span><span class="p">,</span>
+            <span class="n">Note</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Note</span>
+        <span class="p">}).</span><span class="nf">SingleOrDefault</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">void</span> <span class="nf">SalvaEvento</span><span class="p">(</span><span class="n">Evento</span> <span class="n">evento</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">evento</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">Eventi</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">DatiEvento</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Nome</span><span class="p">,</span>
+            <span class="n">Localita</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Localita</span><span class="p">,</span>
+            <span class="n">Data</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Data</span><span class="p">,</span>
+            <span class="n">Descrizione</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Descrizione</span><span class="p">,</span>
+            <span class="n">Note</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Note</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">eventoDaModificare</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">Eventi</span><span class="p">.</span><span class="nf">Single</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">evento</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+        <span class="n">eventoDaModificare</span><span class="p">.</span><span class="n">Nome</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Nome</span><span class="p">;</span>
+        <span class="n">eventoDaModificare</span><span class="p">.</span><span class="n">Localita</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Localita</span><span class="p">;</span>
+        <span class="n">eventoDaModificare</span><span class="p">.</span><span class="n">Data</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Data</span><span class="p">;</span>
+        <span class="n">eventoDaModificare</span><span class="p">.</span><span class="n">Descrizione</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Descrizione</span><span class="p">;</span>
+        <span class="n">eventoDaModificare</span><span class="p">.</span><span class="n">Note</span> <span class="p">=</span> <span class="n">evento</span><span class="p">.</span><span class="n">Note</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nf">CaricaEventi</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">void</span> <span class="nf">AnnullaOperazione</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">void</span> <span class="nf">EliminaEvento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">eventoDaEliminare</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">Eventi</span><span class="p">.</span><span class="nf">Single</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">evento</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">Eventi</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="n">eventoDaEliminare</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nf">CaricaEventi</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Ed ecco il nostro risultato:</p>
+
+<p><img src="/assets/articoli/spa-integrazione-backend/blazor-server-persistenza-dati.gif" alt="Blazor Server integrazione persistenza dati" title="Blazor Server integrazione persistenza dati" /></p>
+
+<p>Potete consultare il codice sorgente<a href="https://github.com/blazordevita/BlazorSPA">qui</a>, nella branch 06-integrazione-backend.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>Per oggi ci fermiamo qui. Abbiamo visto come con Blazor Server l’integrazione della persistenza dei dati sia veramente semplice, dato che ci troviamo già sul back-end e possiamo invocare direttamente Entity Framework. Nel prossimo articolo vedremo come aggiungere la stessa funzionalità alla versione WebAssembly, andando a creare una apposita API e utilizzando il client HTTP messo a disposizione dal framework.</p>
+
+  </div><a class="u-url" href="/blazor/spa/2020/03/06/spa-integrazione-backend.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
