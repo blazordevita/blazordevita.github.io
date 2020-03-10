@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Creare una SPA: integrazione back-end con Blazor WASM | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Creare una SPA: integrazione back-end con Blazor WASM" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework." />
+<meta property="og:description" content="Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework." />
+<link rel="canonical" href="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html" />
+<meta property="og:url" content="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/spa-integrazione-backend-wasm/spa-integrazione-backend-wasm.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-10T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html"},"url":"/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Creare una SPA: integrazione back-end con Blazor WASM","dateModified":"2020-03-10T00:00:00+01:00","datePublished":"2020-03-10T00:00:00+01:00","image":"/assets/articoli/spa-integrazione-backend-wasm/spa-integrazione-backend-wasm.png","description":"Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Integriamo il front-end WASM con il back-end</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Creare una SPA: integrazione back-end con Blazor WASM</h1>
+    <h4>Data pubblicazione: 10-03-2020 - Autore: Michele Aponte</h4>
+  </header><figure>
+      <img src="/assets/articoli/spa-integrazione-backend-wasm/spa-integrazione-backend-wasm.png" alt="Creare una SPA: integrazione back-end con Blazor WASM" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework.</p>
+
+<h2 id="aggiungiamo-il-backend-per-blazor-webassembly">Aggiungiamo il backend per Blazor WebAssembly</h2>
+
+<p>A differenza di Blazor Server, quando usiamo WebAssembly ci troviamo nel browser, quindi non possiamo accedere direttamente al database. Possiamo però creare facilmente un API REST per esporre le operazioni CRUD degli eventi, utilizzando un controller MVC.</p>
+
+<p>Andiamo quindi a crearci un nuovo progetto WebAPI, a cui colleghiamo il progetto <code class="highlighter-rouge">event-manager-data</code> creato nell’articolo precedente:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">dotnet new webapi <span class="nt">-o</span> event-manager-backend
+<span class="nb">cd </span>event-manager-backend
+dotnet add reference ../event-manager-data/event-manager-data.csproj 
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+<span class="nb">cd</span> ..
+dotnet sln add event-manager-backend/event-manager-backend.csproj 
+<span class="nb">cd </span>event-manager-data</code></pre></figure>
+
+<p>Nel file <code class="highlighter-rouge">Startup.cs</code> andiamo ad aggiungere la configurazione per l’utilizzo di EntityFramework con SqlLite, come già fatto per Blazor Server:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">services</span><span class="p">.</span><span class="nf">AddControllers</span><span class="p">();</span>
+
+    <span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="p">&lt;</span><span class="n">EventManagerDbContext</span><span class="p">&gt;(</span>
+        <span class="n">opt</span> <span class="p">=&gt;</span> <span class="n">opt</span><span class="p">.</span><span class="nf">UseSqlite</span><span class="p">(</span><span class="s">"DataSource=eventmanager.db"</span><span class="p">));</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Non ci resta che applicare la migrazione che abbiamo creato la volta scorsa per generare il database SqlLite con la tabella Eventi:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">dotnet ef database update</code></pre></figure>
+
+<p>Passiamo al controller, eliminando dalla cartella <code class="highlighter-rouge">Controllers</code> il file <code class="highlighter-rouge">WeatherForecastController.cs</code>, che contiene il controller di esempio creato dal template WebAPI, e creare una nuova classe <code class="highlighter-rouge">EventiController</code> in cui andiamo a iniettare il nostro <code class="highlighter-rouge">EventManagerDbContext</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">using</span> <span class="nn">event_manager_data</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">event_manager_backend.Controllers</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">ApiController</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">Route</span><span class="p">(</span><span class="s">"api/[controller]"</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">EventiController</span> <span class="p">:</span> <span class="n">ControllerBase</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">EventManagerDbContext</span> <span class="n">db</span><span class="p">;</span>
+    
+        <span class="k">public</span> <span class="nf">EventiController</span><span class="p">(</span><span class="n">EventManagerDbContext</span> <span class="n">db</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">db</span> <span class="p">=</span> <span class="n">db</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Non ci resta che aggiungere le classiche operazioni CRUD per l’entità Eventi, creando le action corrispondenti ai verbi HTTP GET, POST, PUT e DELETE. Partiamo dalle due GET per il recupero della lista e del dettaglio di un evento:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="n">HttpGet</span><span class="p">]</span>
+<span class="k">public</span> <span class="n">IActionResult</span> <span class="nf">Get</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">db</span><span class="p">.</span><span class="n">Eventi</span><span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">ElementoListaEventi</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span>
+        <span class="n">Nome</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Nome</span><span class="p">,</span>
+        <span class="n">Localita</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Localita</span><span class="p">,</span>
+        <span class="n">Data</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Data</span>
+    <span class="p">}).</span><span class="nf">ToList</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="p">[</span><span class="nf">HttpGet</span><span class="p">(</span><span class="s">"{id}"</span><span class="p">)]</span>
+<span class="k">public</span> <span class="n">IActionResult</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="k">this</span><span class="p">.</span><span class="n">db</span><span class="p">.</span><span class="n">Eventi</span>
+        <span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">Evento</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Id</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Nome</span><span class="p">,</span>
+            <span class="n">Localita</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Localita</span><span class="p">,</span>
+            <span class="n">Data</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Data</span><span class="p">,</span>
+            <span class="n">Descrizione</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Descrizione</span><span class="p">,</span>
+            <span class="n">Note</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">Note</span>
+        <span class="p">}).</span><span class="nf">SingleOrDefault</span><span class="p">();</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">result</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Come possiamo vedere dal codice, stiamo utilizzando le classi <code class="highlighter-rouge">ElementoListaEventi</code> e <code class="highlighter-rouge">Evento</code> per proiettare con <em>LINQ</em> le informazioni della tabella che ci servono per il front-end. La buona notizia è che, a differenza dei framework JavaScript, qui le classi di scambio sono scritte in .NET e questo ci permette di creare una libreria condivisa per tali oggetti in modo da non doverli duplicare e soprattuto tenere allineati da entrambi i lati quando ci sono dei cambiamenti.</p>
+
+<p>Creiamoci una libreria .NET standard 2.1 condivisa che andremo a chiamare <code class="highlighter-rouge">event-manager-shared</code>, aggiungendo la libreria per le Data Annotations utilizzata dalle classi condivise per la validazione:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">dotnet new classlib <span class="nt">-o</span> event-manager-shared
+dotnet sln add event-manager-shared/event-manager-shared.csproj 
+<span class="nb">cd </span>event-manager-shared
+dotnet add package System.ComponentModel.Annotations</code></pre></figure>
+
+<p>Eliminiamo il file <code class="highlighter-rouge">Class1.cs</code> creato dal template e spostiamo la cartella <code class="highlighter-rouge">Models</code> dal progetto <code class="highlighter-rouge">event-manager-wasm</code> alla nostra libreria condivisa, aggiornando i namespace delle due classi. A questo punto non dobbiamo fare altro che aggiungere questa libreria sia al progetto back-end che al progetto front-end WebAssembly, andando fisicamente a condividere gli oggetti di scambio:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd </span>event-manager-wasm
+dotnet add reference ../event-manager-shared/event-manager-shared.csproj 
+<span class="nb">cd</span> ../event-manager-backend
+dotnet add reference ../event-manager-shared/event-manager-shared.csproj </code></pre></figure>
+
+<p>Aggiorniamo le using di front-end e back-end per farle corrispondere al namespace <code class="highlighter-rouge">event_manager_shared.Models</code> e testiamo il back-end con il classico <code class="highlighter-rouge">dotnet run</code>:</p>
+
+<p><img src="/assets/articoli/spa-integrazione-backend-wasm/webapi-backend-funzionante.png" alt="WebAPI back-end funzionante" title="WebAPI back-end funzionante" /></p>
+
+<p>Per facilitare la fase di sviluppo andiamo a modificare la porta su cui viene lanciato il progetto back-end, utilizzando ad esempio la 5002. Possiamo modificare questa impostazione dal file <code class="highlighter-rouge">launchSettings.json</code>, presente nella cartella <code class="highlighter-rouge">Properties</code>:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="nl">"event_manager_backend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"commandName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Project"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"launchBrowser"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"applicationUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:5002"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"environmentVariables"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"ASPNETCORE_ENVIRONMENT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Development"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Andiamo inoltre ad abilitare le chiamate CORS e a disabilitare HTTPS nella configurazione di sviluppo, in questo modo possiamo testare in tutta tranquillità le chiamate al back-end. Nel file <code class="highlighter-rouge">Startup.cs</code>, modifichiamo il  metodo <code class="highlighter-rouge">Configure</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="nf">Configure</span><span class="p">(</span><span class="n">IApplicationBuilder</span> <span class="n">app</span><span class="p">,</span> <span class="n">IWebHostEnvironment</span> <span class="n">env</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="nf">IsDevelopment</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">app</span><span class="p">.</span><span class="nf">UseDeveloperExceptionPage</span><span class="p">();</span>
+        <span class="n">app</span><span class="p">.</span><span class="nf">UseCors</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="nf">AllowAnyHeader</span><span class="p">().</span><span class="nf">AllowAnyMethod</span><span class="p">().</span><span class="nf">AllowAnyOrigin</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">app</span><span class="p">.</span><span class="nf">UseHttpsRedirection</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="blazor-webassembly-e-httpclient">Blazor WebAssembly e HTTPClient</h2>
+
+<p>Una volta creata l’API, invocarla da Blazor WebAssembly è molto semplice, dato che il framework ha già configurato per noi la dependency injection dell’oggetto <code class="highlighter-rouge">HttpClient</code> che mette a disposizione per le chiamate HTTP. Non ci resta che iniettarlo nella pagina eventi:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@inject HttpClient Http;
+@page "/eventi"
+
+@if(EventoCorrente == null)
+{
+    <span class="nt">&lt;ListaEventi</span> 
+        <span class="na">ListaElementi=</span><span class="s">"ListaEventi"</span> <span class="na">OnElimina=</span><span class="s">"EliminaEvento"</span>
+        <span class="na">OnCrea=</span><span class="s">"CreaEvento"</span> <span class="na">OnModifica=</span><span class="s">"ModificaEvento"</span> <span class="nt">/&gt;</span>
+}
+else
+{
+    <span class="nt">&lt;DettaglioEvento</span> 
+        <span class="na">DettaglioElemento=</span><span class="s">"EventoCorrente"</span>
+        <span class="na">OnSalva=</span><span class="s">"SalvaEvento"</span> <span class="na">OnAnnulla=</span><span class="s">"AnnullaOperazione"</span> <span class="nt">/&gt;</span>
+}</code></pre></figure>
+
+<p>Creiamoci un metodo privato <code class="highlighter-rouge">caricaEventi()</code>, che utilizzeremo per ricaricare la lista degli eventi dopo ogni modifica e dopo l’inizializzazione della pagina:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">apiUrl</span> <span class="p">=</span> <span class="s">@"http://localhost:5002/api/eventi"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">Evento</span> <span class="n">EventoCorrente</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaEventi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> 
+        <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;();</span>
+    
+    <span class="k">protected</span> <span class="k">override</span> <span class="n">Task</span> <span class="nf">OnInitializedAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">caricaEventi</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">caricaEventi</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">ListaEventi</span> <span class="p">=</span> <span class="k">await</span> <span class="n">Http</span>
+            <span class="p">.</span><span class="n">GetJsonAsync</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;&gt;(</span><span class="n">apiUrl</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>L’oggetto HttpClient ci mette a disposizione tutti i metodi asincroni per l’invocazione del back-end, fornendo in maniera integrata anche la serializzazione/deserializzazione JSON. Dato che i metodi sono asincroni, possiamo utilizzare i costrutti <code class="highlighter-rouge">async/await</code> per fare le chiamate, utilizzando <code class="highlighter-rouge">OnInitializedAsync</code> per caricare la lista dopo l’inizializzazione della pagina.</p>
+
+<p>Le restanti modifiche diventano a questo punto banali, sostituendo le elaborazioni in memoria con le corrispondenti chiamate HTTP:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="nf">CreaEvento</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Evento</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">ModificaEvento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">await</span> <span class="n">Http</span>
+        <span class="p">.</span><span class="n">GetJsonAsync</span><span class="p">&lt;</span><span class="n">Evento</span><span class="p">&gt;(</span><span class="s">$"</span><span class="p">{</span><span class="n">apiUrl</span><span class="p">}</span><span class="s">/</span><span class="p">{</span><span class="n">evento</span><span class="p">.</span><span class="n">Id</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">SalvaEvento</span><span class="p">(</span><span class="n">Evento</span> <span class="n">evento</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">evento</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">await</span> <span class="n">Http</span><span class="p">.</span><span class="n">PostJsonAsync</span><span class="p">&lt;</span><span class="n">Evento</span><span class="p">&gt;(</span><span class="n">apiUrl</span><span class="p">,</span> <span class="n">evento</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="k">await</span> <span class="n">Http</span><span class="p">.</span><span class="nf">PutJsonAsync</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">apiUrl</span><span class="p">}</span><span class="s">/</span><span class="p">{</span><span class="n">evento</span><span class="p">.</span><span class="n">Id</span><span class="p">}</span><span class="s">"</span><span class="p">,</span> <span class="n">evento</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">await</span> <span class="nf">caricaEventi</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">void</span> <span class="nf">AnnullaOperazione</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="n">EventoCorrente</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">EliminaEvento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">await</span> <span class="n">Http</span><span class="p">.</span><span class="nf">DeleteAsync</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">apiUrl</span><span class="p">}</span><span class="s">/</span><span class="p">{</span><span class="n">evento</span><span class="p">.</span><span class="n">Id</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">await</span> <span class="nf">caricaEventi</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Avviamo il progetto back-end e quello front-end e ammiriamo il risultato del nostro lavoro:</p>
+
+<p><img src="/assets/articoli/spa-integrazione-backend-wasm/blazor-wasm-crud.png" alt="Blazor WebAssembly CRUD" title="Blazor WebAssembly CRUD" /></p>
+
+<p>Potete consultare il codice sorgente <a href="https://github.com/blazordevita/BlazorSPA">qui</a>, nella branch 07-integrazione-backend-wasm.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>Con questo articolo abbiamo ultimato la nostra serie su come creare da zero una Single Page Application basilare, con una semplice CRUD, sia con Blazor Server che con Blazor WebAssembly. Nei prossimi articoli cominceremo a esplorare le funzionalità un po’ più avanzate di Blazor, a partire dall’interoperabilità con JavaScript per coprire tutti gli scenari legacy che ci possono capitare.</p>
+
+  </div><a class="u-url" href="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

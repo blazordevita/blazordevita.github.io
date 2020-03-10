@@ -1,4 +1,226 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="it"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" hreflang="it" /><updated>2020-03-09T07:37:32+01:00</updated><id>/feed.xml</id><title type="html">Blazor Developer Italiani</title><subtitle>La prima community italiana dedicata allo sviluppo di applicazioni con Blazor, il framework Microsoft per la realizzazione di Single Page Application con .NET Core, SignalR, WebAssembly e Razor</subtitle><entry><title type="html">Creare una SPA: integrazione back-end con Blazor Server</title><link href="/blazor/spa/2020/03/06/spa-integrazione-backend.html" rel="alternate" type="text/html" title="Creare una SPA: integrazione back-end con Blazor Server" /><published>2020-03-06T00:00:00+01:00</published><updated>2020-03-06T00:00:00+01:00</updated><id>/blazor/spa/2020/03/06/spa-integrazione-backend</id><content type="html" xml:base="/blazor/spa/2020/03/06/spa-integrazione-backend.html">&lt;p&gt;Per ultimare la nostra prima CRUD ci siamo concentrati sul front-end, utilizzando dei dati in memoria per verificare il corretto funzionamento delle operazioni. In un’applicazione reale i dati sono gestiti dal back-end, che può ad esempio leggerli e scriverli su un database. Vediamo come sia semplice in Blazor integrare un back-end .NET, sia nel caso di Blazor Server che con Blazor WebAssembly.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="it"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" hreflang="it" /><updated>2020-03-10T08:58:06+01:00</updated><id>/feed.xml</id><title type="html">Blazor Developer Italiani</title><subtitle>La prima community italiana dedicata allo sviluppo di applicazioni con Blazor, il framework Microsoft per la realizzazione di Single Page Application con .NET Core, SignalR, WebAssembly e Razor</subtitle><entry><title type="html">Creare una SPA: integrazione back-end con Blazor WASM</title><link href="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html" rel="alternate" type="text/html" title="Creare una SPA: integrazione back-end con Blazor WASM" /><published>2020-03-10T00:00:00+01:00</published><updated>2020-03-10T00:00:00+01:00</updated><id>/blazor/spa/2020/03/10/spa-integrazione-backend-wasm</id><content type="html" xml:base="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html">&lt;p&gt;Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework.&lt;/p&gt;
+
+&lt;h2 id=&quot;aggiungiamo-il-backend-per-blazor-webassembly&quot;&gt;Aggiungiamo il backend per Blazor WebAssembly&lt;/h2&gt;
+
+&lt;p&gt;A differenza di Blazor Server, quando usiamo WebAssembly ci troviamo nel browser, quindi non possiamo accedere direttamente al database. Possiamo però creare facilmente un API REST per esporre le operazioni CRUD degli eventi, utilizzando un controller MVC.&lt;/p&gt;
+
+&lt;p&gt;Andiamo quindi a crearci un nuovo progetto WebAPI, a cui colleghiamo il progetto &lt;code class=&quot;highlighter-rouge&quot;&gt;event-manager-data&lt;/code&gt; creato nell’articolo precedente:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;dotnet new webapi &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; event-manager-backend
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;event-manager-backend
+dotnet add reference ../event-manager-data/event-manager-data.csproj 
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ..
+dotnet sln add event-manager-backend/event-manager-backend.csproj 
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;event-manager-data&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Nel file &lt;code class=&quot;highlighter-rouge&quot;&gt;Startup.cs&lt;/code&gt; andiamo ad aggiungere la configurazione per l’utilizzo di EntityFramework con SqlLite, come già fatto per Blazor Server:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ConfigureServices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IServiceCollection&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AddControllers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AddDbContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventManagerDbContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UseSqlite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;DataSource=eventmanager.db&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Non ci resta che applicare la migrazione che abbiamo creato la volta scorsa per generare il database SqlLite con la tabella Eventi:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;dotnet ef database update&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Passiamo al controller, eliminando dalla cartella &lt;code class=&quot;highlighter-rouge&quot;&gt;Controllers&lt;/code&gt; il file &lt;code class=&quot;highlighter-rouge&quot;&gt;WeatherForecastController.cs&lt;/code&gt;, che contiene il controller di esempio creato dal template WebAPI, e creare una nuova classe &lt;code class=&quot;highlighter-rouge&quot;&gt;EventiController&lt;/code&gt; in cui andiamo a iniettare il nostro &lt;code class=&quot;highlighter-rouge&quot;&gt;EventManagerDbContext&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;event_manager_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Microsoft.AspNetCore.Mvc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;event_manager_backend.Controllers&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ApiController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;api/[controller]&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;EventiController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ControllerBase&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;readonly&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventManagerDbContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;EventiController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventManagerDbContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Non ci resta che aggiungere le classiche operazioni CRUD per l’entità Eventi, creando le action corrispondenti ai verbi HTTP GET, POST, PUT e DELETE. Partiamo dalle due GET per il recupero della lista e del dettaglio di un evento:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpGet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IActionResult&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Eventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ElementoListaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Nome&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Nome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Localita&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Localita&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ToList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;HttpGet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{id}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IActionResult&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Eventi&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Nome&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Nome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Localita&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Localita&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Descrizione&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Descrizione&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Note&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Note&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SingleOrDefault&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NotFound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Come possiamo vedere dal codice, stiamo utilizzando le classi &lt;code class=&quot;highlighter-rouge&quot;&gt;ElementoListaEventi&lt;/code&gt; e &lt;code class=&quot;highlighter-rouge&quot;&gt;Evento&lt;/code&gt; per proiettare con &lt;em&gt;LINQ&lt;/em&gt; le informazioni della tabella che ci servono per il front-end. La buona notizia è che, a differenza dei framework JavaScript, qui le classi di scambio sono scritte in .NET e questo ci permette di creare una libreria condivisa per tali oggetti in modo da non doverli duplicare e soprattuto tenere allineati da entrambi i lati quando ci sono dei cambiamenti.&lt;/p&gt;
+
+&lt;p&gt;Creiamoci una libreria .NET standard 2.1 condivisa che andremo a chiamare &lt;code class=&quot;highlighter-rouge&quot;&gt;event-manager-shared&lt;/code&gt;, aggiungendo la libreria per le Data Annotations utilizzata dalle classi condivise per la validazione:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;dotnet new classlib &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; event-manager-shared
+dotnet sln add event-manager-shared/event-manager-shared.csproj 
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;event-manager-shared
+dotnet add package System.ComponentModel.Annotations&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Eliminiamo il file &lt;code class=&quot;highlighter-rouge&quot;&gt;Class1.cs&lt;/code&gt; creato dal template e spostiamo la cartella &lt;code class=&quot;highlighter-rouge&quot;&gt;Models&lt;/code&gt; dal progetto &lt;code class=&quot;highlighter-rouge&quot;&gt;event-manager-wasm&lt;/code&gt; alla nostra libreria condivisa, aggiornando i namespace delle due classi. A questo punto non dobbiamo fare altro che aggiungere questa libreria sia al progetto back-end che al progetto front-end WebAssembly, andando fisicamente a condividere gli oggetti di scambio:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;event-manager-wasm
+dotnet add reference ../event-manager-shared/event-manager-shared.csproj 
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../event-manager-backend
+dotnet add reference ../event-manager-shared/event-manager-shared.csproj &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Aggiorniamo le using di front-end e back-end per farle corrispondere al namespace &lt;code class=&quot;highlighter-rouge&quot;&gt;event_manager_shared.Models&lt;/code&gt; e testiamo il back-end con il classico &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet run&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/articoli/spa-integrazione-backend-wasm/webapi-backend-funzionante.png&quot; alt=&quot;WebAPI back-end funzionante&quot; title=&quot;WebAPI back-end funzionante&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Per facilitare la fase di sviluppo andiamo a modificare la porta su cui viene lanciato il progetto back-end, utilizzando ad esempio la 5002. Possiamo modificare questa impostazione dal file &lt;code class=&quot;highlighter-rouge&quot;&gt;launchSettings.json&lt;/code&gt;, presente nella cartella &lt;code class=&quot;highlighter-rouge&quot;&gt;Properties&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;nl&quot;&gt;&quot;event_manager_backend&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;commandName&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Project&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;launchBrowser&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;applicationUrl&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;http://localhost:5002&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;environmentVariables&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;ASPNETCORE_ENVIRONMENT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Development&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Andiamo inoltre ad abilitare le chiamate CORS e a disabilitare HTTPS nella configurazione di sviluppo, in questo modo possiamo testare in tutta tranquillità le chiamate al back-end. Nel file &lt;code class=&quot;highlighter-rouge&quot;&gt;Startup.cs&lt;/code&gt;, modifichiamo il  metodo &lt;code class=&quot;highlighter-rouge&quot;&gt;Configure&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Configure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IApplicationBuilder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IWebHostEnvironment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;IsDevelopment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UseDeveloperExceptionPage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UseCors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AllowAnyHeader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AllowAnyMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AllowAnyOrigin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;UseHttpsRedirection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;blazor-webassembly-e-httpclient&quot;&gt;Blazor WebAssembly e HTTPClient&lt;/h2&gt;
+
+&lt;p&gt;Una volta creata l’API, invocarla da Blazor WebAssembly è molto semplice, dato che il framework ha già configurato per noi la dependency injection dell’oggetto &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpClient&lt;/code&gt; che mette a disposizione per le chiamate HTTP. Non ci resta che iniettarlo nella pagina eventi:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;@inject HttpClient Http;
+@page &quot;/eventi&quot;
+
+@if(EventoCorrente == null)
+{
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ListaEventi&lt;/span&gt; 
+        &lt;span class=&quot;na&quot;&gt;ListaElementi=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ListaEventi&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;OnElimina=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;EliminaEvento&quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;OnCrea=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;CreaEvento&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;OnModifica=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ModificaEvento&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+}
+else
+{
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;DettaglioEvento&lt;/span&gt; 
+        &lt;span class=&quot;na&quot;&gt;DettaglioElemento=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;EventoCorrente&quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;OnSalva=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;SalvaEvento&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;OnAnnulla=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AnnullaOperazione&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Creiamoci un metodo privato &lt;code class=&quot;highlighter-rouge&quot;&gt;caricaEventi()&lt;/code&gt;, che utilizzeremo per ricaricare la lista degli eventi dopo ogni modifica e dopo l’inizializzazione della pagina:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;n&quot;&gt;@code&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apiUrl&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@&quot;http://localhost:5002/api/eventi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Evento&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventoCorrente&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListaEventi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
+        &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;OnInitializedAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;caricaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;caricaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;ListaEventi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Http&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetJsonAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apiUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;L’oggetto HttpClient ci mette a disposizione tutti i metodi asincroni per l’invocazione del back-end, fornendo in maniera integrata anche la serializzazione/deserializzazione JSON. Dato che i metodi sono asincroni, possiamo utilizzare i costrutti &lt;code class=&quot;highlighter-rouge&quot;&gt;async/await&lt;/code&gt; per fare le chiamate, utilizzando &lt;code class=&quot;highlighter-rouge&quot;&gt;OnInitializedAsync&lt;/code&gt; per caricare la lista dopo l’inizializzazione della pagina.&lt;/p&gt;
+
+&lt;p&gt;Le restanti modifiche diventano a questo punto banali, sostituendo le elaborazioni in memoria con le corrispondenti chiamate HTTP:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;CreaEvento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventoCorrente&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ModificaEvento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventoCorrente&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Http&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetJsonAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apiUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;SalvaEvento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Evento&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PostJsonAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apiUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;PutJsonAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apiUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;caricaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventoCorrente&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AnnullaOperazione&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventoCorrente&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;EliminaEvento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;DeleteAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;$&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apiUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;caricaEventi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Avviamo il progetto back-end e quello front-end e ammiriamo il risultato del nostro lavoro:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/articoli/spa-integrazione-backend-wasm/blazor-wasm-crud.png&quot; alt=&quot;Blazor WebAssembly CRUD&quot; title=&quot;Blazor WebAssembly CRUD&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Potete consultare il codice sorgente &lt;a href=&quot;https://github.com/blazordevita/BlazorSPA&quot;&gt;qui&lt;/a&gt;, nella branch 07-integrazione-backend-wasm.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusioni&quot;&gt;Conclusioni&lt;/h2&gt;
+
+&lt;p&gt;Con questo articolo abbiamo ultimato la nostra serie su come creare da zero una Single Page Application basilare, con una semplice CRUD, sia con Blazor Server che con Blazor WebAssembly. Nei prossimi articoli cominceremo a esplorare le funzionalità un po’ più avanzate di Blazor, a partire dall’interoperabilità con JavaScript per coprire tutti gli scenari legacy che ci possono capitare.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/spa-integrazione-backend-wasm/spa-integrazione-backend-wasm.png" /><media:content medium="image" url="/assets/articoli/spa-integrazione-backend-wasm/spa-integrazione-backend-wasm.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Creare una SPA: integrazione back-end con Blazor Server</title><link href="/blazor/spa/2020/03/06/spa-integrazione-backend.html" rel="alternate" type="text/html" title="Creare una SPA: integrazione back-end con Blazor Server" /><published>2020-03-06T00:00:00+01:00</published><updated>2020-03-06T00:00:00+01:00</updated><id>/blazor/spa/2020/03/06/spa-integrazione-backend</id><content type="html" xml:base="/blazor/spa/2020/03/06/spa-integrazione-backend.html">&lt;p&gt;Per ultimare la nostra prima CRUD ci siamo concentrati sul front-end, utilizzando dei dati in memoria per verificare il corretto funzionamento delle operazioni. In un’applicazione reale i dati sono gestiti dal back-end, che può ad esempio leggerli e scriverli su un database. Vediamo come sia semplice in Blazor integrare un back-end .NET, sia nel caso di Blazor Server che con Blazor WebAssembly.&lt;/p&gt;
 
 &lt;h2 id=&quot;blazor-server-vs-blazor-webassembly-vs-javascript&quot;&gt;Blazor Server vs Blazor WebAssembly vs JavaScript&lt;/h2&gt;
 
@@ -1293,62 +1515,4 @@ else
 
 &lt;p&gt;Per oggi ci fermiamo qui, ma siamo riusciti ad analizzare il funzionamento di Blazor Server, ripercorrendo velocemente la storia che ha portato alla sua nascita e sottolineando come sia possibile riutilizzare tutte le conoscenze che abbiamo dello stack .NET Core per realizzare un front-end con la user experience di una Single Page Application.&lt;/p&gt;
 
-&lt;p&gt;La sfida tecnologica si gioca però sul tavolo &lt;strong&gt;WebAssembly&lt;/strong&gt;, e nel prossimo articolo vedremo come sia possibile far girare il .NET Core Framework direttamente nel browser, senza nessun plug-in aggiuntivo.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/blazorserver/blazorserver.png" /><media:content medium="image" url="/assets/articoli/blazorserver/blazorserver.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Che cos’è Blazor</title><link href="/blazor/intro/2020/02/02/che-cosa-e-blazor.html" rel="alternate" type="text/html" title="Che cos'è Blazor" /><published>2020-02-02T00:00:00+01:00</published><updated>2020-02-02T00:00:00+01:00</updated><id>/blazor/intro/2020/02/02/che-cosa-e-blazor</id><content type="html" xml:base="/blazor/intro/2020/02/02/che-cosa-e-blazor.html">&lt;p&gt;Cerchiamo di capire, in questo primo articolo, da dove è nata l’esigenza di un nuovo framework di front-end.&lt;/p&gt;
-
-&lt;h2 id=&quot;un-po-di-storia&quot;&gt;Un po’ di storia&lt;/h2&gt;
-
-&lt;p&gt;Con la (presunta) &lt;em&gt;morte del Desktop&lt;/em&gt; di qualche anno fa, molti hanno deciso di migrare le proprie applicazioni su tecnologie web, risolvendo il problema della compatibilità cross-platform e della distribuzione degli aggiornamenti dell’applicazione. Spostando però una parte dell’elaborazione dai client al server, sono nati tutta una serie di problemi tecnici, tra cui quello dell’&lt;strong&gt;esperienza utente&lt;/strong&gt;, della &lt;strong&gt;connettività&lt;/strong&gt; continua al server e del &lt;strong&gt;carico&lt;/strong&gt; da gestire.&lt;/p&gt;
-
-&lt;p&gt;Niente di insuperabile, ma il passaggio non è stato indolore, anzi, molti si sono resi conto che migrare la propria interfaccia da una tecnologia client, come ad esempio Windows Form, a una tecnologia web, come WebForms o MVC, è spesso un rifacimento totale della propria soluzione software.&lt;/p&gt;
-
-&lt;p&gt;Nella maggior parte dei casi i benefici superano gli svantaggi e comunque lo sviluppo software si evolve ad una velocità tale da non poter rimanere troppo indietro. In ogni caso, a un certo punto, è nata l’esigenza di avere una user experience più spinta, fortemente limitata dal &lt;em&gt;rendering server-side&lt;/em&gt; di ASP.NET. Ed è qui che è stata evidente l’esigenza di eseguire codice nel browser, utilizzando &lt;strong&gt;&lt;em&gt;JavaScript&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/checosaeblazor/javascript_nightmare.png&quot; alt=&quot;JavaScript Nightmare&quot; title=&quot;L'incubo JavaScript&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I programmatori .NET non amano JavaScript per motivi storici, ma con l’aiuto di &lt;strong&gt;jQuery&lt;/strong&gt; e di alcuni helper si è cominciato ad aggiungere funzionalità client alle applicazioni web. Tutto bene fino a quando non si è sentita l’esigenza di spostare sul client tutto il rendering dell’interfaccia, lasciando al server solo le API per il recupero e il salvataggio dei dati.&lt;/p&gt;
-
-&lt;p&gt;A quel punto la scelta di una libreria, o addirittura un framework completo è diventanto indispensabile per rendere sostenibile lo sviluppo, e soluzioni come &lt;strong&gt;Angular&lt;/strong&gt;, &lt;strong&gt;React&lt;/strong&gt; e &lt;strong&gt;Vue&lt;/strong&gt; hanno cominciato a diffondersi anche tra gli sviluppatori .NET. Angular, in particolare, si è affermato grazie all’utilizzo di &lt;strong&gt;Typescript&lt;/strong&gt; e a un approccio molto vicino ai framework Microsoft.&lt;/p&gt;
-
-&lt;p&gt;Con questi strumenti è possibile realizzare quella che viene chiamata una &lt;strong&gt;&lt;em&gt;Single Page Application&lt;/em&gt;&lt;/strong&gt;, cioè una singola pagina HTML all’interno della quale l’interfaccia viene creata dinamicamente e la navigazione tra le pagine dell’applicazione avviene senza spostarsi fisicamente.&lt;/p&gt;
-
-&lt;h2 id=&quot;perchè-blazor&quot;&gt;Perchè Blazor&lt;/h2&gt;
-
-&lt;p&gt;Dover imparare un linguaggio come JavaScript e un nuovo framework non è certo una passeggiata, anche se aiutati da TypeScript. Molti hanno preferito attendere per capire come si evolveva il mercato, altri per mancanza di tempo per affrontare il tutto.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/checosaeblazor/blazorserver_vs_blazorwebassembly.png&quot; alt=&quot;Blazor Server vs Blazor WebAssembly&quot; title=&quot;Blazor Server vs Blazor WebAssembly&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Blazor&lt;/strong&gt; si colloca proprio qui. Risolve esattamente questo problema. E’ possibile, grazie ad esso, riutilizzare le prorie conoscenze del .NET framework per realizzare una Single Page Application. Lo fa in diversi modi, sfruttando diverse tecnologie, e possiamo scegliere la modalità che meglio si adatta alle nostre esigenze.&lt;/p&gt;
-
-&lt;p&gt;Con il framework .NET Core 3.0 è stato rilasciato in RTM &lt;strong&gt;Blazor Server&lt;/strong&gt;, che sfrutta &lt;strong&gt;SignalR&lt;/strong&gt; per inviare al browser gli aggiornamenti da fare all’interfaccia, eseguendo comunque l’elaborazione lato server. Con il .NET Core 3.1 è stato rilasciato in preview &lt;strong&gt;Blazor WebAssembly&lt;/strong&gt;, che invece scarica nel browser l’applicazione che realizziamo e la esegue grazie allo standard &lt;strong&gt;WebAssembly&lt;/strong&gt;. Approfondiremo la differenza tra i due nel prossimo articolo, per il momento cerchiamo di capire perchè sta avendo tanto successo.&lt;/p&gt;
-
-&lt;h2 id=&quot;perchè-investire-su-blazor&quot;&gt;Perchè investire su Blazor&lt;/h2&gt;
-
-&lt;p&gt;Se conoscete ASP.NET Core e Razor, il passaggio a Blazor è davvero semplice: è questa la sua forza. Una volta capito (davvero) il concetto di componente, entrambe le versioni vi permettono di sfruttare tutto quello che già sapete e su cui avete investito. Inoltre c’è già un bel po’ di materiale e tanti componenti già pronti per pensare di sviluppare una vera applicazione da mettere in produzione.&lt;/p&gt;
-
-&lt;p&gt;Blazor non è nè &lt;em&gt;Silverlight&lt;/em&gt; nè &lt;em&gt;LightSwitch&lt;/em&gt;, Microsoft ci crede e ci sta investendo. La community di sviluppatori .NET è fortemente interessata e lo ha dimostrato fin dal primo momento. Non c’è nessun plug-in da installare, è tutto basato su standard web, ed è questo che vi garantisce che non farà la fine degli esperimenti del passato.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/checosaeblazor/blazor-roadmap.png&quot; alt=&quot;Blazor Roadmap&quot; title=&quot;Blazor Roadmap&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Microsoft ci crede così tanto che ha annunciato una roadmap da brividi per Blazor: non solo web, ma anche &lt;strong&gt;Mobile&lt;/strong&gt; e &lt;strong&gt;Desktop&lt;/strong&gt;. E’ possibile già provare qualcosa di sperimentale su Mobile, grazie ai &lt;strong&gt;Mobile Blazor Bindings&lt;/strong&gt; basati su Xamarin.Forms:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://devblogs.microsoft.com/aspnet/mobile-blazor-bindings-experiment/&quot;&gt;https://devblogs.microsoft.com/aspnet/mobile-blazor-bindings-experiment/&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;installazione&quot;&gt;Installazione&lt;/h2&gt;
-
-&lt;p&gt;Se avete Visual Studio 2019 (la versione community è scaricabile gratuitamente &lt;a href=&quot;https://visualstudio.microsoft.com/it/vs/community&quot;&gt;qui&lt;/a&gt;) e avete installato il supporto allo sviluppo ASP.NET e Web, avete già tutto quello che vi serve: create un nuovo progetto Blazor e lanciate l’applicazione per cominciare a prenderci confidenza.&lt;/p&gt;
-
-&lt;p&gt;Se siete appassionati di Visual Studio Code e della riga di comando, vi basta installare i template per blazor con il seguente comando:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;dotnet new &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; Microsoft.AspNetCore.Blazor.Templates::3.2.0-preview1.20073.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;In questo modo potete creare una applicazione Blazor Server con il comando&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;dotnet new blazorserver&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Oppure una applicazione Blazor WebAssembly con il comando:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;dotnet new blazorwasm&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;conclusioni&quot;&gt;Conclusioni&lt;/h2&gt;
-
-&lt;p&gt;In questo primo articolo abbiamo solo scaldato i motori, cercando di capire dove si colloca Blazor e perchè è la scelta da fare in questo momento per gli sviluppatori .NET. Nei prossimi articoli andremo a fondo nell’utilizzo del framework e cercheremo di toccare con mano la potenza di questo strumento.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Cerchiamo di capire, in questo primo articolo, da dove è nata l’esigenza di un nuovo framework di front-end.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/checosaeblazor/che_cosa_e_blazor.png" /><media:content medium="image" url="/assets/articoli/checosaeblazor/che_cosa_e_blazor.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;La sfida tecnologica si gioca però sul tavolo &lt;strong&gt;WebAssembly&lt;/strong&gt;, e nel prossimo articolo vedremo come sia possibile far girare il .NET Core Framework direttamente nel browser, senza nessun plug-in aggiuntivo.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/blazorserver/blazorserver.png" /><media:content medium="image" url="/assets/articoli/blazorserver/blazorserver.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
