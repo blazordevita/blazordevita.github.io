@@ -1,4 +1,171 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="it"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" hreflang="it" /><updated>2020-03-11T12:40:43+01:00</updated><id>/feed.xml</id><title type="html">Blazor Developer Italiani</title><subtitle>La prima community italiana dedicata allo sviluppo di applicazioni con Blazor, il framework Microsoft per la realizzazione di Single Page Application con .NET Core, SignalR, WebAssembly e Razor</subtitle><entry><title type="html">Creare una SPA: integrazione back-end con Blazor WASM</title><link href="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html" rel="alternate" type="text/html" title="Creare una SPA: integrazione back-end con Blazor WASM" /><published>2020-03-10T00:00:00+01:00</published><updated>2020-03-10T00:00:00+01:00</updated><id>/blazor/spa/2020/03/10/spa-integrazione-backend-wasm</id><content type="html" xml:base="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html">&lt;p&gt;Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="it"><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" hreflang="it" /><updated>2020-03-13T16:15:11+01:00</updated><id>/feed.xml</id><title type="html">Blazor Developer Italiani</title><subtitle>La prima community italiana dedicata allo sviluppo di applicazioni con Blazor, il framework Microsoft per la realizzazione di Single Page Application con .NET Core, SignalR, WebAssembly e Razor</subtitle><entry><title type="html">Interoperabilità con JavaScript</title><link href="/blazor/advanced/2020/03/13/interoperabilita-javascript.html" rel="alternate" type="text/html" title="Interoperabilità con JavaScript" /><published>2020-03-13T00:00:00+01:00</published><updated>2020-03-13T00:00:00+01:00</updated><id>/blazor/advanced/2020/03/13/interoperabilita-javascript</id><content type="html" xml:base="/blazor/advanced/2020/03/13/interoperabilita-javascript.html">&lt;p&gt;Cominciamo ad analizzare qualche aspetto più avanzato di Blazor, partendo da una delle funzionalità essenziali in questa fase di crescita del framework, in cui non abbiamo ancora tutto l’ecosistema di librerie già pronte per risolvere ogni problema di sviluppo front-end.&lt;/p&gt;
+
+&lt;h2 id=&quot;blazor-e-javascript&quot;&gt;Blazor e JavaScript&lt;/h2&gt;
+
+&lt;p&gt;L’utilizzo di Blazor in uno scenario reale, specie se decidiamo di usare Blazor WebAssembly, richiede necessariamente l’integrazione di JavaScript. La buona notizia è che lo standard WASM supporta l’interoperabilità già a livello di specifica e come già spiegato in un &lt;a href=&quot;/blazor/intro/2020/02/11/blazor-webassembly.html&quot;&gt;articolo precedente&lt;/a&gt;, l’esecuzione del codice WebAssembly si colloca nello stesso &lt;strong&gt;Runtime&lt;/strong&gt; in cui eseguiamo JavaScript e da cui possiamo accedere alle API del browser.&lt;/p&gt;
+
+&lt;p&gt;Questo rende la comunicazione tra i due molto più semplice, permettendo sia l’invocazione di funzioni WebAssembly da JavaScript, che viceversa. In Blazor questo significa poter fare lo stesso tra .NET e JavaScript, cosa molto utile per gestire tutti gli scenari &lt;strong&gt;&lt;em&gt;legacy&lt;/em&gt;&lt;/strong&gt;, cruciali nei casi reali.&lt;/p&gt;
+
+&lt;p&gt;Comunque l’interoperabilità tra Blazor e JavaScript funziona anche senza WebAssembly, quindi anche in Blazor Server, solo che in questo caso l’esecuzione del codice viene gestita attraverso SignalR.&lt;/p&gt;
+
+&lt;h2 id=&quot;net-chiama-javascript-risponde&quot;&gt;.NET chiama, JavaScript risponde&lt;/h2&gt;
+
+&lt;p&gt;Supponiamo di voler chiedere all’utente conferma dell’eliminazione di un elemento dalla lista degli eventi, senza utilizzare la bruttissima &lt;code class=&quot;highlighter-rouge&quot;&gt;confirm&lt;/code&gt; del browser, ma usando una modale di Bootstrap per dare all’applicazione un &lt;em&gt;look and feel&lt;/em&gt; coerente.&lt;/p&gt;
+
+&lt;p&gt;La parte CSS di Bootstrap fa già parte del template, ma per poter usare la modale abbiamo bisogno della parte JavaScript, che richiede l’utilizzo di JQuery e Popper. Scarichiamo i file necessari in locale (se preferite è possibile anche utilizzare le CDN) e aggiungiamo le referenze nel file &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; (oppure &lt;code class=&quot;highlighter-rouge&quot;&gt;_Host.cshtml&lt;/code&gt; nel caso di Blazor Server).&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    ...
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;js/jquery.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;js/popper.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;js/bootstrap.min.js&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;mostraConferma&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;nascondiConferma&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;hide&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Aggiungiamo anche un piccolo script in cui definiamo due funzioni, &lt;code class=&quot;highlighter-rouge&quot;&gt;mostraConferma&lt;/code&gt; e &lt;code class=&quot;highlighter-rouge&quot;&gt;nascondiConferma&lt;/code&gt;, che utilizzano l’API jQuery di Bootstrap per la visualizzazione di una modale. Selezioniamo la modale attraverso l’id, che prendiamo come parametro delle funzioni. Per poter rendere visibile queste due funzioni a .NET è necessario che vengano agganciate sull’oggetto &lt;code class=&quot;highlighter-rouge&quot;&gt;window&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Andiamoci adesso a creare un componente Blazor con il markup della modale di Bootstrap e un po’ di codice per rendere personalizzabili l’indentificativo, il titolo, il testo della domanda e l’azione da fare nel caso in cui l’utente selezioni il pulsante di conferma. Nella cartella &lt;code class=&quot;highlighter-rouge&quot;&gt;Shared&lt;/code&gt; del progetto creiamo un file &lt;code class=&quot;highlighter-rouge&quot;&gt;Conferma.razor&lt;/code&gt;, con il seguente codice:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;@IdConferma&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal-dialog&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal-content&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal-header&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;h4&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal-title&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@Titolo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h4&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;close&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-dismiss=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;&amp;amp;times;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal-body&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            @Messaggio
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal-footer&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-danger&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OnSi&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Si&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-default&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-dismiss=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;modal&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;No&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;n&quot;&gt;@code&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parameter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IdConferma&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parameter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Titolo&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parameter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Messaggio&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parameter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventCallback&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OnSi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;A questo punto possiamo utilizzare il componente appena creato in &lt;code class=&quot;highlighter-rouge&quot;&gt;ListaEventi.razor&lt;/code&gt;, fornendo i parametri per l’eliminazione di un evento:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;@Titolo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-primary mb-4&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OnCrea&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Crea Evento&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;table&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+   ...
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;Conferma&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;IdConferma=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;eliminaEvento&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;Titolo=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Elimina Evento&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;Messaggio=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;@(&quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Eliminare&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;evento&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;elementoDaEliminare&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Nome&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&quot;?&quot;)&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;OnSi=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ConfermaEliminazione&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;L’identificativo per la nostra modale sarà quindi &lt;code class=&quot;highlighter-rouge&quot;&gt;eliminaEvento&lt;/code&gt;, il titolo sarà “Elimina Evento”, mentre il messaggio sarà una domanda che conterrà il nome dell’elemento che l’utente ha scelto per l’eliminazione. Dobbiamo modificare leggermente il flusso con cui eseguiamo le operazioni nel componente, perchè quando l’utente selezionerà il pulsante Elimina non vogliamo più invocare l’evento &lt;code class=&quot;highlighter-rouge&quot;&gt;OnElimina&lt;/code&gt;, ma mostrare la modale di conferma. Per fare questo dobbiamo aggiungere al codice un metodo per mostrare la modale da invocare sull’evento &lt;code class=&quot;highlighter-rouge&quot;&gt;@onclick&lt;/code&gt; del pulsante Elimina, chiamiamolo &lt;code class=&quot;highlighter-rouge&quot;&gt;MostraConferma&lt;/code&gt;, a cui passeremo l’elemento selezionato per l’eliminazione, che salveremo in una proprietà privata:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;@Titolo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-primary mb-4&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OnCrea&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Crea Evento&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;table&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    ...
+    @foreach(var evento in ListaElementi)
+    {
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&lt;/span&gt;
+        ...
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;th&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-warning&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;e =&amp;gt; OnModifica.InvokeAsync(evento)&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Modifica&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-danger&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;e =&amp;gt; MostraConferma(evento)&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Elimina&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/th&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+    }
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
+
+...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;n&quot;&gt;@code&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elementoDaEliminare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MostraConferma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elemento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elementoDaEliminare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elemento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;   
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;E’ arrivato il momento di invocare le funzioni JavaScript che abbiamo definito all’inizio, ma per poterlo fare abbiamo bisogno di iniettare nella pagina l’interfaccia offerta dal framework per l’interoperabilità con JavaScript: &lt;code class=&quot;highlighter-rouge&quot;&gt;IJSRuntime&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;@inject IJSRuntime JSRuntime;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;@Titolo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn btn-primary mb-4&quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;OnCrea&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Crea Evento&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;table&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    ...
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
+...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Possiamo utilizzare l’extension method &lt;code class=&quot;highlighter-rouge&quot;&gt;InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, params object[] args)&lt;/code&gt; per invocare sia la funzione che mostra la modale che quella che la nasconde, perchè entrambe non restituiscono un valore:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;n&quot;&gt;@code&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elementoDaEliminare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MostraConferma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ElementoListaEventi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elemento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elementoDaEliminare&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elemento&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JSRuntime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;InvokeVoidAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;mostraConferma&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;eliminaEvento&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Task&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ConfermaEliminazione&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OnElimina&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;InvokeAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elementoDaEliminare&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JSRuntime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;InvokeVoidAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;nascondiConferma&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;eliminaEvento&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Nel caso in cui le funzioni JavaScript da richiamare restituiscano un valore, è possibile invece utilizzare l’extension method &lt;code class=&quot;highlighter-rouge&quot;&gt;InvokeAsync&amp;lt;TValue&amp;gt;(this IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object[] args)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Riassumendo, il flusso diventa:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;L’utente seleziona il pulsante Elimina&lt;/li&gt;
+  &lt;li&gt;Viene invocato il metodo &lt;code class=&quot;highlighter-rouge&quot;&gt;MostraConferma&lt;/code&gt;, passando l’elemento da eliminare&lt;/li&gt;
+  &lt;li&gt;Il metodo salva l’elemento da eliminare in una proprietà privata e mostra la modale&lt;/li&gt;
+  &lt;li&gt;L’utente seleziona il pulsante Sì della modale&lt;/li&gt;
+  &lt;li&gt;Viene invocato il metodo ConfermaEliminazione che solleva l’evento &lt;code class=&quot;highlighter-rouge&quot;&gt;OnElimina&lt;/code&gt; e chiude la modale&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Eccolo in azione:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/articoli/interoperabilita-javascript/conferma-modale-bootstrap.gif&quot; alt=&quot;Conferma Modale Bootstrap&quot; title=&quot;Conferma Modale Bootstrap&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Potete consultare il codice sorgente &lt;a href=&quot;https://github.com/blazordevita/BlazorSPA&quot;&gt;qui&lt;/a&gt;, nella branch 08-interoperabilita-javascript.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusioni&quot;&gt;Conclusioni&lt;/h2&gt;
+
+&lt;p&gt;Con questo articolo abbiamo cominciato l’esplorazione degli aspetti un po’ più avanzati di Blazor, quelli che poi nelle applicazioni reali possono fare la differenza in termini di funzionalità e manutenibilità. L’integrazione con JavaScript è fondamentale per l’utilizzo di librerie già pronte che possono renderci più produttivi, fornendoci uno strumento indispensabile in questa prima fase di vita del framework.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Cominciamo ad analizzare qualche aspetto più avanzato di Blazor, partendo da una delle funzionalità essenziali in questa fase di crescita del framework, in cui non abbiamo ancora tutto l’ecosistema di librerie già pronte per risolvere ogni problema di sviluppo front-end.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/interoperabilita-javascript/interoperabilita-javascript.png" /><media:content medium="image" url="/assets/articoli/interoperabilita-javascript/interoperabilita-javascript.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Creare una SPA: integrazione back-end con Blazor WASM</title><link href="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html" rel="alternate" type="text/html" title="Creare una SPA: integrazione back-end con Blazor WASM" /><published>2020-03-10T00:00:00+01:00</published><updated>2020-03-10T00:00:00+01:00</updated><id>/blazor/spa/2020/03/10/spa-integrazione-backend-wasm</id><content type="html" xml:base="/blazor/spa/2020/03/10/spa-integrazione-backend-wasm.html">&lt;p&gt;Dopo aver visto come sia semplice in Blazor Server integrare un back-end .NET, vediamo come possiamo fare lo stesso con Blazor WebAssembly, creando un API REST per la gestione dei nostri eventi e utilizzando il client HTTP che ci mette a disposizione il framework.&lt;/p&gt;
 
 &lt;h2 id=&quot;aggiungiamo-il-backend-per-blazor-webassembly&quot;&gt;Aggiungiamo il backend per Blazor WebAssembly&lt;/h2&gt;
 
@@ -1409,110 +1576,4 @@ else
 
 &lt;h2 id=&quot;conclusioni&quot;&gt;Conclusioni&lt;/h2&gt;
 
-&lt;p&gt;Per oggi ci fermiamo qui. In questo articolo abbiamo analizzato le peculiarità di Blazor WebAssembly, cercando di capire le principali differenze di funzionamento con Blazor Server. Nel prossimo articolo faremo un confronto tra i due, analizzando pro e contro di ogni versione e in quali contesti una delle due risponde meglio ai nostri requisiti.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview ma già sperimentabile in attesa del rilascio di Maggio 2020.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/blazorwebassembly/blazorwebassembly.png" /><media:content medium="image" url="/assets/articoli/blazorwebassembly/blazorwebassembly.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Da Web Forms a Blazor Server</title><link href="/blazor/intro/2020/02/07/da-web-forms-a-blazor-server.html" rel="alternate" type="text/html" title="Da Web Forms a Blazor Server" /><published>2020-02-07T00:00:00+01:00</published><updated>2020-02-07T00:00:00+01:00</updated><id>/blazor/intro/2020/02/07/da-web-forms-a-blazor-server</id><content type="html" xml:base="/blazor/intro/2020/02/07/da-web-forms-a-blazor-server.html">&lt;p&gt;Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione.&lt;/p&gt;
-
-&lt;h2 id=&quot;cera-una-volta-aspnet-web-forms&quot;&gt;C’era una volta ASP.NET Web Forms&lt;/h2&gt;
-
-&lt;p&gt;Ricordate come funzionava (e funziona ancora…) &lt;strong&gt;ASP.NET Web Forms&lt;/strong&gt;? Una pagina HTML, all’interno di una grande form, con un campo nascosto (il famoso &lt;strong&gt;ViewState&lt;/strong&gt;) contenente una stringa crittografata rappresentante lo stato della pagina, cioè il valore corrente di tutti i controlli server nella pagina. Questa form, mandata al server ogni volta che l’interazione dell’utente richiedesse un aggiornamento dell’interfaccia, scatenava l’esecuzione del motore di ASP.NET Web Forms, che aggiornava l’HTML e il valore del ViewState in base agli handler del code behind. Il nuovo HTML, comprensivo del nuovo ViewState, veniva rimandando indietro (processo chiamato &lt;strong&gt;Postback&lt;/strong&gt;) alla stessa pagina.&lt;/p&gt;
-
-&lt;p&gt;Alla fine dei conti, lo sviluppo web è basato su questo meccanismo: catturo l’interazione dell’utente, faccio una richiesta HTTP al server e ottengo una risposta HTTP che uso per aggiornare l’interfaccia. Web Forms cercava solo di automatizzare questo processo, per nascondere i dettagli di funzionamento del protocollo ai programmatori Microsoft che venivano dal mondo Desktop, che erano abituati a ragionare in termini di Form, controlli e Handler di eventi nel &lt;em&gt;code behind&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/blazorserver/bici.jpg&quot; alt=&quot;Da WebForms a MVC: togliere le rotelle alla bici&quot; title=&quot;Da WebForms a MVC: togliere le rotelle alla bici&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Questa astrazione portava con se però una grossa inefficenza in termini di scambio dati e di esperienza utente, visto che nella maggior parte dei casi viene spostata avanti e indietro tutta la pagina, con un refresh dell’interfaccia ad ogni interazione. La cosa fu mitigata con l’arrivo dell’ &lt;strong&gt;Update Panel&lt;/strong&gt;, che rendeva asincrono lo scambio utilizzando &lt;em&gt;AJAX&lt;/em&gt; in maniera trasparente al programmatore, risolvendo il problema del refresh.&lt;/p&gt;
-
-&lt;p&gt;Quando questa astrazione è diventata ingombrante e abbiamo accettato l’idea di doverci scrivere l’HTML (anzichè generarlo dai controlli server) e controllare l’interazione con il server, utilizzando JavaScript dove necessario, siamo passati a &lt;strong&gt;ASP.NET MVC&lt;/strong&gt;: è stato un po’ come togliere le rotelle alla bici, all’inizio ci siamo demoralizzati per qualche caduta, ma poi abbiamo scoperto che potevamo correre senza limitazioni.&lt;/p&gt;
-
-&lt;h2 id=&quot;aspnet-core-razor-e-signalr&quot;&gt;ASP.NET Core, Razor e SignalR&lt;/h2&gt;
-
-&lt;p&gt;Se conoscete già ASP.NET Core, SignalR e Razor, avete già tutti gli elementi per utilizzare Blazor Server. Questa è probabilmente una delle principali ragioni che ha creato tanto entusiasmo attorno al framework. Facciamo un piccolo recap per chi non ha ancora avuto la possibilità di apprezzare il nuovo framework Microsoft.&lt;/p&gt;
-
-&lt;h3 id=&quot;da-aspnet-a-aspnet-core&quot;&gt;Da ASP.NET a ASP.NET Core&lt;/h3&gt;
-
-&lt;p&gt;Con l’introduzione di ASP.NET MVC nel 2008, gli sviluppatori Microsoft cominciarono (pian piano…) ad apprezzare il nuovo modello di sviluppo web, basato su un adattamento del pattern &lt;em&gt;MVC&lt;/em&gt;. Qualche anno dopo fu aggiunto al framework un gemello per la realizzazione di &lt;strong&gt;API REST&lt;/strong&gt;, &lt;strong&gt;ASP.NET WEB API&lt;/strong&gt;. Il tutto strettamente legato a &lt;strong&gt;IIS&lt;/strong&gt;, l’application framework di Microsoft distribuito principalmente con le versioni server di Windows. Quindi per un periodo abbastanza lungo abbiamo avuto il nostro &lt;em&gt;Windows Server&lt;/em&gt;, sul quale installavamo IIS e il .NET Framework che forniva ASP.NET come base di integrazione con IIS, che ci metteva a disposizione 3 framework tra cui scegliere: ASP.NET Web Forms, ASP.NET MVC e ASP.NET WEB API. Una infrastruttura un po’ ridondante in alcuni punti, ma che serviva allo scopo.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/blazorserver/aspnet-stack.png&quot; alt=&quot;ASP.NET STACK&quot; title=&quot;ASP.NET STACK&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;A un certo punto però, per ragioni che avremmo compreso fino in fondo solo anni dopo, il legame tra ASP.NET e IIS è cominciato ad andare un po’ stretto. Questo portò all’introduzione di &lt;strong&gt;&lt;a href=&quot;http://owin.org/&quot;&gt;OWIN&lt;/a&gt;&lt;/strong&gt;, uno standard aperto che definisce una interfaccia tra un web server .NET e una applicazione web. Insieme allo standard venne fornito anche una implementazione, chiamata &lt;strong&gt;&lt;a href=&quot;https://github.com/aspnet/AspNetKatana/&quot;&gt;Katana&lt;/a&gt;&lt;/strong&gt;, che contrattualizzava il legame tra ASP.NET e IIS. Il tutto fu introdotto con la versione 4 di MVC, fornendo di fatto la possibilità di far girare applicazioni ASP.NET MVC su web server diversi da IIS.&lt;/p&gt;
-
-&lt;p&gt;Aggiungiamo che in quel periodo i rilasci di ASP.NET seguivano quelli del .NET Framework, nonostante il web si evolvesse ad una velocità più alta del framework di base. Ma la vera ragione che portò a un momento di rottura fu il fatto che ASP.NET non era stato creato pensando agli scenari &lt;em&gt;Cloud&lt;/em&gt;, e Microsoft stava per puntare tutto sul suo Cloud: &lt;strong&gt;Microsoft Azure&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;Nel 2016 fu rilasciata la prima versione di &lt;strong&gt;ASP.NET Core&lt;/strong&gt;, basata su un nuovo framework .NET &lt;strong&gt;&lt;em&gt;cross-platform&lt;/em&gt;&lt;/strong&gt; che fu chiamato &lt;strong&gt;.NET Core&lt;/strong&gt;. Gli aggiornamenti di ASP.NET non dovevano più essere legati al framework sottostante, quindi tutto è stato basato su &lt;strong&gt;NuGet&lt;/strong&gt;. Con l’occasione sono stati unificati i framework MVC e WEB API, abbandonando definitivamente Web Forms. Il framework fornisce di base strumenti integrati per configurazione, logging e &lt;strong&gt;&lt;em&gt;Dependency Injection&lt;/em&gt;&lt;/strong&gt;,  e ci si può costruire la propria pipeline HTTP, utilizzando i middleware Owin: una vera e propria rivoluzione. Grazie al rilascio contestuale di &lt;strong&gt;Kestrel&lt;/strong&gt;, un web server cross-platform compatibile OWIN, è possibile far girare .NET Core su Windows, Linux e MacOS, aprendo scenari incredibili.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/blazorserver/net-netcore.png&quot; alt=&quot;.NET e .NET Core Stack&quot; title=&quot;.NET e .NET Core Stack]&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Il .NET Framework è ancora lì (per il momento), accanto a .NET Core, utilizzando le Standard Libraries per condividere il codice tra i due mondi. Il prossimo passo sarà &lt;strong&gt;&lt;a href=&quot;https://devblogs.microsoft.com/dotnet/introducing-net-5/&quot;&gt;.NET 5&lt;/a&gt;&lt;/strong&gt;, che unificherà tutto lo stack tecnologico Microsoft.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/blazorserver/dotnet5.png&quot; alt=&quot;Il futuro di .NET: .NET 5&quot; title=&quot;Il futuro di .NET: .NET 5&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;razor&quot;&gt;Razor&lt;/h3&gt;
-
-&lt;p&gt;In ASP.NET il rendering server-side delle pagine web è sempre stato affidato al &lt;strong&gt;View Engine&lt;/strong&gt;, il motore che analizza il misto tra markup, codice .NET, direttive e componenti custom e li traduce in HTML per il browser.&lt;/p&gt;
-
-&lt;p&gt;In ASP.NET Web Forms il View Engine di default era &lt;strong&gt;ASPX&lt;/strong&gt;, che utilizzava i simboli  &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;%&lt;/code&gt; e &lt;code class=&quot;highlighter-rouge&quot;&gt;%&amp;gt;&lt;/code&gt; per introdurre nel markup il codice C# o Visual Basic:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;%&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prodotto&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Prodotti&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-   &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;&amp;lt;%&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prodotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Disponibile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;%=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prodotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NomeProdotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;disponibile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;&amp;lt;%&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-       &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt;
-       &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;%=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prodotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NomeProdotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;non&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;disponibile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;&amp;lt;%&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;%&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;%&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Nel passaggio a MVC fu introdotto un nuovo View Engine chiamato &lt;strong&gt;Razor&lt;/strong&gt;, con una sintassi meno invasiva di ASPX e che utilizza il simbolo &lt;code class=&quot;highlighter-rouge&quot;&gt;@&lt;/code&gt; per introdurre nel markup il codice C# o Visual Basic:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;@foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;prodotto&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Prodotti&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;@if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prodotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Disponibile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;@prodotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NomeProdotto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;disponibile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;@prodotto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NomeProdotto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;non&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;disponibile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Razor diventò il default per i progetti MVC e la sua semplicità di utilizzo lo ha portato a diventare parte integrante di una versione semplificata di ASP.NET MVC chiamata &lt;strong&gt;Razor Pages&lt;/strong&gt;, un modello nel quale al posto di Controller e View viene introdotto il concetto di &lt;em&gt;Page&lt;/em&gt; che contiene sia il markup che il codice che la gestisce.&lt;/p&gt;
-
-&lt;h3 id=&quot;signalr&quot;&gt;SignalR&lt;/h3&gt;
-
-&lt;p&gt;Nello sviluppo web di solito è il client che apre una connessione al server, fa una richiesta HTTP e ottiene una risposta HTTP, con la quale la connessione viene chiusa. Spesso però abbiamo bisogno di sapere se lato server è cambiato qualcosa.&lt;/p&gt;
-
-&lt;p&gt;Possiamo sicuramente fare delle richieste periodiche in maniera automatica per verificare se qualcosa è cambiato, ma questa operazione, che viene chiamata &lt;strong&gt;Polling&lt;/strong&gt;, è decisamente dispendiosa. Una possibile alternativa è il &lt;strong&gt;Long Polling&lt;/strong&gt;, che consiste nel mantenere attiva una connesione dal client al server in uno stato &lt;em&gt;Pending&lt;/em&gt;: quando ci sarà un aggiornamento lato server, questo potrà essere comunicato utilizzando la connessione aperta. La risposta chiuderà la connessione, sarà quindi compito del client aprirne un’altra, ripetendo il processo. Sicuramente meno dispendioso del Polling, ma i browser moderni supportano delle valide alternative.&lt;/p&gt;
-
-&lt;p&gt;Una di queste è l’utilizzo dei &lt;strong&gt;Server-Sent Event&lt;/strong&gt;, che ci permette di ricevere aggiornamenti dal server restando in ascolto su un particolare &lt;em&gt;endpoint&lt;/em&gt;. In pratica registriamo una callback JavaScript utilizzando uno speciale oggetto chiamato &lt;strong&gt;EventSource&lt;/strong&gt;, a quel punto il sever, utilizzando il content-type &lt;em&gt;text/event-stream&lt;/em&gt; può invocare questa callback senza che ci siano attese lato client. I Server-Sent Event sono però monodirezionali (dal server al client), se abbiamo bisogno di connessioni bidirezionali senza attese possiamo utilizzare la specificica &lt;strong&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc6455&quot;&gt;WebSocket&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;Tutto bello, ma abbiamo bisogno di sapere se browser e server supportano la scelta che facciamo. Ed è proprio qui che entra in gioco &lt;strong&gt;SignalR&lt;/strong&gt;: in maniera completamente trasparente al programmatore permette di utilizzare lo strumento migliore messo a disposizione da client e server. Questo significa che, se disponibile, SignalR utilizzerà le WebSocket, altrimenti proverà con i Server-Sent Events. Nel caso nessuno dei due sia disponibile, verrà utilizzato il Long Polling. Questa operazione di scelta del trasporto è automatica e non impatta sull’API messa a disposizione da SignalR.&lt;/p&gt;
-
-&lt;p&gt;Il programmatore deve solo preoccuparsi di definire una o più classi &lt;strong&gt;Hub&lt;/strong&gt;, che verranno utilizzate come endpoint per la comunicazione. Trovate maggiori informazioni &lt;a href=&quot;https://dotnet.microsoft.com/apps/aspnet/signalr&quot;&gt;qui&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;blazor-server&quot;&gt;Blazor Server&lt;/h2&gt;
-
-&lt;p&gt;Adesso che sappiamo come siamo arrivati ad oggi e quali sono le tecnologie che abbiamo a disposizione, siamo pronti per analizzare come funziona Blazor Server: si tratta di un nuovo framework per la realizzazione dell’interfaccia utente delle nostre applicazioni ASP.NET Core, definita utilizzando HTML e CSS e sfruttando Razor e C# per il suo aggiornamento dinamico.&lt;/p&gt;
-
-&lt;p&gt;Gli aggiornamenti dell’interfaccia avvengono lato server, e vengono inviati al client utilizzando SignalR. Vediamolo in funzione lanciando l’applicazione che abbiamo creato nell’&lt;a href=&quot;/blazor/intro/2020/02/02/che-cosa-e-blazor.html&quot;&gt;articolo precedente&lt;/a&gt;, utilizzando il comando della .NET CLI &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet run&lt;/code&gt;, o il classico F5 di Visual Studio.&lt;/p&gt;
-
-&lt;p&gt;Aprite Chrome o una versione del nuovo &lt;a href=&quot;https://www.microsoft.com/en-us/edge&quot;&gt;EDGE&lt;/a&gt;, nel mio caso EDGE per MAC, che come probabilmente saprete utilizza l’engine di Chromium. Aprite il pannello degli stumenti per gli sviluppatori, selezionate il TAB Network, Filter All e andate all’indirizzo https://localhost:5001:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/blazorserver/traffico-rete-blazor-server.png&quot; alt=&quot;Traffico di rete di Blazor Server&quot; title=&quot;Traffico di rete di Blazor Server&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Quello che vedete è il template di base di Blazor Server. Nel TAB Network potete vedere il traffico di rete, tra cui la WebSocket inizializzata da SignalR durante la negoziazione del trasporto. Se cliccate sul Filtro WS (WebSockets) del TAB Network, selezionate la WebSocket &lt;code class=&quot;highlighter-rouge&quot;&gt;_blazor&lt;/code&gt;, cliccate sulla voce di menu &lt;em&gt;Counter&lt;/em&gt; e poi sul pulsante &lt;em&gt;Click me&lt;/em&gt;, vedrete quanto segue:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/articoli/blazorserver/traffico-websocket-blazor-server.png&quot; alt=&quot;Traffico WebSocket di Blazor Server&quot; title=&quot;Traffico WebSocket di Blazor Server&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nel Tab &lt;code class=&quot;highlighter-rouge&quot;&gt;Messages&lt;/code&gt;, potete vedere lo scambio dati bidirezionale tra il client e il server: il click sul pulsante ha inviato tramite la WebSocket la richiesta al server, che ha aggiornato il valore di un contatore, rigenerato l’HTML, confrontato con l’HTML precedente e inviato il differenziale al client mediante la WebSocket. A quel punto il codice presente nello script &lt;code class=&quot;highlighter-rouge&quot;&gt;blazor.server.js&lt;/code&gt; ha aggiornato il DOM del browser!&lt;/p&gt;
-
-&lt;h2 id=&quot;conclusioni&quot;&gt;Conclusioni&lt;/h2&gt;
-
-&lt;p&gt;Per oggi ci fermiamo qui, ma siamo riusciti ad analizzare il funzionamento di Blazor Server, ripercorrendo velocemente la storia che ha portato alla sua nascita e sottolineando come sia possibile riutilizzare tutte le conoscenze che abbiamo dello stack .NET Core per realizzare un front-end con la user experience di una Single Page Application.&lt;/p&gt;
-
-&lt;p&gt;La sfida tecnologica si gioca però sul tavolo &lt;strong&gt;WebAssembly&lt;/strong&gt;, e nel prossimo articolo vedremo come sia possibile far girare il .NET Core Framework direttamente nel browser, senza nessun plug-in aggiuntivo.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Vediamo come funziona la versione Server di Blazor, resa disponibile con .NET Core 3.0 e utilizzabile già in produzione.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/blazorserver/blazorserver.png" /><media:content medium="image" url="/assets/articoli/blazorserver/blazorserver.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;Per oggi ci fermiamo qui. In questo articolo abbiamo analizzato le peculiarità di Blazor WebAssembly, cercando di capire le principali differenze di funzionamento con Blazor Server. Nel prossimo articolo faremo un confronto tra i due, analizzando pro e contro di ogni versione e in quali contesti una delle due risponde meglio ai nostri requisiti.&lt;/p&gt;</content><author><name>Michele Aponte</name></author><summary type="html">Dopo Blazor Server vediamo come funziona la versione WebAssembly, attualmente in preview ma già sperimentabile in attesa del rilascio di Maggio 2020.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="/assets/articoli/blazorwebassembly/blazorwebassembly.png" /><media:content medium="image" url="/assets/articoli/blazorwebassembly/blazorwebassembly.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
