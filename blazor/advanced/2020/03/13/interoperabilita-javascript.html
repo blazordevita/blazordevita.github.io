@@ -34,7 +34,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-03-13T00:00:00+01:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/03/13/interoperabilita-javascript.html"},"url":"/blazor/advanced/2020/03/13/interoperabilita-javascript.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Interoperabilità con JavaScript","dateModified":"2020-03-13T00:00:00+01:00","datePublished":"2020-03-13T00:00:00+01:00","image":"/assets/articoli/interoperabilita-javascript/interoperabilita-javascript.png","description":"Cominciamo ad analizzare qualche aspetto più avanzato di Blazor, partendo da una delle funzionalità essenziali in questa fase di crescita del framework, in cui non abbiamo ancora tutto l’ecosistema di librerie già pronte per risolvere ogni problema di sviluppo front-end.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/03/13/interoperabilita-javascript.html"},"author":{"@type":"Person","name":"Michele Aponte"},"url":"/blazor/advanced/2020/03/13/interoperabilita-javascript.html","headline":"Interoperabilità con JavaScript","dateModified":"2020-03-13T00:00:00+01:00","datePublished":"2020-03-13T00:00:00+01:00","image":"/assets/articoli/interoperabilita-javascript/interoperabilita-javascript.png","description":"Cominciamo ad analizzare qualche aspetto più avanzato di Blazor, partendo da una delle funzionalità essenziali in questa fase di crescita del framework, in cui non abbiamo ancora tutto l’ecosistema di librerie già pronte per risolvere ogni problema di sviluppo front-end.","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -76,7 +76,7 @@
 
 <h2 id="blazor-e-javascript">Blazor e JavaScript</h2>
 
-<p>L’utilizzo di Blazor in uno scenario reale, specie se decidiamo di usare Blazor WebAssembly, richiede necessariamente l’integrazione di JavaScript. La buona notizia è che lo standard WASM supporta l’interoperabilità già a livello di specifica e come già spiegato in un <a href="/blazor/intro/2020/02/11/blazor-webassembly.html">articolo precedente</a>, l’esecuzione del codice WebAssembly si colloca nello stesso <strong>Runtime</strong> in cui eseguiamo JavaScript e da cui possiamo accedere alle API del browser.</p>
+<p>L’utilizzo di Blazor in uno scenario reale, specie se decidiamo di usare Blazor WebAssembly, richiede necessariamente l’integrazione di JavaScript. La buona notizia è che lo standard WASM supporta l’interoperabilità già a livello di specifica e come già spiegato in un <a href="/blazor/intro/2020/02/11/blazor-webassembly.html">articolo precedente</a>, l’esecuzione del codice WebAssembly si colloca nello stesso <strong>runtime</strong> in cui eseguiamo JavaScript e da cui possiamo accedere alle API del browser.</p>
 
 <p>Questo rende la comunicazione tra i due molto più semplice, permettendo sia l’invocazione di funzioni WebAssembly da JavaScript, che viceversa. In Blazor questo significa poter fare lo stesso tra .NET e JavaScript, cosa molto utile per gestire tutti gli scenari <strong><em>legacy</em></strong>, cruciali nei casi reali.</p>
 
@@ -86,7 +86,7 @@
 
 <p>Supponiamo di voler chiedere all’utente conferma dell’eliminazione di un elemento dalla lista degli eventi, senza utilizzare la bruttissima <code class="highlighter-rouge">confirm</code> del browser, ma usando una modale di Bootstrap per dare all’applicazione un <em>look and feel</em> coerente.</p>
 
-<p>La parte CSS di Bootstrap fa già parte del template, ma per poter usare la modale abbiamo bisogno della parte JavaScript, che richiede l’utilizzo di JQuery e Popper. Scarichiamo i file necessari in locale (se preferite è possibile anche utilizzare le CDN) e aggiungiamo le referenze nel file <code class="highlighter-rouge">index.html</code> (oppure <code class="highlighter-rouge">_Host.cshtml</code> nel caso di Blazor Server).</p>
+<p>La parte CSS di Bootstrap fa già parte del template, ma per poter usare la modale abbiamo bisogno della parte JavaScript, che richiede l’utilizzo di JQuery e popper. Scarichiamo i file necessari in locale (se preferite è possibile anche utilizzare le CDN) e aggiungiamo le referenze nel file <code class="highlighter-rouge">index.html</code> (oppure <code class="highlighter-rouge">_Host.cshtml</code> nel caso di Blazor Server).</p>
 
 <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
@@ -220,7 +220,7 @@
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Nel caso in cui le funzioni JavaScript da richiamare restituiscano un valore, è possibile invece utilizzare l’extension method <code class="highlighter-rouge">InvokeAsync&lt;TValue&gt;(this IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object[] args)</code>.</p>
+<p>Nel caso in cui le funzioni JavaScript da richiamare restituiscano un valore, è possibile invece utilizzare l’extension method <code class="highlighter-rouge">InvokeAsync&lt;TValue&gt;(this IJSRuntime jsRuntime, string identifier, params object[] args)</code>.</p>
 
 <p>Riassumendo, il flusso diventa:</p>
 <ul>
