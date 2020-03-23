@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Chiamare .NET da JavaScript | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Chiamare .NET da JavaScript" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Un altro aspetto importante dell’interoperabilità è la possibilità di invocare un metodo .NET da JavaScript, indispensabile per poter utilizzare librerie e funzioni JavaScript già pronte con Blazor. Vediamo insieme quali sono i passi da seguire per implementare questa funzionalità." />
+<meta property="og:description" content="Un altro aspetto importante dell’interoperabilità è la possibilità di invocare un metodo .NET da JavaScript, indispensabile per poter utilizzare librerie e funzioni JavaScript già pronte con Blazor. Vediamo insieme quali sono i passi da seguire per implementare questa funzionalità." />
+<link rel="canonical" href="/blazor/advanced/2020/03/13/chiamare-dotnet-da-javascript.html" />
+<meta property="og:url" content="/blazor/advanced/2020/03/13/chiamare-dotnet-da-javascript.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/javascript-dotnet/javascript-dotnet.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-13T00:00:00+01:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/03/13/chiamare-dotnet-da-javascript.html"},"url":"/blazor/advanced/2020/03/13/chiamare-dotnet-da-javascript.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Chiamare .NET da JavaScript","dateModified":"2020-03-13T00:00:00+01:00","datePublished":"2020-03-13T00:00:00+01:00","image":"/assets/articoli/javascript-dotnet/javascript-dotnet.png","description":"Un altro aspetto importante dell’interoperabilità è la possibilità di invocare un metodo .NET da JavaScript, indispensabile per poter utilizzare librerie e funzioni JavaScript già pronte con Blazor. Vediamo insieme quali sono i passi da seguire per implementare questa funzionalità.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Invochiamo metodi .NET da JavaScript</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Chiamare .NET da JavaScript</h1>
+    <h4>Data pubblicazione: 13-03-2020 - Autore: Michele Aponte</h4>
+  </header><figure>
+      <img src="/assets/articoli/javascript-dotnet/javascript-dotnet.png" alt="Chiamare .NET da JavaScript" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Un altro aspetto importante dell’interoperabilità è la possibilità di invocare un metodo .NET da JavaScript, indispensabile per poter utilizzare librerie e funzioni JavaScript già pronte con Blazor. Vediamo insieme quali sono i passi da seguire per implementare questa funzionalità.</p>
+
+<h2 id="invocare-metodi-statici-e-metodi-di-istanza">Invocare metodi statici e metodi di istanza</h2>
+
+<p>Affinchè un metodo .NET sia invocabile da JavaScript è necessario che questo sia <code class="highlighter-rouge">public</code> e decorato con l’attributo <code class="highlighter-rouge">[JSInvokable]</code>. Il modo più semplice è utilizzarlo su un metodo statico, asincrono o non, in una qualsiasi classe di un qualsiasi assembly. Da una funzione JavaScript agganciata sull’oggetto <code class="highlighter-rouge">window</code>, possiamo invocare il metodo usando l’oggetto denominato <code class="highlighter-rouge">DotNet</code>, che ci espone i metodi <code class="highlighter-rouge">invokeMethod</code> e <code class="highlighter-rouge">invokeMethodAsync</code>, a cui dobbiamo specificare il nome dell’assembly .NET che contiene il metodo da invocare, il nome del metodo e gli eventuali parametri. L’utilizzo della versione asincrona (<code class="highlighter-rouge">invokeMethodAsync</code>) ci restituisce una Promise a cui possiamo specificare la callback da eseguire quando il metodo sarà risolto, mentre la versione sincrona ci restituisce direttamente il risultato:</p>
+
+<p>Supponendo che il progetto corrente si chiami <code class="highlighter-rouge">MyBlazorApp</code>, un esempio generico potrebbe essere il seguente:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">MiaClasse</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">JSInvokable</span><span class="p">]</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span><span class="p">[]</span> <span class="nf">RecuperaListaStringhe</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"elemento1"</span><span class="p">,</span> <span class="s">"elemento2"</span><span class="p">,</span> <span class="s">"elemento3"</span> <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">JSInvokable</span><span class="p">]</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">[</span><span class="k">]&gt;</span> <span class="nf">RecuperaListaStringheAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Task</span><span class="p">.</span><span class="nf">FromResult</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"elemento1"</span><span class="p">,</span> <span class="s">"elemento2"</span><span class="p">,</span> <span class="s">"elemento3"</span> <span class="p">}</span> <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">window</span><span class="p">.</span><span class="nx">chiamaDotNet</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">elementi</span> <span class="o">=</span> <span class="nx">DotNet</span><span class="p">.</span><span class="nx">invokeMethod</span><span class="p">(</span><span class="dl">'</span><span class="s1">MyBlazorApp</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">RecuperaListaStringhe</span><span class="dl">'</span><span class="p">);</span>
+
+    <span class="nx">DotNet</span><span class="p">.</span><span class="nx">invokeMethodAsync</span><span class="p">(</span><span class="dl">'</span><span class="s1">MyBlazorApp</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">RecuperaListaStringheAsync</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">listastringhe</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">listastringhe</span><span class="p">));</span> 
+<span class="p">}</span></code></pre></figure>
+
+<p>Come abbiamo visto negli articoli precedenti, un componente è una classe quindi possiamo definire il metodo sia in una Page che in un Blazor Component. In generale comunque, quando si ha a che fare con metodi statici, il consiglio è quello di organizzare il codice per tenere le parti statiche in classi separate o, meglio ancora, di evitarle il più possibile per l’accoppiamento che ne consegue.</p>
+
+<p>Possiamo infatti utilizzare anche metodi di istanza per l’interoperabilità con JavaScript, a patto che quest’ultimo abbia un riferimento all’oggetto su cui vogliamo fare l’invocazione. Il metodo statico <code class="highlighter-rouge">T DotNetObjectReference.Create(T value)</code> della libreria <code class="highlighter-rouge">JSInterop</code> ci mette disposizione un modo per creare, a partire dall’istanza di un oggetto, un riferimento da poter passare a JavaScript attraverso l’oggetto <code class="highlighter-rouge">JSRuntime</code> che abbiamo visto dell’articolo precedente. Possiamo quindi chiamare JavaScript da .NET per passare una istanza di oggetto .NET, su cui poi da JavaScript possiamo invocare metodi non statici. Supponiamo di avere una classe <code class="highlighter-rouge">MiaClasse</code> su cui invochiamo il metodo <code class="highlighter-rouge">ChiamaJavaScript()</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">MiaClasse</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">ChiamaJavaScript</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">await</span> <span class="n">JSRuntime</span><span class="p">.</span><span class="nf">InvokeVoidAsync</span><span class="p">(</span>
+            <span class="s">"chiamaJavaScript"</span><span class="p">,</span> 
+            <span class="n">DotNetObjectReference</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">JSInvokable</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span><span class="p">[]</span> <span class="nf">RecuperaListaStringhe</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"elemento1"</span><span class="p">,</span> <span class="s">"elemento2"</span><span class="p">,</span> <span class="s">"elemento3"</span> <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">JSInvokable</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">[</span><span class="k">]&gt;</span> <span class="nf">RecuperaListaStringheAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Task</span><span class="p">.</span><span class="nf">FromResult</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"elemento1"</span><span class="p">,</span> <span class="s">"elemento2"</span><span class="p">,</span> <span class="s">"elemento3"</span> <span class="p">}</span> <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">window</span><span class="p">.</span><span class="nx">chiamaJavaScript</span> <span class="o">=</span> <span class="p">(</span><span class="nx">oggetto</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">elementi</span> <span class="o">=</span> <span class="nx">oggetto</span><span class="p">.</span><span class="nx">invokeMethod</span><span class="p">(</span><span class="dl">'</span><span class="s1">RecuperaListaStringhe</span><span class="dl">'</span><span class="p">);</span>
+
+    <span class="nx">oggetto</span><span class="p">.</span><span class="nx">invokeMethodAsync</span><span class="p">(</span><span class="dl">'</span><span class="s1">RecuperaListaStringheAsync</span><span class="dl">'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">listastringhe</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">listastringhe</span><span class="p">));</span> 
+<span class="p">}</span></code></pre></figure>
+
+<p>Il metodo <code class="highlighter-rouge">ChiamaJavaScript</code> invoca la funzione JavaScript <code class="highlighter-rouge">chiamaJavaScript</code>, passando come parametro l’istanza di <code class="highlighter-rouge">MiaClasse</code> corrente (usando l’oggetto <code class="highlighter-rouge">this</code>), su cui dalla stessa funzione possiamo invocare direttamente i metodi <code class="highlighter-rouge">RecuperaListaStringhe</code> o <code class="highlighter-rouge">RecuperaListaStringheAsync</code>.</p>
+
+<p>Sia che scegliamo di utilizzare metodi statici che di istanza, è comunque consigliabile l’utilizzo delle versioni asincrone delle invocazioni, che non bloccano l’unico thread JavaScript che abbiamo a disposizione.</p>
+
+<h2 id="un-esempio-reale">Un esempio reale</h2>
+<p>Supponiamo di voler aggiungere alla nostra applicazione per la gestione di eventi una mappa, su cui posizionare dei marker sul luogo dove l’evento si svolge. Il modo più veloce è usare una mappa di Google, che ci fornisce una API JavaScript completa per necessità di questo tipo. In particolare utilizzeremo due API, quella per la visualizzazione della mappa e quella per il geocoding che, dato un indirizzo, ci restituisce le coordinate (latitudine e logitudine) corrispondenti. Per utilizzare le API di Google c’è bisogno di una registrazione a Google Cloud, essendo il servizio a pagamento superata una determinata soglia di invocazioni. Seguendo le istruzioni che potete trovare <a href="https://developers.google.com/maps/documentation/javascript/get-api-key?hl=it">qui</a>, otterete il token che ci serve per il nostro codice.</p>
+
+<p>Andiamo quindi sulla nostra SPA, e aggiungiamo sull’oggetto window un metodo <code class="highlighter-rouge">mostraMappa</code>, a cui passeremo l’elemento HTML in cui vogliamo che venga visualizzata la mappa, la zona in cui vogliamo centrare la mappa (Italia nei nostri esempi), un livello di zoom, una lista di eventi e l’istanza del componente Blazor su cui vogliamo invocare un metodo specifico:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+    <span class="p">...</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">mostraMappa</span> <span class="o">=</span> <span class="p">(</span><span class="nx">contenitore</span><span class="p">,</span> <span class="nx">zona</span><span class="p">,</span> <span class="nx">zoom</span><span class="p">,</span> <span class="nx">eventi</span><span class="p">,</span> <span class="nx">componente</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">geocoder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">maps</span><span class="p">.</span><span class="nx">Geocoder</span><span class="p">();</span>
+        <span class="nx">geocoder</span><span class="p">.</span><span class="nx">geocode</span><span class="p">({</span><span class="dl">'</span><span class="s1">address</span><span class="dl">'</span><span class="p">:</span> <span class="nx">zona</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">results</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">OK</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">maps</span><span class="p">.</span><span class="nb">Map</span><span class="p">(</span><span class="nx">contenitore</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="na">zoom</span><span class="p">:</span> <span class="nx">zoom</span><span class="p">,</span>
+                    <span class="na">center</span><span class="p">:</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">location</span>
+                <span class="p">});</span>
+                <span class="nx">eventi</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">evento</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                    <span class="nx">geocoder</span><span class="p">.</span><span class="nx">geocode</span><span class="p">({</span><span class="dl">'</span><span class="s1">address</span><span class="dl">'</span><span class="p">:</span> <span class="nx">evento</span><span class="p">.</span><span class="nx">localita</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">results</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">OK</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="kd">var</span> <span class="nx">marker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">google</span><span class="p">.</span><span class="nx">maps</span><span class="p">.</span><span class="nx">Marker</span><span class="p">({</span>
+                                <span class="na">map</span><span class="p">:</span> <span class="nx">map</span><span class="p">,</span>
+                                <span class="na">position</span><span class="p">:</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">location</span>
+                            <span class="p">});</span>
+                            <span class="nx">marker</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                                <span class="nx">componente</span><span class="p">.</span><span class="nx">invokeMethodAsync</span><span class="p">(</span><span class="dl">'</span><span class="s1">SelezionaEvento</span><span class="dl">'</span><span class="p">,</span> <span class="nx">evento</span><span class="p">)</span>
+                                    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">});</span>
+                            <span class="p">});</span>
+                        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">indirizzo non trovato: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
+                        <span class="p">}</span>
+                    <span class="p">});</span>
+                <span class="p">});</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">zona non trovata: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">status</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="nx">script</span> <span class="k">async</span> <span class="nx">defer</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">https://maps.googleapis.com/maps/api/js?key=&lt;APIKEY&gt;</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script&gt;</span></code></pre></figure>
+
+<p>Il codice è molto semplice e volutamente poco generalizzato per concentrare l’attenzione sul nostro scopo principale. Partendo dal nome della zona su cui vogliamo centrare la mappa, recuperiamo le coordinate e inizializziamo un oggetto mappa. Dato un indirizzo, i risultati possibili della geolocalizzazione possono essere più di uno, ma noi ci sentiamo fortunati e immaginiamo che quello giusto sia il primo. Inizializzata la mappa cicliamo sulla lista degli eventi e sfruttiamo la proprietà <em>localita</em> di ogni elemento per aggiungere dei marker sulla mappa, e su ognugno di essi andiamo ad aggiungere un listner dell’evento <code class="highlighter-rouge">click</code>. Quando l’utente cliccherà sul marker invocheremo il metodo di istanza <code class="highlighter-rouge">SelezionaEvento</code> del componente .NET, a cui passeremo l’evento corrispndente al marker.</p>
+
+<p>Andiamo adesso a creare un componente Blazor per visualizzare gli eventi sulla mappa, chiamiamolo <code class="highlighter-rouge">MappaEventi.razor</code> e posizioniamolo nella cartella Componenti del progetto Blazor. Dal punto di vista del markup abbiamo solo bisogno di un contenitore, un <code class="highlighter-rouge">&lt;div&gt;&lt;/div&gt;</code> per esempio, ma ci serve un modo per recuperare un riferimento a questo componente da poter utilizzare nel codice .NET. Per ottenere questa informazione, possiamo sfruttare la direttiva <code class="highlighter-rouge">@ref</code> che il framework ci mette a disposizione, grazie alla quale possiamo riversare il riferimento di un elemento del markup (sia esso un elemento HTML o un ulteriore componente Blazor) in una proprietà di tipo <code class="highlighter-rouge">ElementReference</code>:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@inject IJSRuntime JSRuntime;
+<span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"width:@Width;height:@Height;"</span> <span class="err">@</span><span class="na">ref=</span><span class="s">"MapContainerReference"</span><span class="nt">&gt;&lt;/div&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="n">ElementReference</span> <span class="n">MapContainerReference</span><span class="p">;</span>
+    
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Width</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">"100%"</span><span class="p">;</span>
+    
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Height</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">"400px"</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">ListaElementi</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+   
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">EventCallback</span><span class="p">&lt;</span><span class="n">ElementoListaEventi</span><span class="p">&gt;</span> <span class="n">OnSeleziona</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>A questo punto non dobbiamo fare nient’altro che chiamare la funzione JavaScript <code class="highlighter-rouge">mostraMappa</code>, ma mettiamo il codice necessario in un metodo privato perchè, come spesso accade, l’integrazione di librerie JavaScript può richiedere di eseguire alcune chiamate in un determinato momento del ciclo di vita della pagina.</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">mostraMappa</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">await</span> <span class="n">JSRuntime</span><span class="p">.</span><span class="nf">InvokeVoidAsync</span><span class="p">(</span>
+                <span class="s">"mostraMappa"</span><span class="p">,</span> 
+                <span class="n">MapContainerReference</span><span class="p">,</span> 
+                <span class="s">"Italia"</span><span class="p">,</span> 
+                <span class="m">5</span><span class="p">,</span> 
+                <span class="n">ListaElementi</span><span class="p">,</span>
+                <span class="n">DotNetObjectReference</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+        <span class="nf">StateHasChanged</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">JSInvokable</span><span class="p">]</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">SelezionaEvento</span><span class="p">(</span><span class="n">ElementoListaEventi</span> <span class="n">evento</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">OnSeleziona</span><span class="p">.</span><span class="nf">InvokeAsync</span><span class="p">(</span><span class="n">evento</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Notiamo che il metodo <code class="highlighter-rouge">SelezionaEvento</code> è un metodo di istanza del componente, e questo è necessario per poterci riferire all’evento <code class="highlighter-rouge">OnSeleziona</code> o a qualsiasi altra proprietà del componente stesso. Se avesssimo usato qui un metodo statico avremmo avuto il problema di dover trovare un modo per poter accedere alle proprietà dell’istanza del componente, ad esempio generando un evento statico e sottoscrivendolo nel componente.</p>
+
+<p>Notiamo anche il metodo <code class="highlighter-rouge">StateHasChanged()</code> del componente Blazor, che ci permette di forzare il meccanismo di <strong>change detection</strong> del framework per applicare le modifiche al DOM che in questo caso Blazor non è in grado di rilevare. Perchè? In realtà tutte queste invocazioni asincrone lavorano su un thread differente da quello dell’interfaccia su cui Blazor verifica i cambiamenti, quindi in questi casi è necessario indicare al framework che qualcosa è cambiato e che deve eseguire gli algoritmi di verifica e aggiornare l’interfaccia.</p>
+
+<p>Manca un ultimo passaggio: quando eseguiamo questo codice? E’ un aspetto molto interessante, perchè abbiamo già incrociato negli articoli precedenti i metodi di gestione del ciclo di vita di un componente, con l’override dei metodi <code class="highlighter-rouge">OnInitialized</code> e <code class="highlighter-rouge">OnInitializedAsync</code>. Blazor ci da la possibilità di internire in vari momenti del ciclo di vita di un componente, per eseguire delle operazioni custom dopo che determinate operazioni sul componente sono state fatte:</p>
+<ul>
+  <li><code class="highlighter-rouge">OnInitialized</code> e <code class="highlighter-rouge">OnInitializedAsync</code>: eseguiti dopo che il componente è stato inizializzato e ha ricevuto i parametri iniziali.</li>
+  <li><code class="highlighter-rouge">SetParametersAsync(ParameterView parameters)</code>: eseguito prima che un parametro del componente cambi valore</li>
+  <li><code class="highlighter-rouge">OnParametersSet</code> e <code class="highlighter-rouge">OnParametersSetAsync</code>: eseguiti dopo che un parametro del componente ha cambiato valore</li>
+  <li><code class="highlighter-rouge">OnAfterRender(bool firstRender)</code> e <code class="highlighter-rouge">OnAfterRenderAsync(bool firstRender)</code>: eseguito ogni volta che il componente viene renderizzato e il DOM aggiornato, un parametro booleano ci dice se è la prima volta che viene eseguito.</li>
+  <li><code class="highlighter-rouge">bool ShouldRender()</code>: eseguito prima del rendering per decidere se eseguire oppure no l’aggiornamento dell’interfaccia.</li>
+</ul>
+
+<p>Nel nostro caso abbiamo bisogno di aggiornare la mappa ogni volta che la lista eventi viene aggiornata e appena il DOM è pronto, quindi:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">private</span> <span class="kt">bool</span> <span class="n">firstRender</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnParametersSetAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(!</span><span class="n">firstRender</span><span class="p">)</span>
+        <span class="p">{</span>
+           <span class="k">await</span> <span class="nf">mostraMappa</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnAfterRenderAsync</span><span class="p">(</span><span class="kt">bool</span> <span class="n">firstRender</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">firstRender</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">firstRender</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="k">await</span> <span class="nf">mostraMappa</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Se cerchiamo di aggiornare la mappa alla prima invocazione del <code class="highlighter-rouge">OnParametersSetAsync</code> otterremmo un errore perchè il DOM non è ancora pronto, quindi utilizziamo un flag interno per sapere se c’è stata almeno un primo rendering del componente.</p>
+
+<p>Non ci resta che utilizzare il nuovo componente nella pagina degli eventi:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/eventi"
+@inject EventManagerDbContext context;
+@if(EventoCorrente == null)
+{
+    <span class="nt">&lt;ListaEventi</span> 
+        <span class="na">ListaElementi=</span><span class="s">"ListaEventi"</span> <span class="na">OnElimina=</span><span class="s">"EliminaEvento"</span>
+        <span class="na">OnCrea=</span><span class="s">"CreaEvento"</span> <span class="na">OnModifica=</span><span class="s">"ModificaEvento"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;MappaEventi</span> 
+        <span class="na">ListaElementi=</span><span class="s">"ListaEventi"</span>
+        <span class="na">OnSeleziona=</span><span class="s">"ModificaEvento"</span> <span class="nt">/&gt;</span>
+}
+else
+{
+    <span class="nt">&lt;DettaglioEvento</span> 
+        <span class="na">DettaglioElemento=</span><span class="s">"EventoCorrente"</span>
+        <span class="na">OnSalva=</span><span class="s">"SalvaEvento"</span> <span class="na">OnAnnulla=</span><span class="s">"AnnullaOperazione"</span> <span class="nt">/&gt;</span>
+}</code></pre></figure>
+
+<p>Ed ecco il risultato:</p>
+
+<p><img src="/assets/articoli/javascript-dotnet/mappa-google-in-applicazione-blazor.gif" alt="&quot;Mappa Google in applicazione Blazor&quot;" title="Mappa Google in applicazione Blazor" /></p>
+
+<p>Potete consultare il codice sorgente <a href="https://github.com/blazordevita/BlazorSPA">qui</a>, nella branch 09-javascript-dotnet.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>In questo articolo abbiamo visto come invocare metodi .NET, statici e non, da JavaScript per intergrare librerie di terze parti o nostre funzionalità custom. Abbiamo anche colto l’occasione per analizzare due aspetti avanzati del framework, la direttiva <code class="highlighter-rouge">@ref</code> e i cosiddetti <strong><em>hook</em></strong> del ciclo di vita di un componente, molto utili nell’utilizzo di Blazor in applicazioni reali. Come sempre l’unico maestro è la pratica e adesso avete tutti gli elementi per integrare librerie JavaScript nella vostra applicazione.</p>
+
+  </div><a class="u-url" href="/blazor/advanced/2020/03/13/chiamare-dotnet-da-javascript.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
