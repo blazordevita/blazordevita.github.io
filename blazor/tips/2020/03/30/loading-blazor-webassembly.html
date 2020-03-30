@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Loading in Blazor WebAssembly | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Loading in Blazor WebAssembly" />
+<meta name="author" content="Gianluca Gentile" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Attualmente, uno dei più grandi limiti di Blazor WebAssembly è il dover caricare tutte le dipendenze DLL necessarie a poter utilizzare C# nel browser. Il progetto di default, al primo avvio, necessita il download di oltre 16 MB di dati quando viene eseguito in debug:" />
+<meta property="og:description" content="Attualmente, uno dei più grandi limiti di Blazor WebAssembly è il dover caricare tutte le dipendenze DLL necessarie a poter utilizzare C# nel browser. Il progetto di default, al primo avvio, necessita il download di oltre 16 MB di dati quando viene eseguito in debug:" />
+<link rel="canonical" href="/blazor/tips/2020/03/30/loading-blazor-webassembly.html" />
+<meta property="og:url" content="/blazor/tips/2020/03/30/loading-blazor-webassembly.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/loading-blazor-webassembly/loading-blazor-webassembly.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-30T01:00:00+02:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/tips/2020/03/30/loading-blazor-webassembly.html"},"url":"/blazor/tips/2020/03/30/loading-blazor-webassembly.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Loading in Blazor WebAssembly","dateModified":"2020-03-30T01:00:00+02:00","datePublished":"2020-03-30T01:00:00+02:00","image":"/assets/articoli/loading-blazor-webassembly/loading-blazor-webassembly.png","description":"Attualmente, uno dei più grandi limiti di Blazor WebAssembly è il dover caricare tutte le dipendenze DLL necessarie a poter utilizzare C# nel browser. Il progetto di default, al primo avvio, necessita il download di oltre 16 MB di dati quando viene eseguito in debug:","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Diamo un feedback all&#39;utente mentre l&#39;applicazione si avvia</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Loading in Blazor WebAssembly</h1>
+    <h4>Data pubblicazione: 30-03-2020 - Autore: Gianluca Gentile</h4>
+  </header><figure>
+      <img src="/assets/articoli/loading-blazor-webassembly/loading-blazor-webassembly.png" alt="Loading in Blazor WebAssembly" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Attualmente, uno dei più grandi limiti di Blazor WebAssembly è il dover caricare tutte le dipendenze DLL necessarie a poter utilizzare C# nel browser. Il progetto di default, al primo avvio, necessita il download di oltre 16 MB di dati quando viene eseguito in debug:</p>
+
+<p><img src="/assets/articoli/loading-blazor-webassembly/image001.png" alt="Dimensione download Blazor WebAssembly" /></p>
+
+<p>È pur vero che in produzione la dimensione si riduce quasi del 50% ma rimane un limite non da poco se paragonato ad altri framework di frontend come ad esempio Angular. In questo articolo purtroppo non riusciamo a sopperire a questa lacuna ma si vuole rendere più user friendly il loading iniziale dando la percezione che l’applicativo si sta caricando e non è bloccato. Attualmente la schermata iniziale di loading è questa:</p>
+
+<p><img src="/assets/articoli/loading-blazor-webassembly/image002.png" alt="Loading di default" /></p>
+
+<p>Una semplice scritta Loading… immersa in un mare di bianco. Quando siamo in debug e quindi il server è locahost riusciamo a malapena ad intravedere la schermata mostrata sopra, ma che succede se il server è remoto e la nostra connessione non è la più veloce possibile?
+Purtroppo, la staticità di quella schermata può portare l’utente a pensare che ci sia qualche problema e nel caso peggiore anche ad abbandonare la navigazione. Rendiamo la fase di loading più “animata”.</p>
+
+<h2 id="html">HTML</h2>
+<p>Per fare ciò è necessario modificare il file index.html che si trova dentro wwwroot:</p>
+
+<p><img src="/assets/articoli/loading-blazor-webassembly/image003.png" alt="File index.html Blazor WebAssembly" /></p>
+
+<p>Nel file index.html, subito dopo il tag &lt;body&gt; troviamo il tag <app> al cui interno c’è il testo “Loading”:</app></p>
+
+<p><img src="/assets/articoli/loading-blazor-webassembly/image004.png" alt="Modifica file index.html Blazor WebAssembly" /></p>
+
+<p>Andiamo a sostituire “Loading…” con questo html:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"loading-section"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h2&gt;</span>Welcome<span class="nt">&lt;/h2&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"short-description"</span> <span class="na">id=</span><span class="s">"loadingText"</span><span class="nt">&gt;</span>Loading, please wait<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"loader mt-3"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"loader-dot dot1"</span><span class="nt">&gt;&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"loader-dot dot2"</span><span class="nt">&gt;&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"loader-dot dot3"</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;p&gt;</span>Un attimo di pazienza, il programma si sta caricando<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></figure>
+
+<p>Mi raccomando non cancellate i tag <code class="highlighter-rouge">&lt;app&gt;</code> altrimenti Blazor non funzionerà.</p>
+
+<h2 id="javascript">JavaScript</h2>
+<p>A malincuore dobbiamo usare un minimo di JavaScript perché in questa fase non abbiamo a disposizione C#. Nelle ultime release di Blazor WebAssembly, le DLL necessarie vengono caricate attraverso la chiamata <code class="highlighter-rouge">fetch</code> quindi possiamo sovrascrivere il metodo JavaScript ed intercettare le richieste verso il server.</p>
+
+<p>Prima del tag script <code class="highlighter-rouge">&lt;script src="_framework/blazor.webassembly.js"&gt;&lt;/script&gt;</code>, andiamo a ridefinire <code class="highlighter-rouge">fetch</code> utilizzando il codice seguente:</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">text/javascript</span><span class="dl">"</span><span class="o">&gt;</span>
+    <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kd">let</span> <span class="nx">loaded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">standardFetch</span> <span class="o">=</span> <span class="nx">fetch</span><span class="p">;</span>
+        <span class="nx">fetch</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">total</span><span class="o">++</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">standardFetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+            <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="nx">loaded</span><span class="o">++</span><span class="p">;</span>
+                <span class="kd">let</span> <span class="nx">progress</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(((</span><span class="nx">loaded</span> <span class="o">/</span> <span class="nx">total</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">));</span>
+                <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URL</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+                <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">loadingText</span><span class="dl">"</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">progress</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">% - &lt;i&gt;loaded </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">url</span><span class="p">.</span><span class="nx">pathname</span><span class="o">+</span><span class="dl">"</span><span class="s2">&lt;/i&gt;</span><span class="dl">"</span><span class="p">;</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="nx">promise</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">})();</span>
+<span class="o">&lt;</span><span class="sr">/script&gt;</span></code></pre></figure>
+
+<p>Chi ha un po’ di dimestichezza con JavaScript può notare che il codice non fa altro che contare le richieste effettuate e quelle che vengono terminate per aggiornare il testo presente nel tag identificato dall’identificativo “loadingText”, che si trova nel codice HTML inserito in precedenza. Tale testo mostrerà la percentuale di caricamento e il nome dell’ultimo file caricato.</p>
+
+<h2 id="css">CSS</h2>
+<p>Adesso dobbiamo rendere più bello questo loading. Per farlo ho aggiunto un file CSS che ho chiamato <code class="highlighter-rouge">custom.css</code>:</p>
+
+<p><img src="/assets/articoli/loading-blazor-webassembly/image005.png" alt="Custom CSS" /></p>
+
+<p>Ovviamente dovete inserire in index.html il collegamento a questo nuovo file CSS:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"css/custom.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="nt">/&gt;</span></code></pre></figure>
+
+<p>Vi consiglio di inserirlo subito dopo il riferimento al file site.css che è quello di default. Al suo interno ho inserito questo:</p>
+
+<figure class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.loading-section</span> <span class="p">{</span>
+    <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+    <span class="nl">height</span><span class="p">:</span> <span class="m">55vh</span><span class="p">;</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+    <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">column</span><span class="p">;</span>
+    <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+    <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span> <span class="nb">auto</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.loading-section</span> <span class="nt">h2</span> <span class="p">{</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="m">#0366d6</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.loader-dot</span> <span class="p">{</span>
+    <span class="nl">height</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+    <span class="nl">border-radius</span><span class="p">:</span> <span class="m">50%</span><span class="p">;</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="m">#0366d6</span><span class="p">;</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">inline-block</span><span class="p">;</span>
+    <span class="nl">-webkit-animation</span><span class="p">:</span> <span class="n">grow</span> <span class="m">2.1s</span> <span class="n">infinite</span> <span class="n">ease-in-out</span> <span class="nb">both</span><span class="p">;</span>
+    <span class="nl">animation</span><span class="p">:</span> <span class="n">grow</span> <span class="m">2.1s</span> <span class="n">infinite</span> <span class="n">ease-in-out</span> <span class="nb">both</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.loader-dot.dot1</span> <span class="p">{</span>
+    <span class="nl">-webkit-animation-delay</span><span class="p">:</span> <span class="m">-0.96s</span><span class="p">;</span>
+    <span class="nl">animation-delay</span><span class="p">:</span> <span class="m">-0.96s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.loader-dot.dot2</span> <span class="p">{</span>
+    <span class="nl">-webkit-animation-delay</span><span class="p">:</span> <span class="m">-0.48s</span><span class="p">;</span>
+    <span class="nl">animation-delay</span><span class="p">:</span> <span class="m">-0.48s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@-webkit-keyframes</span> <span class="n">grow</span> <span class="p">{</span>
+    <span class="nt">0</span><span class="o">%,</span> <span class="nt">80</span><span class="o">%,</span> <span class="nt">100</span><span class="o">%</span> <span class="p">{</span>
+        <span class="nl">-webkit-transform</span><span class="p">:</span> <span class="n">scale</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nt">40</span><span class="o">%</span> <span class="p">{</span>
+        <span class="nl">-webkit-transform</span><span class="p">:</span> <span class="n">scale</span><span class="p">(</span><span class="m">1.0</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Ovviamente potete personalizzare sia l’HTML che il CSS come meglio preferite.</p>
+
+<p>Nel mio caso il risultato ottenuto è questo:
+<img src="/assets/articoli/loading-blazor-webassembly/image006.png" alt="Loading in azione" />
+<img src="/assets/articoli/loading-blazor-webassembly/image007.png" alt="Loading in azione" /></p>
+
+<p>## Avvertenze
+E’ importante sottolineare che sovrascrivere il metodo <code class="highlighter-rouge">fetch</code> dei default del browser comporta l’utilizzo di quello sovrascritto per tutto il tempo che la pagina è aperta quindi se fate utilizzo di tale metodo ricordatevi che non è quello <em>originale</em>.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+<p>Sicuramente il problema della velocità di caricamento non è stato risolto dalle funzionalità descritte nell’articolo ma si rende più consapevole di ciò che sta succedendo l’utente che usufruisce dell’applicativo. Spero che quando Blazor WebAssembly uscirà dalla fase di preview ci sia un netto miglioramento (se non la soluzione definitiva) al problema.</p>
+
+  </div><a class="u-url" href="/blazor/tips/2020/03/30/loading-blazor-webassembly.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
