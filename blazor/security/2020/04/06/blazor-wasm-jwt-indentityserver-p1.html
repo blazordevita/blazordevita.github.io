@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Autenticazione JWT e IdentityServer in Blazor - Parte 1 | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Autenticazione JWT e IdentityServer in Blazor - Parte 1" />
+<meta name="author" content="Gianluca Gentile" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito" />
+<meta property="og:description" content="In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito" />
+<link rel="canonical" href="/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html" />
+<meta property="og:url" content="/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/blazor-wasm-jwt-indentityserver-p1.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-06T01:00:00+02:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html"},"url":"/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e IdentityServer in Blazor - Parte 1","dateModified":"2020-04-06T01:00:00+02:00","datePublished":"2020-04-06T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-indentityserver-p1/blazor-wasm-jwt-indentityserver-p1.png","description":"In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Gestire autenticazione e sicurezza in Blazor WASM</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e IdentityServer in Blazor - Parte 1</h1>
+    <h4>Data pubblicazione: 06-04-2020 - Autore: Gianluca Gentile</h4>
+  </header><figure>
+      <img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/blazor-wasm-jwt-indentityserver-p1.png" alt="Autenticazione JWT e IdentityServer in Blazor - Parte 1" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso:</p>
+<ul>
+  <li>Anonimo: per la visualizzare le pagine pubbliche</li>
+  <li>Atleta: per il cliente che usufruisce dei servizi erogati</li>
+  <li>Admin: per la gestione amministrativa del sito</li>
+</ul>
+
+<p>Per regolamentare le tipologie di accesso sopra descritte è necessario, oltre alla registrazione dell’utente, anche un sistema di autorizzazioni. Utilizzeremo quindi:</p>
+<ul>
+  <li>Blazor WebAssembly per il frontend</li>
+  <li>ASP.NET Core per le API ed autenticazione/autorizzazione</li>
+  <li>Identity Server per la gestione degli utenti</li>
+  <li>Database SQL Server</li>
+  <li>Entity Framework come ORM</li>
+  <li>JWT Token</li>
+</ul>
+
+<p>Prima di iniziare, vorrei spendere due parole sull’implementazione di autenticazione / autorizzazione presente nelle ultime release di Blazor WebAssembly. Come è possibile leggere nella <a href="https://docs.microsoft.com/en-us/aspnet/core/security/blazor/webassembly/?view=aspnetcore-3.1">documentazione</a>, è presente il supporto ad Open ID Connect, tant’è che quando viene creato il progetto con Visual Studio, c’è già tutto il necessario per gestire gli utenti. Non ho utilizzato tale implementazione perché le richieste di Login / Registrazione avvengono tramite le pagine di default di Identity Server, mentre io preferisco avere queste pagine all’interno del front-end Blazor.</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image002.png" alt="Pagina Registrazione di ASP.NET Identity" /></p>
+
+<p>Sicuramene possiamo andare a personalizzare le pagine ma per adesso ho preferito non farlo e seguo fiducioso questa richiesta su <a href="https://github.com/dotnet/AspNetCore.Docs/issues/17448">GitHub</a>.</p>
+
+<h2 id="creazione-del-progetto">Creazione del progetto</h2>
+
+<p>Siamo pronti ad iniziare. Apriamo Visual Studio e creiamo un nuovo progetto App Blazor:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image003.png" alt="Visual Studio Crea Nuovo Progetto" /></p>
+
+<p>Dopo avergli dato un nome ed impostato una cartella dove salvare il progetto, clicchiamo su “Crea” e scegliamo Blazor WebAssembly App e spuntiamo “ASP.NET Core hosted”:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image004.png" alt="Blazor WebAssembly template" /></p>
+
+<p>Il template di creazione del progetto non ha, ovviamente, tutti i pacchetti necessari alla nostra app, andiamo quindi ad installarl cliccando con il tasto destro sul progetto “Server” e selezionando “Gestisci pacchetti NuGet…”:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image005.png" alt="Finestra aggiunta pacchetti Nuget" /></p>
+
+<p>Nella schermata che si aprirà, clicchiamo su “Sfoglia” ed installiamo questi pacchetti:</p>
+<ul>
+  <li>Microsoft.AspNetCore.Authentication.JwtBearer</li>
+  <li>Microsoft.AspNetCore.Identity.EntityFrameworkCore</li>
+  <li>Microsoft.AspNetCore.Identity.UI</li>
+  <li>Microsoft.EntityFrameworkCore.SqlServer</li>
+  <li>Microsoft.EntityFrameworkCore.Tools</li>
+</ul>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image006.png" alt="Installazione pacchetto Nuget" /></p>
+
+<p>A questo punto abbiamo tutto il necessario.</p>
+
+<h2 id="configurazione-del-database">Configurazione del database</h2>
+
+<p>Come anticipato inizialmente, il backend è basato su SQL Server e verrà utilizzato Entity Framework per l’acceso ai dati. E’ necessario quindi impostare la stringa di connessione e per farlo andiamo ad editare il file <code class="highlighter-rouge">appsettings.json</code> che si trova sulla root del progetto server:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image007.png" alt="File appsettings.json" /></p>
+
+<p>Al suo contenuto iniziale, adiamo ad aggiungere la stringa di connessione:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image008.png" alt="Configurazione stringa connessione in appsettings.json" /></p>
+
+<p>Il valore di <code class="highlighter-rouge">DefaultConnection</code> è così formato:
+<code class="highlighter-rouge">"Data Source=NOME_DEL_SERVER;Initial Catalog=NOME_DEL_DATABASE;Persist Security Info=True;Connection Timeout=0;User ID=USERNAME;Password=PASSWORD"</code></p>
+
+<p>Il mio approccio sarà di tipo <strong><em>Code First</em></strong>, quindi partendo dal modello mi affiderò ai tool di Entity Framework per creare la struttura del database.
+Per prima cosa è necessario creare il DBContext: andiamo a creare una cartella chiamata “Data” dentro il progetto “Server” ed al suo interno creiamo la classe “ApplicationDbContext.cs”:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image009.png" alt="File ApplicationDbContext" /></p>
+
+<p>Il contenuto di tale classe è molto semplice perché sarà necessario solo estendere la classe <code class="highlighter-rouge">IdentityDbContext</code>, creare il costruttore e configurare il metodo <code class="highlighter-rouge">OnModelCreating</code>, che per adesso richiama le funzionalità del parent:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image010.png" alt="Contenuto di ApplicationDbContext" /></p>
+
+<p>Ovviamente sarà necessario importare i namespace richiesti. A questo punto possiamo configurare la nostra applicazione “Server” per utilizzare tutto ciò che abbiamo installato fino a questo punto. Per farlo è necessario aprire il file <code class="highlighter-rouge">Startup.cs</code>, che si trova sempre nel progetto Server, e modificare il metodo <code class="highlighter-rouge">ConfigureServices</code>. Nello specifico andiamo ad aggiungere:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="p">&lt;</span><span class="n">ApplicationDbContext</span><span class="p">&gt;(</span><span class="n">options</span> <span class="p">=&gt;</span>
+    <span class="n">options</span><span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span><span class="n">Configuration</span><span class="p">.</span><span class="nf">GetConnectionString</span><span class="p">(</span><span class="s">"DefaultConnection"</span><span class="p">)));</span>
+
+<span class="n">services</span><span class="p">.</span><span class="n">AddDefaultIdentity</span><span class="p">&lt;</span><span class="n">IdentityUser</span><span class="p">&gt;(</span><span class="n">options</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequireNonAlphanumeric</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequireDigit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequiredLength</span> <span class="p">=</span> <span class="m">8</span><span class="p">;</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="n">AddEntityFrameworkStores</span><span class="p">&lt;</span><span class="n">ApplicationDbContext</span><span class="p">&gt;();</span>
+
+<span class="n">services</span><span class="p">.</span><span class="nf">AddAuthentication</span><span class="p">(</span><span class="n">JwtBearerDefaults</span><span class="p">.</span><span class="n">AuthenticationScheme</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">AddJwtBearer</span><span class="p">(</span><span class="n">options</span> <span class="p">=&gt;</span>
+    <span class="p">{</span>
+        <span class="n">options</span><span class="p">.</span><span class="n">TokenValidationParameters</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TokenValidationParameters</span>
+        <span class="p">{</span>
+            <span class="n">ValidateIssuer</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+            <span class="n">ValidateAudience</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+            <span class="n">ValidateLifetime</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+            <span class="n">ValidateIssuerSigningKey</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+            <span class="n">ValidIssuer</span> <span class="p">=</span> <span class="n">Configuration</span><span class="p">[</span><span class="s">"Jwt:Issuer"</span><span class="p">],</span>
+            <span class="n">ValidAudience</span> <span class="p">=</span> <span class="n">Configuration</span><span class="p">[</span><span class="s">"Jwt:Audience"</span><span class="p">],</span>
+            <span class="n">IssuerSigningKey</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SymmetricSecurityKey</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">Configuration</span><span class="p">[</span><span class="s">"Jwt:SecurityKey"</span><span class="p">]))</span>
+        <span class="p">};</span>
+    <span class="p">});</span></code></pre></figure>
+
+<p>Analizziamo il codice che abbiamo scritto. Le prime 2 righe indicano qual è il <code class="highlighter-rouge">DbContext</code> da utilizzare e dove trovare la stringa di connessione del database. Chi ha un po’ di praticità con Entity Framework avrà già visto queste istruzioni.</p>
+
+<p>Abbastanza esplicativa è anche la porzione di codice <code class="highlighter-rouge">services.AddDefaultIdentity&lt;IdentityUser&gt;()</code>: non facciamo altro che dire ad Identity Server quali caratteristiche devono avere la password e che store usare. In ambiente di test preferisco usare password che non siano necessariamente alfanumeriche e quindi tramite le direttive options mi semplifico la vita.</p>
+
+<p>Con l’ultima parte, <code class="highlighter-rouge">services.AddAuthentication()</code>, configuriamo l’autenticazione tramite token di tipo JWT Bearer, prendendo la chiave, l’issuer e l’audience dal file “appsettings.json”:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image012.png" alt="Parametri configurazione token JWT" /></p>
+
+<h2 id="inizializzazione-del-database">Inizializzazione del database</h2>
+<p>Arrivati a questo punto siamo pronti per creare le tabelle necessarie ad Identity Server. Per farlo apriamo la “Console di Gestione pacchetti” andando su Strumenti -&gt; Gestione pacchetti Nuget:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image013.png" alt="Console Gestione pacchetti NuGet" /></p>
+
+<p>Andiamo a creare la prima migrazione con il comando <code class="highlighter-rouge">Add-Migration InitDBTrain</code>.Ecco il risultato:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image014.png" alt="Migration Entity Framework" /></p>
+
+<p>Verrà creato e visualizzato un file C# contenete tutte le modifiche che saranno apportate dal database. <code class="highlighter-rouge">InitDBTrain</code> è solo la descrizione della migrazione appena creata quindi potete personalizzarla come credete. Per attuare tali modifiche sarà necessario il comando <code class="highlighter-rouge">Update-Database</code>:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image014.png" alt="Aggiornamento del database con Entity Framework" /></p>
+
+<p>Andando a verificare il database, vedremo le tabella create:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image015.png" alt="Aggiornamento del database con Entity Framework" /></p>
+
+<h2 id="estendere-il-modello-di-identity-server">Estendere il modello di Identity Server</h2>
+<p>Di default Identity Server non è predisposto a persistere alcune informazioni che possono tornare utili quando si tratta di archiviare dati utente come nome, cognome o data di nascita. Per ampliare il modello user di Identity Server è sufficiente estendere la sua classe base e per farlo andiamo a creare la classe “Athlete” perché come detto, l’applicazione gestirà i programmi di allenamento degli atleti registrati. Nella cartella Data del progetto Server creiamo la classe:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">Athlete</span> <span class="p">:</span> <span class="n">IdentityUser</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="n">MinimumLength</span> <span class="p">=</span> <span class="m">3</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">PersonalData</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">FirstName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="n">MinimumLength</span> <span class="p">=</span> <span class="m">3</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">PersonalData</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">LastName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">// Campo calcolato</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">DataType</span><span class="p">(</span><span class="n">DataType</span><span class="p">.</span><span class="n">Date</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">PersonalData</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Birthday</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">PersonalData</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">char</span> <span class="n">Sex</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Il codice è molto esplicativo per chi conosce la Data Annotation e forse l’unica annotazione che merita una spiegazione è quella identificata da <code class="highlighter-rouge">[PersonalData]</code>, con la quale andiamo a dire ad Identity Server che quel campo è personale e quindi va gestito secondo le specifiche richieste dalla normativa sulla privacy. Come probabilmente saprete, in Europa vige il GDPR che tra le sue regole impone di rendere disponibili all’utente tutti i suoi dati personali e il diritto all’oblio, dargli cioè la possibilità di eliminare tutti i dati salvati sul sistema. Gli automatismi di Identity Server ci permettono di rispettare entrambe le regole, il nostro compito è contrassegnare con questo attributo quali siano i dati personali.</p>
+
+<p>Dopo questo breve excursus burocratico, torniamo al nostro codice. Creato il modello, andiamo ad aggiornare la classe ApplicationDbContext che diventa così:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">ApplicationDbContext</span> <span class="p">:</span> <span class="n">IdentityDbContext</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">ApplicationDbContext</span><span class="p">(</span><span class="n">DbContextOptions</span> <span class="n">options</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">builder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">base</span><span class="p">.</span><span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">builder</span><span class="p">);</span>
+
+        <span class="n">builder</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;()</span>
+            <span class="p">.</span><span class="nf">Property</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">HasComputedColumnSql</span><span class="p">(</span><span class="s">"[LastName] + ' ' + [FirstName]"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Nella prima riga abbiamo specificato il modello da usare, <code class="highlighter-rouge">Athlete</code> appunto, mentre nel metodo <code class="highlighter-rouge">OnModelCreating</code> abbiamo definito il campo calcolato <code class="highlighter-rouge">Name</code>. In questo modo il campo Name è semplicemente la concatenazione delle due proprietà <code class="highlighter-rouge">LastName</code> e <code class="highlighter-rouge">FirstName</code>. Per finire, andiamo ad aggiornare il file <code class="highlighter-rouge">Startup.cs</code> specificando che il modello è <code class="highlighter-rouge">Athlete</code> e non quello di default:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">services</span><span class="p">.</span><span class="n">AddDefaultIdentity</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;(</span><span class="n">options</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequireNonAlphanumeric</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequireDigit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequiredLength</span> <span class="p">=</span> <span class="m">8</span><span class="p">;</span>
+<span class="p">})</span></code></pre></figure>
+
+<p>Aggiorniamo il database aggiungendo la migrazione con il comando <code class="highlighter-rouge">Add-Migration AthleteModel</code> e lanciando il comando <code class="highlighter-rouge">Update-Database</code>:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image017.png" alt="Aggiornamento del database con Entity Framework" /></p>
+
+<h2 id="modelli-per-la-registrazione">Modelli per la registrazione</h2>
+<p>Dopo aver creato il contenitore dove persistere i dati è necessario creare i due modelli che si occuperanno rispettivamente della richiesta di registrazione e della relativa risposta, che andremo a creare nel progetto “Shared” perché saranno condivisi tra la parte frontend e backend.
+Per tenere ordinato il codice ho creato le cartelle <code class="highlighter-rouge">Models &gt; Account</code> e al proprio interno ho inserito le 2 classi descritte: <code class="highlighter-rouge">RegisterRequest</code> e <code class="highlighter-rouge">RegisterResponse</code>:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image018.png" alt="La cartella Models &gt; Account" /></p>
+
+<p>Ecco il contenuto di <code class="highlighter-rouge">RegisterRequest.cs</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">RegisterRequest</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">50</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">EmailAddress</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">25</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">FirstName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">25</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">LastName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">Birthday</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">int</span><span class="p">?</span> <span class="n">Sex</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">16</span><span class="p">,</span> <span class="n">ErrorMessage</span> <span class="p">=</span> <span class="s">"{0} length must be between {2} and {1}."</span><span class="p">,</span> <span class="n">MinimumLength</span> <span class="p">=</span> <span class="m">8</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Password</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Required</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">Compare</span><span class="p">(</span><span class="k">nameof</span><span class="p">(</span><span class="n">Password</span><span class="p">),</span> <span class="n">ErrorMessage</span> <span class="p">=</span> <span class="s">"Password mismatch"</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">ConfirmPassword</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In questo modello ci sono tutti dati necessari alla registrazione e la sua particolarità è che sono tutte proprietà nullable. Alla richiesta di registrazione restituiremo il modello <code class="highlighter-rouge">RegisterResponse</code>, identificato nella classe il cui file è <code class="highlighter-rouge">RegisterResponse.cs</code> e il cui contenuto è questo:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">RegisterResponse</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsSuccess</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">Errors</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="layout-e-page">Layout e Page</h2>
+<p>E’ giunto finalmente il momento di scrivere qualche riga di codice nel progetto “Client”, iniziando dal creare il layout che useremo sia per la registrazione che per la login. Viste le mie doti grafiche prossime allo zero oltre a Bootstrap, utilizzerò un comodo pacchetto per ora gratuito chiamato <code class="highlighter-rouge">Radzen</code> che offre una moltitudine di componenti per Blazor dall’aspetto professionale e comodi da usare. L’installazione è banale e vi rimando alla pagina specifica (<a href="https://www.radzen.com/">https://www.radzen.com/</a>) presente sul sito di Radzen per vedere come fare.</p>
+
+<p>Creiamo nel progetto “Shared” un nuovo component Razor denominato <code class="highlighter-rouge">AuthLayout.razor</code>, il cui contenuto sarà semplicemente questo:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@inherits LayoutComponentBase
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"middle-box"</span><span class="nt">&gt;</span>
+    @Body
+<span class="nt">&lt;/div&gt;</span></code></pre></figure>
+
+<p>Adesso è necessario creare la pagina di registrazione, per farlo aggiungiamo un componente Razor dentro <code class="highlighter-rouge">Pages -&gt; Auth</code> denominato <code class="highlighter-rouge">Register.razor</code>, il cui contenuto è il seguente:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/account/register"
+@layout AuthLayout
+@inject HttpClient Http
+@using CompTrain.Shared.Models.Account;
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-12"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h2&gt;</span>Create new account<span class="nt">&lt;/h2&gt;</span>
+        <span class="nt">&lt;EditForm</span> <span class="na">Model=</span><span class="s">"model"</span> <span class="na">OnValidSubmit=</span><span class="s">"RegisterUser"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;RadzenCard&gt;</span>
+                <span class="nt">&lt;label&gt;</span>First Name<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenTextBox</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.FirstName"</span><span class="nt">&gt;&lt;/RadzenTextBox&gt;</span>
+
+                <span class="nt">&lt;label&gt;</span>Last Name<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenTextBox</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.LastName"</span><span class="nt">&gt;&lt;/RadzenTextBox&gt;</span>
+
+                <span class="nt">&lt;label&gt;</span>Birthday<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenDatePicker</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.Birthday"</span> <span class="na">DateFormat=</span><span class="s">"dd/MM/yyyy"</span> <span class="nt">/&gt;</span>
+
+                <span class="nt">&lt;label&gt;</span>Sex<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenRadioButtonList</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.Sex"</span> <span class="na">TValue=</span><span class="s">"int?"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;Items&gt;</span>
+                        <span class="nt">&lt;RadzenRadioButtonListItem</span> <span class="na">Text=</span><span class="s">"Man"</span> <span class="na">Value=</span><span class="s">"1"</span> <span class="na">TValue=</span><span class="s">"int?"</span> <span class="nt">/&gt;</span>
+                        <span class="nt">&lt;RadzenRadioButtonListItem</span> <span class="na">Text=</span><span class="s">"Woman"</span> <span class="na">Value=</span><span class="s">"2"</span> <span class="na">TValue=</span><span class="s">"int?"</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/Items&gt;</span>
+                <span class="nt">&lt;/RadzenRadioButtonList&gt;</span>
+
+
+                <span class="nt">&lt;label&gt;</span>Email<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenTextBox</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.Email"</span><span class="nt">&gt;&lt;/RadzenTextBox&gt;</span>
+
+                <span class="nt">&lt;label&gt;</span>Password<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenPassword</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.Password"</span><span class="nt">&gt;&lt;/RadzenPassword&gt;</span>
+
+                <span class="nt">&lt;label&gt;</span>Confirm Password<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;RadzenPassword</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"model.ConfirmPassword"</span><span class="nt">&gt;&lt;/RadzenPassword&gt;</span>
+
+                <span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;DataAnnotationsValidator</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;ValidationSummary</span> <span class="nt">/&gt;</span>
+
+
+                <span class="nt">&lt;Alert</span> <span class="na">Title=</span><span class="s">"Attenzione"</span> <span class="na">ErrorList=</span><span class="s">"errorMessages"</span> <span class="nt">/&gt;</span>
+
+
+                <span class="nt">&lt;RadzenButton</span> <span class="na">ButtonType=</span><span class="s">"Radzen.ButtonType.Submit"</span> <span class="na">Text=</span><span class="s">"Register"</span> <span class="na">ButtonStyle=</span><span class="s">"Radzen.ButtonStyle.Primary"</span> <span class="na">class=</span><span class="s">"btn-block"</span> <span class="na">mr-2</span><span class="nt">&gt;&lt;/RadzenButton&gt;</span>
+
+            <span class="nt">&lt;/RadzenCard&gt;</span>
+        <span class="nt">&lt;/EditForm&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="n">RegisterRequest</span> <span class="n">model</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">RegisterRequest</span><span class="p">();</span>
+    <span class="n">RegisterResponse</span> <span class="n">registerResponse</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+    <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">errorMessages</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">RegisterUser</span><span class="p">()</span>
+    <span class="p">{</span>
+
+        <span class="n">registerResponse</span> <span class="p">=</span> <span class="k">await</span> <span class="n">Http</span><span class="p">.</span><span class="n">PostJsonAsync</span><span class="p">&lt;</span><span class="n">RegisterResponse</span><span class="p">&gt;(</span><span class="s">"api/accounts/register"</span><span class="p">,</span> <span class="n">model</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">registerResponse</span><span class="p">.</span><span class="n">IsSuccess</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">errorMessages</span> <span class="p">=</span> <span class="n">registerResponse</span><span class="p">.</span><span class="n">Errors</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span></code></pre></figure>
+
+<p>Da notare il binding con il modello <code class="highlighter-rouge">RegisterRequest</code> e l’utilizzo del componente denominato <code class="highlighter-rouge">Alert</code>, che andiamo subito a creare dentro <code class="highlighter-rouge">Shared</code>:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@if (IsVisible)
+{
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert alert-@CSSClass"</span> <span class="na">role=</span><span class="s">"alert"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h4</span> <span class="na">class=</span><span class="s">"alert-heading"</span><span class="nt">&gt;</span>@Title<span class="nt">&lt;/h4&gt;</span>
+        <span class="nt">&lt;ul&gt;</span>
+            @foreach (string error in ErrorList)
+            {
+                <span class="nt">&lt;li&gt;</span>@error<span class="nt">&lt;/li&gt;</span>
+            }
+        <span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+}</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="kt">bool</span> <span class="n">IsVisible</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Title</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">ErrorList</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">CSSClass</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">"warning"</span><span class="p">;</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnParametersSet</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">IsVisible</span> <span class="p">=</span> <span class="p">!</span><span class="n">String</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">Title</span><span class="p">)</span> <span class="p">&amp;&amp;</span>  <span class="p">(</span><span class="n">ErrorList</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">&amp;&amp;</span> <span class="n">ErrorList</span><span class="p">.</span><span class="nf">Count</span><span class="p">()</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In pratica questo component mostra a video l’alert di Bootstrap prendendo come parametri d’ingresso un titolo, una lista di errore e la classe CSS per dare colore e risalto all’avviso.</p>
+
+<p>Prima di eseguire il progetto, un piccolo accorgimento grafico nel CSS. Preferisco creare un file CSS chiamato <code class="highlighter-rouge">custom.css</code> dove metto tutte le definizioni aggiunte da me per non intaccare i file CSS già presenti.
+Creiamo il file <code class="highlighter-rouge">custom.css</code> nella cartella <code class="highlighter-rouge">wwwroot &gt; css</code>, e al suo interno inseriamo:</p>
+
+<figure class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.middle-box</span> <span class="p">{</span>
+    <span class="nl">margin</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
+    <span class="nl">margin-top</span><span class="p">:</span> <span class="m">60px</span><span class="p">;</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">500px</span><span class="p">;</span>
+    <span class="nl">padding</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+    <span class="nl">box-shadow</span><span class="p">:</span> <span class="m">5px</span> <span class="m">10px</span> <span class="m">18px</span> <span class="m">#888888</span><span class="p">;</span>
+    <span class="nl">border-radius</span><span class="p">:</span> <span class="m">20px</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Non dimenticate di aggiungere il link del CSS appena creato al file index.html presente dentro wwwroot (<code class="highlighter-rouge">&lt;link href="css/custom.css" rel="stylesheet" /&gt;</code>).</p>
+
+<p>Ci siamo, possiamo utilizzare il tasto play per lanciare nostra app! All’apertura del browser scriviamo nella barra degli indirizzi l’URL <code class="highlighter-rouge">https://localhost:44322/account/register</code>, che mostrerà il risultato del nostro lavoro:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image019.png" alt="La pagina di registrazione in Blazor" /></p>
+
+<p>Nel prossimo articolo andremo a definire il controller che si occuperà della creazione dell’utente usando Identity Server, completando il processo di registrazione.</p>
+
+  </div><a class="u-url" href="/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
