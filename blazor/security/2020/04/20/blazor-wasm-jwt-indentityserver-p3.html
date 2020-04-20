@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Autenticazione JWT e IdentityServer in Blazor - Parte 3 | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Autenticazione JWT e IdentityServer in Blazor - Parte 3" />
+<meta name="author" content="Gianluca Gentile" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:" />
+<meta property="og:description" content="Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:" />
+<link rel="canonical" href="/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html" />
+<meta property="og:url" content="/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/blazor-wasm-jwt-indentityserver-p3.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-20T01:00:00+02:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html"},"url":"/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e IdentityServer in Blazor - Parte 3","dateModified":"2020-04-20T01:00:00+02:00","datePublished":"2020-04-20T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-indentityserver-p3/blazor-wasm-jwt-indentityserver-p3.png","description":"Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Gestire autenticazione e sicurezza in Blazor WASM</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e IdentityServer in Blazor - Parte 3</h1>
+    <h4>Data pubblicazione: 20-04-2020 - Autore: Gianluca Gentile</h4>
+  </header><figure>
+      <img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/blazor-wasm-jwt-indentityserver-p3.png" alt="Autenticazione JWT e IdentityServer in Blazor - Parte 3" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller <code class="highlighter-rouge">Account</code> la dipendenza dalla classe <code class="highlighter-rouge">SignInManager</code> e della classe <code class="highlighter-rouge">Configuration</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">private</span> <span class="k">readonly</span> <span class="n">UserManager</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;</span> <span class="n">_userManager</span><span class="p">;</span>
+<span class="k">private</span> <span class="k">readonly</span> <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">AccountsController</span><span class="p">&gt;</span> <span class="n">_logger</span><span class="p">;</span>
+<span class="k">private</span> <span class="k">readonly</span> <span class="n">IEmailSender</span> <span class="n">_emailSender</span><span class="p">;</span>
+<span class="k">private</span> <span class="k">readonly</span> <span class="n">SignInManager</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;</span> <span class="n">_signInManager</span><span class="p">;</span>
+<span class="k">private</span> <span class="k">readonly</span> <span class="n">IConfiguration</span> <span class="n">_configuration</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="nf">AccountsController</span><span class="p">(</span>
+    <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">AccountsController</span><span class="p">&gt;</span> <span class="n">logger</span><span class="p">,</span>
+    <span class="n">UserManager</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;</span> <span class="n">userManager</span><span class="p">,</span>
+    <span class="n">IEmailSender</span> <span class="n">emailSender</span><span class="p">,</span> 
+    <span class="n">SignInManager</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;</span> <span class="n">signInManager</span><span class="p">,</span> 
+    <span class="n">IConfiguration</span> <span class="n">configuration</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">_logger</span> <span class="p">=</span> <span class="n">logger</span><span class="p">;</span>
+    <span class="n">_userManager</span> <span class="p">=</span> <span class="n">userManager</span><span class="p">;</span>
+    <span class="n">_emailSender</span> <span class="p">=</span> <span class="n">emailSender</span><span class="p">;</span>
+    <span class="n">_signInManager</span> <span class="p">=</span> <span class="n">signInManager</span><span class="p">;</span>
+    <span class="n">_configuration</span> <span class="p">=</span> <span class="n">configuration</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In questo modo possiamo andare a creare la action <code class="highlighter-rouge">Login</code> nello stesso controller:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="nf">HttpPost</span><span class="p">(</span><span class="s">"[action]"</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">Login</span><span class="p">([</span><span class="n">FromBody</span><span class="p">]</span> <span class="n">LoginRequest</span> <span class="n">loginRequest</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">LoginResponse</span> <span class="n">response</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">LoginResponse</span><span class="p">();</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_signInManager</span><span class="p">.</span><span class="nf">PasswordSignInAsync</span><span class="p">(</span><span class="n">loginRequest</span><span class="p">.</span><span class="n">Email</span><span class="p">,</span> <span class="n">loginRequest</span><span class="p">.</span><span class="n">Password</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(!</span><span class="n">result</span><span class="p">.</span><span class="n">Succeeded</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">Errors</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="p">{</span> <span class="s">"Username and password are invalid."</span> <span class="p">};</span>
+            <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">user</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_signInManager</span><span class="p">.</span><span class="n">UserManager</span><span class="p">.</span><span class="nf">FindByEmailAsync</span><span class="p">(</span><span class="n">loginRequest</span><span class="p">.</span><span class="n">Email</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">roles</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_signInManager</span><span class="p">.</span><span class="n">UserManager</span><span class="p">.</span><span class="nf">GetRolesAsync</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">claims</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Claim</span><span class="p">&gt;();</span>
+        <span class="n">claims</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">Claim</span><span class="p">(</span><span class="n">ClaimTypes</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">loginRequest</span><span class="p">.</span><span class="n">Email</span><span class="p">));</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">role</span> <span class="k">in</span> <span class="n">roles</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">claims</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">Claim</span><span class="p">(</span><span class="n">ClaimTypes</span><span class="p">.</span><span class="n">Role</span><span class="p">,</span> <span class="n">role</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">key</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SymmetricSecurityKey</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">_configuration</span><span class="p">[</span><span class="s">"Jwt:SecurityKey"</span><span class="p">]));</span>
+        <span class="kt">var</span> <span class="n">creds</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SigningCredentials</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">SecurityAlgorithms</span><span class="p">.</span><span class="n">HmacSha256</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">expiry</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">.</span><span class="nf">AddDays</span><span class="p">(</span><span class="n">Convert</span><span class="p">.</span><span class="nf">ToInt32</span><span class="p">(</span><span class="n">_configuration</span><span class="p">[</span><span class="s">"Jwt:ExpiryInDays"</span><span class="p">]));</span>
+
+        <span class="kt">var</span> <span class="n">token</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">JwtSecurityToken</span><span class="p">(</span>
+            <span class="n">_configuration</span><span class="p">[</span><span class="s">"Jwt:Issuer"</span><span class="p">],</span>
+            <span class="n">_configuration</span><span class="p">[</span><span class="s">"Jwt:Audience"</span><span class="p">],</span>
+            <span class="n">claims</span><span class="p">,</span>
+            <span class="n">expires</span><span class="p">:</span> <span class="n">expiry</span><span class="p">,</span>
+            <span class="n">signingCredentials</span><span class="p">:</span> <span class="n">creds</span>
+        <span class="p">);</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">Token</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">JwtSecurityTokenHandler</span><span class="p">().</span><span class="nf">WriteToken</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">IsSuccess</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_logger</span><span class="p">.</span><span class="nf">LogInformation</span><span class="p">(</span><span class="s">$"Login error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s"> - Email: </span><span class="p">{</span><span class="n">loginRequest</span><span class="p">.</span><span class="n">Email</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">Errors</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">ex</span><span class="p">.</span><span class="n">Message</span> <span class="p">};</span>
+        <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Il metodo controlla che i dati immessi siano corretti e genera il token. Come è possibile vedere dal codice, nel token vengono inseriti anche i ruoli relativi all’utente, ma per poterli utilizzare è necessario specificare nel file <code class="highlighter-rouge">Startup.cs</code> l’aggiunta di essi:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">services</span><span class="p">.</span><span class="n">AddDefaultIdentity</span><span class="p">&lt;</span><span class="n">Athlete</span><span class="p">&gt;(</span><span class="n">options</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequireNonAlphanumeric</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequireDigit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Password</span><span class="p">.</span><span class="n">RequiredLength</span> <span class="p">=</span> <span class="m">8</span><span class="p">;</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="n">AddRoles</span><span class="p">&lt;</span><span class="n">IdentityRole</span><span class="p">&gt;()</span>
+<span class="p">.</span><span class="n">AddEntityFrameworkStores</span><span class="p">&lt;</span><span class="n">ApplicationDbContext</span><span class="p">&gt;();</span></code></pre></figure>
+
+<p>In questo momento non c’è nessun ruolo configurato, ma successivamente vedremo come questo concetto ci permetta di diversificare gli utenti dell’applicazione. Se ispezioniamo la richiesta di login, dovremmo visualizzare qualcosa di simile:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image001.png" alt="Token restituito dal login" /></p>
+
+<p>Ok, abbiamo il token, adesso va gestito.</p>
+
+<h2 id="autenticazione-in-blazor-web-assembly">Autenticazione in Blazor Web Assembly</h2>
+
+<p>Nella documentazione ufficiale ci sono molti esempi di integrazione di autenticazione ed autorizzazione ma, come detto nel primo articolo di questa serie, creremo il nostro provider personalizzato.</p>
+
+<p>Prima di tutto creiamo una interfaccia chiamata <code class="highlighter-rouge">ILoginService</code>, che salveremo nella cartella <em>Auth</em> del progetto <em>Client</em>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">interface</span> <span class="nc">ILoginService</span>
+<span class="p">{</span>
+    <span class="n">Task</span> <span class="nf">Login</span><span class="p">(</span><span class="kt">string</span> <span class="n">token</span><span class="p">);</span>
+    <span class="n">Task</span> <span class="nf">Logout</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Abbiamo bisogno di salvare il token nello storage del browser, quindi installiamo un pacchetto NuGet chiamato <code class="highlighter-rouge">Blazored.LocalStorage</code> che ci consente di leggere e scrivere nel local storage in modo immediato:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image002.png" alt="Local Storage Nuget Package" /></p>
+
+<p>Installiamo anche:</p>
+<ul>
+  <li>Microsoft.AspNetCore.Components.WebAssembly.Authentication</li>
+  <li>System.IdentityModel.Tokens.Jwt</li>
+</ul>
+
+<p>Per utilizzare <code class="highlighter-rouge">BlazoredLocalStorage</code> è necessario aggiungere nel <code class="highlighter-rouge">Program.cs</code> del progetto <code class="highlighter-rouge">Client</code> il service fornito con l’istruzione <code class="highlighter-rouge">builder.Services.AddBlazoredLocalStorage()</code>.</p>
+
+<p>Passiamo a creare il nostro provider di autenticazione che chiameremo <code class="highlighter-rouge">CustomAuthStateProvider.cs</code>, che verrà salvato nella cartella <code class="highlighter-rouge">Auth</code> del progetto <code class="highlighter-rouge">Client</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomAuthStateProvider</span> <span class="p">:</span> <span class="n">AuthenticationStateProvider</span><span class="p">,</span> <span class="n">ILoginService</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ILocalStorageService</span> <span class="n">_localStorage</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">HttpClient</span> <span class="n">_httpClient</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="kt">string</span> <span class="n">_tokenkey</span> <span class="p">=</span> <span class="s">"TOKENKEY"</span><span class="p">;</span>
+    <span class="k">private</span> <span class="n">AuthenticationState</span> <span class="n">_anonymous</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">AuthenticationState</span><span class="p">(</span><span class="k">new</span> <span class="nf">ClaimsPrincipal</span><span class="p">(</span><span class="k">new</span> <span class="nf">ClaimsIdentity</span><span class="p">()));</span>
+
+    <span class="k">public</span> <span class="nf">CustomAuthStateProvider</span><span class="p">(</span><span class="n">ILocalStorageService</span> <span class="n">localStorage</span><span class="p">,</span> <span class="n">HttpClient</span> <span class="n">httpClient</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">_localStorage</span> <span class="p">=</span> <span class="n">localStorage</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">_httpClient</span> <span class="p">=</span> <span class="n">httpClient</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="k">override</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">AuthenticationState</span><span class="p">&gt;</span> <span class="nf">GetAuthenticationStateAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">token</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_localStorage</span><span class="p">.</span><span class="n">GetItemAsync</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">_tokenkey</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="nf">tokenStatus</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">_httpClient</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="n">Authorization</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+            <span class="k">await</span> <span class="n">_localStorage</span><span class="p">.</span><span class="nf">RemoveItemAsync</span><span class="p">(</span><span class="n">_tokenkey</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">_anonymous</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nf">buildAuthenticationState</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">Login</span><span class="p">(</span><span class="kt">string</span> <span class="n">token</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">await</span> <span class="n">_localStorage</span><span class="p">.</span><span class="nf">SetItemAsync</span><span class="p">(</span><span class="n">_tokenkey</span><span class="p">,</span> <span class="n">token</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">authState</span> <span class="p">=</span> <span class="nf">buildAuthenticationState</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+        <span class="nf">NotifyAuthenticationStateChanged</span><span class="p">(</span><span class="n">Task</span><span class="p">.</span><span class="nf">FromResult</span><span class="p">(</span><span class="n">authState</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">Logout</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">_httpClient</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="n">Authorization</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+        <span class="k">await</span> <span class="n">_localStorage</span><span class="p">.</span><span class="nf">RemoveItemAsync</span><span class="p">(</span><span class="n">_tokenkey</span><span class="p">);</span>
+        <span class="nf">NotifyAuthenticationStateChanged</span><span class="p">(</span><span class="n">Task</span><span class="p">.</span><span class="nf">FromResult</span><span class="p">(</span><span class="n">_anonymous</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">AuthenticationState</span> <span class="nf">buildAuthenticationState</span><span class="p">(</span><span class="kt">string</span> <span class="n">token</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_httpClient</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="n">Authorization</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">AuthenticationHeaderValue</span><span class="p">(</span><span class="s">"bearer"</span><span class="p">,</span> <span class="n">token</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">AuthenticationState</span><span class="p">(</span><span class="k">new</span> <span class="nf">ClaimsPrincipal</span><span class="p">(</span><span class="k">new</span> <span class="nf">ClaimsIdentity</span><span class="p">(</span><span class="nf">claimsFromJwt</span><span class="p">(</span><span class="n">token</span><span class="p">),</span> <span class="s">"jwt"</span><span class="p">)));</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">bool</span> <span class="nf">tokenStatus</span><span class="p">(</span><span class="kt">string</span> <span class="n">token</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+                <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">jwthandler</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">JwtSecurityTokenHandler</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">jwttoken</span> <span class="p">=</span> <span class="n">jwthandler</span><span class="p">.</span><span class="nf">ReadJwtToken</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">jwttoken</span><span class="p">.</span><span class="n">ValidTo</span> <span class="p">&gt;</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Claim</span><span class="p">&gt;</span> <span class="nf">claimsFromJwt</span><span class="p">(</span><span class="kt">string</span> <span class="n">token</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+                <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">jwthandler</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">JwtSecurityTokenHandler</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">jwttoken</span> <span class="p">=</span> <span class="n">jwthandler</span><span class="p">.</span><span class="nf">ReadJwtToken</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">jwttoken</span><span class="p">.</span><span class="n">Claims</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Inoltre impostiamo il servizio nel file <code class="highlighter-rouge">Program.cs</code>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="nf">AddAuthorizationCore</span><span class="p">();</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">CustomAuthStateProvider</span><span class="p">&gt;();</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">AuthenticationStateProvider</span><span class="p">,</span> <span class="n">CustomAuthStateProvider</span><span class="p">&gt;(</span>
+    <span class="n">provider</span> <span class="p">=&gt;</span> <span class="n">provider</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">CustomAuthStateProvider</span><span class="p">&gt;());</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">ILoginService</span><span class="p">,</span> <span class="n">CustomAuthStateProvider</span><span class="p">&gt;(</span>
+<span class="n">provider</span> <span class="p">=&gt;</span> <span class="n">provider</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">CustomAuthStateProvider</span><span class="p">&gt;());</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="nf">AddOptions</span><span class="p">();</span></code></pre></figure>
+
+<p>Adesso modifichiamo la pagina di <code class="highlighter-rouge">Login</code> per utilizzare il nostro provider:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">loginResponse</span> <span class="p">=</span> <span class="k">await</span> <span class="n">Http</span><span class="p">.</span><span class="n">PostJsonAsync</span><span class="p">&lt;</span><span class="n">LoginResponse</span><span class="p">&gt;(</span><span class="s">"api/accounts/login"</span><span class="p">,</span> <span class="n">model</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">loginResponse</span><span class="p">.</span><span class="n">IsSuccess</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">await</span> <span class="n">loginService</span><span class="p">.</span><span class="nf">Login</span><span class="p">(</span><span class="n">loginResponse</span><span class="p">.</span><span class="n">Token</span><span class="p">);</span>
+    <span class="n">navManager</span><span class="p">.</span><span class="nf">NavigateTo</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Modifichiamo il routing nel file <code class="highlighter-rouge">App.razor</code> per utilizzare l’<code class="highlighter-rouge">AuthorizeRouteView</code>:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;Router</span> <span class="na">AppAssembly=</span><span class="s">"@typeof(Program).Assembly"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Found</span> <span class="na">Context=</span><span class="s">"routeData"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;AuthorizeRouteView</span> <span class="na">RouteData=</span><span class="s">"@routeData"</span> <span class="na">DefaultLayout=</span><span class="s">"@typeof(MainLayout)"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;NotAuthorized&gt;</span>
+                <span class="nt">&lt;h5&gt;</span>Non autorizzato<span class="nt">&lt;/h5&gt;</span>
+            <span class="nt">&lt;/NotAuthorized&gt;</span>
+            <span class="nt">&lt;Authorizing&gt;</span>
+                <span class="nt">&lt;h5&gt;</span>In autorizzazione<span class="nt">&lt;/h5&gt;</span>
+            <span class="nt">&lt;/Authorizing&gt;</span>
+        <span class="nt">&lt;/AuthorizeRouteView&gt;</span>
+    <span class="nt">&lt;/Found&gt;</span>
+    <span class="nt">&lt;NotFound&gt;</span>
+        <span class="nt">&lt;CascadingAuthenticationState&gt;</span>
+            <span class="nt">&lt;LayoutView</span> <span class="na">Layout=</span><span class="s">"@typeof(MainLayout)"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;p&gt;</span>Sorry, there's nothing at this address.<span class="nt">&lt;/p&gt;</span>
+            <span class="nt">&lt;/LayoutView&gt;</span>
+        <span class="nt">&lt;/CascadingAuthenticationState&gt;</span>
+    <span class="nt">&lt;/NotFound&gt;</span>
+<span class="nt">&lt;/Router&gt;</span></code></pre></figure>
+
+<p>A questo punto possiamo gestire nella nostra <code class="highlighter-rouge">Index.razor</code>, che si trova in <code class="highlighter-rouge">Pages</code>, il blocco da mostrare in caso l’utente sia autorizzato e quello nel caso in cui non risulti esserlo:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;AuthorizeView&gt;</span>
+    <span class="nt">&lt;Authorized&gt;</span>
+        Hello, @context.User.Identity.Name!
+        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"LogOut"</span><span class="nt">&gt;</span>Log out<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/Authorized&gt;</span>
+    <span class="nt">&lt;NotAuthorized&gt;</span>
+        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"Register"</span><span class="nt">&gt;</span>Register<span class="nt">&lt;/a&gt;</span>
+        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"Login"</span><span class="nt">&gt;</span>Log in<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/NotAuthorized&gt;</span>
+<span class="nt">&lt;/AuthorizeView&gt;</span></code></pre></figure>
+
+<p>Facciamo partire l’applicazione e dopo aver fatto la login, se tutto funziona correttamente, visualizzeremo questa schermata:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image003.png" alt="Pagina di benvenuto dopo login" /></p>
+
+<p>Possiamo vedere anche il token salvato sul browser:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image004.png" alt="Token salvato nel browser" /></p>
+
+<p>Perfetto, siamo dentro! Vediamo adesso come uscire.</p>
+
+<p>Creiamo la pagina di <code class="highlighter-rouge">Logout</code> dentro la cartella <code class="highlighter-rouge">Account</code> (negli articoli precedenti si chiamava <code class="highlighter-rouge">Auth</code> ma l’ho rinominata per rendere tutto omogeneo) il cui contenuto sarà il seguente:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/logout"
+@inject ILoginService loginService
+@inject NavigationManager navigationManager
+@layout MainLayout
+
+<span class="nt">&lt;text&gt;</span>Bye!<span class="nt">&lt;/text&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> <span class="p">{</span>
+    <span class="k">protected</span> <span class="k">async</span> <span class="k">override</span> <span class="n">Task</span> <span class="nf">OnInitializedAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">await</span> <span class="n">loginService</span><span class="p">.</span><span class="nf">Logout</span><span class="p">();</span>
+        <span class="n">navigationManager</span><span class="p">.</span><span class="nf">NavigateTo</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Avviamo l’applicazione e vediamo se il logout funziona:</p>
+
+<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image005.png" alt="Logout" /></p>
+
+<p>Ottimo, siamo usciti dall’applicazione! Ispezionando il local storage vedrete che anche il token è stato eliminato.</p>
+
+  </div><a class="u-url" href="/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
