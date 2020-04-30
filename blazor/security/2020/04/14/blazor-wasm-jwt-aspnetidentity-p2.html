@@ -20,21 +20,21 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Autenticazione JWT e IdentityServer in Blazor - Parte 2 | Blazor Developer Italiani</title>
+<title>Autenticazione JWT e ASP.NET Identity in Blazor - Parte 2 | Blazor Developer Italiani</title>
 <meta name="generator" content="Jekyll v4.0.0" />
-<meta property="og:title" content="Autenticazione JWT e IdentityServer in Blazor - Parte 2" />
+<meta property="og:title" content="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 2" />
 <meta name="author" content="Gianluca Gentile" />
 <meta property="og:locale" content="it" />
 <meta name="description" content="Entriamo nel vivo della fase di registrazione dell’utente, completando il processo di creazione e di convalida dell’account. Per fare ciò andiamo a creare il controller che si occuperà della registrazione e di altre funzionalità che riguardano l’utente." />
 <meta property="og:description" content="Entriamo nel vivo della fase di registrazione dell’utente, completando il processo di creazione e di convalida dell’account. Per fare ciò andiamo a creare il controller che si occuperà della registrazione e di altre funzionalità che riguardano l’utente." />
-<link rel="canonical" href="/blazor/security/2020/04/14/blazor-wasm-jwt-indentityserver-p2.html" />
-<meta property="og:url" content="/blazor/security/2020/04/14/blazor-wasm-jwt-indentityserver-p2.html" />
+<link rel="canonical" href="/blazor/security/2020/04/14/blazor-wasm-jwt-aspnetidentity-p2.html" />
+<meta property="og:url" content="/blazor/security/2020/04/14/blazor-wasm-jwt-aspnetidentity-p2.html" />
 <meta property="og:site_name" content="Blazor Developer Italiani" />
-<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/blazor-wasm-jwt-indentityserver-p2.png" />
+<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/blazor-wasm-jwt-aspnetidentity-p2.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-14T01:00:00+02:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/14/blazor-wasm-jwt-indentityserver-p2.html"},"url":"/blazor/security/2020/04/14/blazor-wasm-jwt-indentityserver-p2.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e IdentityServer in Blazor - Parte 2","dateModified":"2020-04-14T01:00:00+02:00","datePublished":"2020-04-14T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-indentityserver-p2/blazor-wasm-jwt-indentityserver-p2.png","description":"Entriamo nel vivo della fase di registrazione dell’utente, completando il processo di creazione e di convalida dell’account. Per fare ciò andiamo a creare il controller che si occuperà della registrazione e di altre funzionalità che riguardano l’utente.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/14/blazor-wasm-jwt-aspnetidentity-p2.html"},"url":"/blazor/security/2020/04/14/blazor-wasm-jwt-aspnetidentity-p2.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e ASP.NET Identity in Blazor - Parte 2","dateModified":"2020-04-14T01:00:00+02:00","datePublished":"2020-04-14T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/blazor-wasm-jwt-aspnetidentity-p2.png","description":"Entriamo nel vivo della fase di registrazione dell’utente, completando il processo di creazione e di convalida dell’account. Per fare ciò andiamo a creare il controller che si occuperà della registrazione e di altre funzionalità che riguardano l’utente.","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -66,11 +66,11 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h3 class="post-subtitle">Gestire autenticazione e sicurezza in Blazor WASM</h3>
-    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e IdentityServer in Blazor - Parte 2</h1>
+    <h3 class="post-subtitle">Autenticazione e sicurezza in Blazor WASM</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e ASP.NET Identity in Blazor - Parte 2</h1>
     <h4>Data pubblicazione: 14-04-2020 - Autore: Gianluca Gentile</h4>
   </header><figure>
-      <img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/blazor-wasm-jwt-indentityserver-p2.png" alt="Autenticazione JWT e IdentityServer in Blazor - Parte 2" />
+      <img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/blazor-wasm-jwt-aspnetidentity-p2.png" alt="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 2" />
   </figure><div class="post-content e-content" itemprop="articleBody">
     <p>Entriamo nel vivo della fase di registrazione dell’utente, completando il processo di creazione e di convalida dell’account. Per fare ciò andiamo a creare il controller che si occuperà della registrazione e di altre funzionalità che riguardano l’utente.</p>
 
@@ -115,7 +115,7 @@
 
 <p>Nel progetto “Server” quindi abbiamo questa nuova struttura:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image001.png" alt="Struttura progetto aggiornata" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image001.png" alt="Struttura progetto aggiornata" /></p>
 
 <p>Non resta che aggiungere al file Startup.cs il nuovo servizio:</p>
 
@@ -125,7 +125,7 @@
 <h2 id="account-controller">Account controller</h2>
 <p>Cliccando con il tasto destro della cartella denominata <em>Controllers</em> presente sul progetto Server, possiamo selezionare la voce <em>Aggiungi</em> e successivamente <em>Nuovo elemento…</em>. Selezioniamo poi <strong>API Controller Class – Empty</strong> e digitiamo il nome del nostro controller, <code class="highlighter-rouge">AccountsController.cs</code>:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image011.png" alt="Struttura progetto aggiornata" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image011.png" alt="Struttura progetto aggiornata" /></p>
 
 <p>Nel nuovo controller andiamo ad iniettare tramite dependency injection <code class="highlighter-rouge">ILogger</code> e <code class="highlighter-rouge">IEmailSender</code>, insieme a <code class="highlighter-rouge">UserManager</code>, il servizio che ci fornisce ASP.NET Identity per la gestione degli account. Creeremo l’action <code class="highlighter-rouge">Register</code> che prende in input il modello <code class="highlighter-rouge">RegisterRequest</code> e restituisce l’oggetto <code class="highlighter-rouge">RegisterResponse</code>, che contiene tutto il necessario per capire se la richiesta è andata a buon fine:</p>
 
@@ -180,15 +180,15 @@
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Cosa avviene se inseriamo dei dati non corretti? Come abbiamo visto nel precedente articolo, il modello è validato in base alle <em>Data Annotation</em> specificate nella classe <code class="highlighter-rouge">RegisterRequest</code>. Inoltre adesso se a Identity Server non piacciono i dati che abbiamo inserito, valorizzerà una lista di errori che verranno visualizzati nella form di registrazione per fornire un output chiaro all’utente:</p>
+<p>Cosa avviene se inseriamo dei dati non corretti? Come abbiamo visto nel precedente articolo, il modello è validato in base alle <em>Data Annotation</em> specificate nella classe <code class="highlighter-rouge">RegisterRequest</code>. Inoltre adesso se a ASP.NET Identity non piacciono i dati che abbiamo inserito, valorizzerà una lista di errori che verranno visualizzati nella form di registrazione per fornire un output chiaro all’utente:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image012.png" alt="Validazione utente durante la registrazione" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image012.png" alt="Validazione utente durante la registrazione" /></p>
 
 <p>Cosa accade invece se i dati sono corretti e la creazione dell’utente va a buon fine? Sul database ci sarà la entry contenente il nuovo utente ma latp frontend dobbiamo ancora gestire il risultato.</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image013.png" alt="Utente creato sul database" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image013.png" alt="Utente creato sul database" /></p>
 
-<p>E’ importante notare che il campo <code class="highlighter-rouge">EmailConfirmed</code> sul database è “0”, questo perché una volta creato l’utente è necessario (impostazione di default di Identity Server) confermare l’indirizzo email. Se non ci sono stati intoppi e se il servizio email è operativo, controllate la casella e-mail perché dovreste aver ricevuto un messagio con il testo: “Please confirm your account by clicking here”. Cliccando però non succede nulla perché non abbiamo ancora gestito la richiesta nel front-end.</p>
+<p>E’ importante notare che il campo <code class="highlighter-rouge">EmailConfirmed</code> sul database è “0”, questo perché una volta creato l’utente è necessario (impostazione di default di ASP.NET Identity) confermare l’indirizzo email. Se non ci sono stati intoppi e se il servizio email è operativo, controllate la casella e-mail perché dovreste aver ricevuto un messagio con il testo: “Please confirm your account by clicking here”. Cliccando però non succede nulla perché non abbiamo ancora gestito la richiesta nel front-end.</p>
 
 <h2 id="conferma-e-mail">Conferma e-mail</h2>
 <p>Andiamo a creare sul progetto <em>client</em> la pagina di conferma dell’indirizzo e-mail, che chiamerò con una fantasia spropositata <code class="highlighter-rouge">EmailConfirmation.razor</code>. Ecco il suo contenuto:</p>
@@ -264,11 +264,11 @@
 
 <p>Non ho creato una classe <em>Response</em> perché il tipo di dato è semplicemente un boolean che indica se tutto è filato liscio. Come avrete potuto notare, la pagina <code class="highlighter-rouge">EmailConfirmation</code> visualizza il messaggio di avviso e solo se la conferma della e-mail va a buon fine, c’è il redirect alla schermata di login (che dobbiamo ancora realizzare).</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image014.png" alt="Avviso e-mail utente non confermata" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image014.png" alt="Avviso e-mail utente non confermata" /></p>
 
 <p>Se controlliamo il database vedremo che l’indirizzo e-mail è stato confermato:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image015.png" alt="E-mail utente confermata sul database" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image015.png" alt="E-mail utente confermata sul database" /></p>
 
 <h2 id="componente-di-notifica-invio-email">Componente di notifica invio email</h2>
 
@@ -302,7 +302,7 @@
 
 <p>Ed il risultato è questo:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image016.png" alt="Messaggio di conferma e invito a verificare la posta" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image016.png" alt="Messaggio di conferma e invito a verificare la posta" /></p>
 
 <p>Riutilizzeremo questo componente anche quando invieremo la mail per il recupero password o il cambio email. Il codice di <code class="highlighter-rouge">Register.razor</code> diventa quindi:</p>
 
@@ -432,7 +432,7 @@
 
 <p>Ecco come si presenta la pagina:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image017.png" alt="Pagina recupero password" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image017.png" alt="Pagina recupero password" /></p>
 
 <p>Andiamo quindi ad aggiungere le due classi usate per la <em>Request</em> e la <em>Response</em>:</p>
 
@@ -452,7 +452,7 @@
 
 <p>Entrambi i file sono stati creati nel progetto <em>Shared</em>:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image018.png" alt="Struttura progetto con i nuovi files" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image018.png" alt="Struttura progetto con i nuovi files" /></p>
 
 <p>E’ necessario aggiungere anche il metodo sul controller <code class="highlighter-rouge">Accounts</code>:</p>
 
@@ -545,7 +545,7 @@
 
 <p>La pagina visualizzata sarà la seguente:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image019.png" alt="Pagina cambio password" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image019.png" alt="Pagina cambio password" /></p>
 
 <p>Se URL ed dati inseriti sono corretti si verrà reindirizzati alla login.</p>
 
@@ -607,7 +607,7 @@
 
 <p>L’aspetto grafico è questo:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p2/image020.png" alt="Pagina login" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p2/image020.png" alt="Pagina login" /></p>
 
 <p>Anche qui sono necessarie le due classi di <em>Request</em> e <em>Response</em>:</p>
 
@@ -632,7 +632,7 @@
 
 <p>Nel prossimo articolo vedremo come effettuare il login e quindi gestire l’autenticazione.</p>
 
-  </div><a class="u-url" href="/blazor/security/2020/04/14/blazor-wasm-jwt-indentityserver-p2.html" hidden></a>
+  </div><a class="u-url" href="/blazor/security/2020/04/14/blazor-wasm-jwt-aspnetidentity-p2.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">

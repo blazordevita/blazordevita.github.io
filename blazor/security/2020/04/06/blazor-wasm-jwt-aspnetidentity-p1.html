@@ -20,21 +20,21 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Autenticazione JWT e IdentityServer in Blazor - Parte 1 | Blazor Developer Italiani</title>
+<title>Autenticazione JWT e ASP.NET Identity in Blazor - Parte 1 | Blazor Developer Italiani</title>
 <meta name="generator" content="Jekyll v4.0.0" />
-<meta property="og:title" content="Autenticazione JWT e IdentityServer in Blazor - Parte 1" />
+<meta property="og:title" content="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 1" />
 <meta name="author" content="Gianluca Gentile" />
 <meta property="og:locale" content="it" />
 <meta name="description" content="In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito" />
 <meta property="og:description" content="In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito" />
-<link rel="canonical" href="/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html" />
-<meta property="og:url" content="/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html" />
+<link rel="canonical" href="/blazor/security/2020/04/06/blazor-wasm-jwt-aspnetidentity-p1.html" />
+<meta property="og:url" content="/blazor/security/2020/04/06/blazor-wasm-jwt-aspnetidentity-p1.html" />
 <meta property="og:site_name" content="Blazor Developer Italiani" />
-<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/blazor-wasm-jwt-indentityserver-p1.png" />
+<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/blazor-wasm-jwt-aspnetidentity-p1.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-06T01:00:00+02:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html"},"url":"/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e IdentityServer in Blazor - Parte 1","dateModified":"2020-04-06T01:00:00+02:00","datePublished":"2020-04-06T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-indentityserver-p1/blazor-wasm-jwt-indentityserver-p1.png","description":"In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/06/blazor-wasm-jwt-aspnetidentity-p1.html"},"url":"/blazor/security/2020/04/06/blazor-wasm-jwt-aspnetidentity-p1.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e ASP.NET Identity in Blazor - Parte 1","dateModified":"2020-04-06T01:00:00+02:00","datePublished":"2020-04-06T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/blazor-wasm-jwt-aspnetidentity-p1.png","description":"In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso: Anonimo: per la visualizzare le pagine pubbliche Atleta: per il cliente che usufruisce dei servizi erogati Admin: per la gestione amministrativa del sito","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -66,11 +66,11 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h3 class="post-subtitle">Gestire autenticazione e sicurezza in Blazor WASM</h3>
-    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e IdentityServer in Blazor - Parte 1</h1>
+    <h3 class="post-subtitle">Autenticazione e sicurezza in Blazor WASM</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e ASP.NET Identity in Blazor - Parte 1</h1>
     <h4>Data pubblicazione: 06-04-2020 - Autore: Gianluca Gentile</h4>
   </header><figure>
-      <img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/blazor-wasm-jwt-indentityserver-p1.png" alt="Autenticazione JWT e IdentityServer in Blazor - Parte 1" />
+      <img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/blazor-wasm-jwt-aspnetidentity-p1.png" alt="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 1" />
   </figure><div class="post-content e-content" itemprop="articleBody">
     <p>In questa serie di articoli verrà realizzata un’applicazione per la gestione degli allenamenti, che prevede 3 livelli di accesso:</p>
 <ul>
@@ -83,7 +83,7 @@
 <ul>
   <li>Blazor WebAssembly per il frontend</li>
   <li>ASP.NET Core per le API ed autenticazione/autorizzazione</li>
-  <li>Identity Server per la gestione degli utenti</li>
+  <li>ASP.NET Identity per la gestione degli utenti</li>
   <li>Database SQL Server</li>
   <li>Entity Framework come ORM</li>
   <li>JWT Token</li>
@@ -91,7 +91,7 @@
 
 <p>Prima di iniziare, vorrei spendere due parole sull’implementazione di autenticazione / autorizzazione presente nelle ultime release di Blazor WebAssembly. Come è possibile leggere nella <a href="https://docs.microsoft.com/en-us/aspnet/core/security/blazor/webassembly/?view=aspnetcore-3.1">documentazione</a>, è presente il supporto ad Open ID Connect, tant’è che quando viene creato il progetto con Visual Studio, c’è già tutto il necessario per gestire gli utenti. Non ho utilizzato tale implementazione perché le richieste di Login / Registrazione avvengono tramite le pagine di default di Identity Server, mentre io preferisco avere queste pagine all’interno del front-end Blazor.</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image002.png" alt="Pagina Registrazione di ASP.NET Identity" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image002.png" alt="Pagina Registrazione di ASP.NET Identity" /></p>
 
 <p>Sicuramene possiamo andare a personalizzare le pagine ma per adesso ho preferito non farlo e seguo fiducioso questa richiesta su <a href="https://github.com/dotnet/AspNetCore.Docs/issues/17448">GitHub</a>.</p>
 
@@ -99,15 +99,15 @@
 
 <p>Siamo pronti ad iniziare. Apriamo Visual Studio e creiamo un nuovo progetto App Blazor:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image003.png" alt="Visual Studio Crea Nuovo Progetto" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image003.png" alt="Visual Studio Crea Nuovo Progetto" /></p>
 
 <p>Dopo avergli dato un nome ed impostato una cartella dove salvare il progetto, clicchiamo su “Crea” e scegliamo Blazor WebAssembly App e spuntiamo “ASP.NET Core hosted”:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image004.png" alt="Blazor WebAssembly template" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image004.png" alt="Blazor WebAssembly template" /></p>
 
 <p>Il template di creazione del progetto non ha, ovviamente, tutti i pacchetti necessari alla nostra app, andiamo quindi ad installarl cliccando con il tasto destro sul progetto “Server” e selezionando “Gestisci pacchetti NuGet…”:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image005.png" alt="Finestra aggiunta pacchetti Nuget" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image005.png" alt="Finestra aggiunta pacchetti Nuget" /></p>
 
 <p>Nella schermata che si aprirà, clicchiamo su “Sfoglia” ed installiamo questi pacchetti:</p>
 <ul>
@@ -118,7 +118,7 @@
   <li>Microsoft.EntityFrameworkCore.Tools</li>
 </ul>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image006.png" alt="Installazione pacchetto Nuget" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image006.png" alt="Installazione pacchetto Nuget" /></p>
 
 <p>A questo punto abbiamo tutto il necessario.</p>
 
@@ -126,11 +126,11 @@
 
 <p>Come anticipato inizialmente, il backend è basato su SQL Server e verrà utilizzato Entity Framework per l’acceso ai dati. E’ necessario quindi impostare la stringa di connessione e per farlo andiamo ad editare il file <code class="highlighter-rouge">appsettings.json</code> che si trova sulla root del progetto server:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image007.png" alt="File appsettings.json" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image007.png" alt="File appsettings.json" /></p>
 
 <p>Al suo contenuto iniziale, adiamo ad aggiungere la stringa di connessione:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image008.png" alt="Configurazione stringa connessione in appsettings.json" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image008.png" alt="Configurazione stringa connessione in appsettings.json" /></p>
 
 <p>Il valore di <code class="highlighter-rouge">DefaultConnection</code> è così formato:
 <code class="highlighter-rouge">"Data Source=NOME_DEL_SERVER;Initial Catalog=NOME_DEL_DATABASE;Persist Security Info=True;Connection Timeout=0;User ID=USERNAME;Password=PASSWORD"</code></p>
@@ -138,11 +138,11 @@
 <p>Il mio approccio sarà di tipo <strong><em>Code First</em></strong>, quindi partendo dal modello mi affiderò ai tool di Entity Framework per creare la struttura del database.
 Per prima cosa è necessario creare il DBContext: andiamo a creare una cartella chiamata “Data” dentro il progetto “Server” ed al suo interno creiamo la classe “ApplicationDbContext.cs”:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image009.png" alt="File ApplicationDbContext" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image009.png" alt="File ApplicationDbContext" /></p>
 
 <p>Il contenuto di tale classe è molto semplice perché sarà necessario solo estendere la classe <code class="highlighter-rouge">IdentityDbContext</code>, creare il costruttore e configurare il metodo <code class="highlighter-rouge">OnModelCreating</code>, che per adesso richiama le funzionalità del parent:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image010.png" alt="Contenuto di ApplicationDbContext" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image010.png" alt="Contenuto di ApplicationDbContext" /></p>
 
 <p>Ovviamente sarà necessario importare i namespace richiesti. A questo punto possiamo configurare la nostra applicazione “Server” per utilizzare tutto ciò che abbiamo installato fino a questo punto. Per farlo è necessario aprire il file <code class="highlighter-rouge">Startup.cs</code>, che si trova sempre nel progetto Server, e modificare il metodo <code class="highlighter-rouge">ConfigureServices</code>. Nello specifico andiamo ad aggiungere:</p>
 
@@ -173,31 +173,31 @@ Per prima cosa è necessario creare il DBContext: andiamo a creare una cartella 
 
 <p>Analizziamo il codice che abbiamo scritto. Le prime 2 righe indicano qual è il <code class="highlighter-rouge">DbContext</code> da utilizzare e dove trovare la stringa di connessione del database. Chi ha un po’ di praticità con Entity Framework avrà già visto queste istruzioni.</p>
 
-<p>Abbastanza esplicativa è anche la porzione di codice <code class="highlighter-rouge">services.AddDefaultIdentity&lt;IdentityUser&gt;()</code>: non facciamo altro che dire ad Identity Server quali caratteristiche devono avere la password e che store usare. In ambiente di test preferisco usare password che non siano necessariamente alfanumeriche e quindi tramite le direttive options mi semplifico la vita.</p>
+<p>Abbastanza esplicativa è anche la porzione di codice <code class="highlighter-rouge">services.AddDefaultIdentity&lt;IdentityUser&gt;()</code>: non facciamo altro che dire ad ASP.NET Identity quali caratteristiche devono avere la password e che store usare. In ambiente di test preferisco usare password che non siano necessariamente alfanumeriche e quindi tramite le direttive options mi semplifico la vita.</p>
 
 <p>Con l’ultima parte, <code class="highlighter-rouge">services.AddAuthentication()</code>, configuriamo l’autenticazione tramite token di tipo JWT Bearer, prendendo la chiave, l’issuer e l’audience dal file “appsettings.json”:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image012.png" alt="Parametri configurazione token JWT" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image012.png" alt="Parametri configurazione token JWT" /></p>
 
 <h2 id="inizializzazione-del-database">Inizializzazione del database</h2>
-<p>Arrivati a questo punto siamo pronti per creare le tabelle necessarie ad Identity Server. Per farlo apriamo la “Console di Gestione pacchetti” andando su Strumenti -&gt; Gestione pacchetti Nuget:</p>
+<p>Arrivati a questo punto siamo pronti per creare le tabelle necessarie ad ASP.NET Identity. Per farlo apriamo la “Console di Gestione pacchetti” andando su Strumenti -&gt; Gestione pacchetti Nuget:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image013.png" alt="Console Gestione pacchetti NuGet" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image013.png" alt="Console Gestione pacchetti NuGet" /></p>
 
 <p>Andiamo a creare la prima migrazione con il comando <code class="highlighter-rouge">Add-Migration InitDBTrain</code>.Ecco il risultato:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image014.png" alt="Migration Entity Framework" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image014.png" alt="Migration Entity Framework" /></p>
 
 <p>Verrà creato e visualizzato un file C# contenete tutte le modifiche che saranno apportate dal database. <code class="highlighter-rouge">InitDBTrain</code> è solo la descrizione della migrazione appena creata quindi potete personalizzarla come credete. Per attuare tali modifiche sarà necessario il comando <code class="highlighter-rouge">Update-Database</code>:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image014.png" alt="Aggiornamento del database con Entity Framework" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image014.png" alt="Aggiornamento del database con Entity Framework" /></p>
 
 <p>Andando a verificare il database, vedremo le tabella create:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image015.png" alt="Aggiornamento del database con Entity Framework" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image015.png" alt="Aggiornamento del database con Entity Framework" /></p>
 
-<h2 id="estendere-il-modello-di-identity-server">Estendere il modello di Identity Server</h2>
-<p>Di default Identity Server non è predisposto a persistere alcune informazioni che possono tornare utili quando si tratta di archiviare dati utente come nome, cognome o data di nascita. Per ampliare il modello user di Identity Server è sufficiente estendere la sua classe base e per farlo andiamo a creare la classe “Athlete” perché come detto, l’applicazione gestirà i programmi di allenamento degli atleti registrati. Nella cartella Data del progetto Server creiamo la classe:</p>
+<h2 id="estendere-il-modello-di-aspnet-identity">Estendere il modello di ASP.NET Identity</h2>
+<p>Di default ASP.NET Identity non è predisposto a persistere alcune informazioni che possono tornare utili quando si tratta di archiviare dati utente come nome, cognome o data di nascita. Per ampliare il modello user di ASP.NET Identity è sufficiente estendere la sua classe base e per farlo andiamo a creare la classe “Athlete” perché come detto, l’applicazione gestirà i programmi di allenamento degli atleti registrati. Nella cartella Data del progetto Server creiamo la classe:</p>
 
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">Athlete</span> <span class="p">:</span> <span class="n">IdentityUser</span>
 <span class="p">{</span>
@@ -224,7 +224,7 @@ Per prima cosa è necessario creare il DBContext: andiamo a creare una cartella 
     <span class="k">public</span> <span class="kt">char</span> <span class="n">Sex</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Il codice è molto esplicativo per chi conosce la Data Annotation e forse l’unica annotazione che merita una spiegazione è quella identificata da <code class="highlighter-rouge">[PersonalData]</code>, con la quale andiamo a dire ad Identity Server che quel campo è personale e quindi va gestito secondo le specifiche richieste dalla normativa sulla privacy. Come probabilmente saprete, in Europa vige il GDPR che tra le sue regole impone di rendere disponibili all’utente tutti i suoi dati personali e il diritto all’oblio, dargli cioè la possibilità di eliminare tutti i dati salvati sul sistema. Gli automatismi di Identity Server ci permettono di rispettare entrambe le regole, il nostro compito è contrassegnare con questo attributo quali siano i dati personali.</p>
+<p>Il codice è molto esplicativo per chi conosce la Data Annotation e forse l’unica annotazione che merita una spiegazione è quella identificata da <code class="highlighter-rouge">[PersonalData]</code>, con la quale andiamo a dire ad ASP.NET Identity che quel campo è personale e quindi va gestito secondo le specifiche richieste dalla normativa sulla privacy. Come probabilmente saprete, in Europa vige il GDPR che tra le sue regole impone di rendere disponibili all’utente tutti i suoi dati personali e il diritto all’oblio, dargli cioè la possibilità di eliminare tutti i dati salvati sul sistema. Gli automatismi di ASP.NET Identity ci permettono di rispettare entrambe le regole, il nostro compito è contrassegnare con questo attributo quali siano i dati personali.</p>
 
 <p>Dopo questo breve excursus burocratico, torniamo al nostro codice. Creato il modello, andiamo ad aggiornare la classe ApplicationDbContext che diventa così:</p>
 
@@ -254,13 +254,13 @@ Per prima cosa è necessario creare il DBContext: andiamo a creare una cartella 
 
 <p>Aggiorniamo il database aggiungendo la migrazione con il comando <code class="highlighter-rouge">Add-Migration AthleteModel</code> e lanciando il comando <code class="highlighter-rouge">Update-Database</code>:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image017.png" alt="Aggiornamento del database con Entity Framework" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image017.png" alt="Aggiornamento del database con Entity Framework" /></p>
 
 <h2 id="modelli-per-la-registrazione">Modelli per la registrazione</h2>
 <p>Dopo aver creato il contenitore dove persistere i dati è necessario creare i due modelli che si occuperanno rispettivamente della richiesta di registrazione e della relativa risposta, che andremo a creare nel progetto “Shared” perché saranno condivisi tra la parte frontend e backend.
 Per tenere ordinato il codice ho creato le cartelle <code class="highlighter-rouge">Models &gt; Account</code> e al proprio interno ho inserito le 2 classi descritte: <code class="highlighter-rouge">RegisterRequest</code> e <code class="highlighter-rouge">RegisterResponse</code>:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image018.png" alt="La cartella Models &gt; Account" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image018.png" alt="La cartella Models &gt; Account" /></p>
 
 <p>Ecco il contenuto di <code class="highlighter-rouge">RegisterRequest.cs</code>:</p>
 
@@ -434,11 +434,11 @@ Creiamo il file <code class="highlighter-rouge">custom.css</code> nella cartella
 
 <p>Ci siamo, possiamo utilizzare il tasto play per lanciare nostra app! All’apertura del browser scriviamo nella barra degli indirizzi l’URL <code class="highlighter-rouge">https://localhost:44322/account/register</code>, che mostrerà il risultato del nostro lavoro:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p1/image019.png" alt="La pagina di registrazione in Blazor" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p1/image019.png" alt="La pagina di registrazione in Blazor" /></p>
 
-<p>Nel prossimo articolo andremo a definire il controller che si occuperà della creazione dell’utente usando Identity Server, completando il processo di registrazione.</p>
+<p>Nel prossimo articolo andremo a definire il controller che si occuperà della creazione dell’utente usando ASP.NET Identity, completando il processo di registrazione.</p>
 
-  </div><a class="u-url" href="/blazor/security/2020/04/06/blazor-wasm-jwt-indentityserver-p1.html" hidden></a>
+  </div><a class="u-url" href="/blazor/security/2020/04/06/blazor-wasm-jwt-aspnetidentity-p1.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">

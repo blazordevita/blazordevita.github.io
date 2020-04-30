@@ -20,21 +20,21 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Autenticazione JWT e IdentityServer in Blazor - Parte 3 | Blazor Developer Italiani</title>
+<title>Autenticazione JWT e ASP.NET Identity in Blazor - Parte 3 | Blazor Developer Italiani</title>
 <meta name="generator" content="Jekyll v4.0.0" />
-<meta property="og:title" content="Autenticazione JWT e IdentityServer in Blazor - Parte 3" />
+<meta property="og:title" content="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 3" />
 <meta name="author" content="Gianluca Gentile" />
 <meta property="og:locale" content="it" />
 <meta name="description" content="Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:" />
 <meta property="og:description" content="Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:" />
-<link rel="canonical" href="/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html" />
-<meta property="og:url" content="/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html" />
+<link rel="canonical" href="/blazor/security/2020/04/20/blazor-wasm-jwt-aspnetidentity-p3.html" />
+<meta property="og:url" content="/blazor/security/2020/04/20/blazor-wasm-jwt-aspnetidentity-p3.html" />
 <meta property="og:site_name" content="Blazor Developer Italiani" />
-<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/blazor-wasm-jwt-indentityserver-p3.png" />
+<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/blazor-wasm-jwt-aspnetidentity-p3.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-20T01:00:00+02:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html"},"url":"/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e IdentityServer in Blazor - Parte 3","dateModified":"2020-04-20T01:00:00+02:00","datePublished":"2020-04-20T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-indentityserver-p3/blazor-wasm-jwt-indentityserver-p3.png","description":"Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/20/blazor-wasm-jwt-aspnetidentity-p3.html"},"url":"/blazor/security/2020/04/20/blazor-wasm-jwt-aspnetidentity-p3.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e ASP.NET Identity in Blazor - Parte 3","dateModified":"2020-04-20T01:00:00+02:00","datePublished":"2020-04-20T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/blazor-wasm-jwt-aspnetidentity-p3.png","description":"Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller Account la dipendenza dalla classe SignInManager e della classe Configuration:","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -66,11 +66,11 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h3 class="post-subtitle">Gestire autenticazione e sicurezza in Blazor WASM</h3>
-    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e IdentityServer in Blazor - Parte 3</h1>
+    <h3 class="post-subtitle">Autenticazione e sicurezza in Blazor WASM</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e ASP.NET Identity in Blazor - Parte 3</h1>
     <h4>Data pubblicazione: 20-04-2020 - Autore: Gianluca Gentile</h4>
   </header><figure>
-      <img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/blazor-wasm-jwt-indentityserver-p3.png" alt="Autenticazione JWT e IdentityServer in Blazor - Parte 3" />
+      <img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/blazor-wasm-jwt-aspnetidentity-p3.png" alt="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 3" />
   </figure><div class="post-content e-content" itemprop="articleBody">
     <p>Nel precedente articolo ci siamo lasciati con l’impegno di implementare la pagina di Login, per la quale abbiamo bisogno di aggiungere al costruttore del controller <code class="highlighter-rouge">Account</code> la dipendenza dalla classe <code class="highlighter-rouge">SignInManager</code> e della classe <code class="highlighter-rouge">Configuration</code>:</p>
 
@@ -155,7 +155,7 @@
 
 <p>In questo momento non c’è nessun ruolo configurato, ma successivamente vedremo come questo concetto ci permetta di diversificare gli utenti dell’applicazione. Se ispezioniamo la richiesta di login, dovremmo visualizzare qualcosa di simile:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image001.png" alt="Token restituito dal login" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/image001.png" alt="Token restituito dal login" /></p>
 
 <p>Ok, abbiamo il token, adesso va gestito.</p>
 
@@ -173,7 +173,7 @@
 
 <p>Abbiamo bisogno di salvare il token nello storage del browser, quindi installiamo un pacchetto NuGet chiamato <code class="highlighter-rouge">Blazored.LocalStorage</code> che ci consente di leggere e scrivere nel local storage in modo immediato:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image002.png" alt="Local Storage Nuget Package" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/image002.png" alt="Local Storage Nuget Package" /></p>
 
 <p>Installiamo anche:</p>
 <ul>
@@ -321,11 +321,11 @@
 
 <p>Facciamo partire l’applicazione e dopo aver fatto la login, se tutto funziona correttamente, visualizzeremo questa schermata:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image003.png" alt="Pagina di benvenuto dopo login" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/image003.png" alt="Pagina di benvenuto dopo login" /></p>
 
 <p>Possiamo vedere anche il token salvato sul browser:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image004.png" alt="Token salvato nel browser" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/image004.png" alt="Token salvato nel browser" /></p>
 
 <p>Perfetto, siamo dentro! Vediamo adesso come uscire.</p>
 
@@ -348,11 +348,11 @@
 
 <p>Avviamo l’applicazione e vediamo se il logout funziona:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p3/image005.png" alt="Logout" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p3/image005.png" alt="Logout" /></p>
 
 <p>Ottimo, siamo usciti dall’applicazione! Ispezionando il local storage vedrete che anche il token è stato eliminato.</p>
 
-  </div><a class="u-url" href="/blazor/security/2020/04/20/blazor-wasm-jwt-indentityserver-p3.html" hidden></a>
+  </div><a class="u-url" href="/blazor/security/2020/04/20/blazor-wasm-jwt-aspnetidentity-p3.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">

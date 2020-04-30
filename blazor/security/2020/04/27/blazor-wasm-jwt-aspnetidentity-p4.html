@@ -20,21 +20,21 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Autenticazione JWT e IdentityServer in Blazor - Parte 4 | Blazor Developer Italiani</title>
+<title>Autenticazione JWT e ASP.NET Identity in Blazor - Parte 4 | Blazor Developer Italiani</title>
 <meta name="generator" content="Jekyll v4.0.0" />
-<meta property="og:title" content="Autenticazione JWT e IdentityServer in Blazor - Parte 4" />
+<meta property="og:title" content="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 4" />
 <meta name="author" content="Gianluca Gentile" />
 <meta property="og:locale" content="it" />
 <meta name="description" content="Fin ora abbiamo visto come creare ed autenticare un utente, oltre che a recuperare la password e a confermare il proprio indirizzo e-mail. Passiamo adesso alla gestione dei ruoli su Identy Framework, visto che per l’applicazione è necessario distinguere i vari livelli di accesso." />
 <meta property="og:description" content="Fin ora abbiamo visto come creare ed autenticare un utente, oltre che a recuperare la password e a confermare il proprio indirizzo e-mail. Passiamo adesso alla gestione dei ruoli su Identy Framework, visto che per l’applicazione è necessario distinguere i vari livelli di accesso." />
-<link rel="canonical" href="/blazor/security/2020/04/27/blazor-wasm-jwt-indentityserver-p4.html" />
-<meta property="og:url" content="/blazor/security/2020/04/27/blazor-wasm-jwt-indentityserver-p4.html" />
+<link rel="canonical" href="/blazor/security/2020/04/27/blazor-wasm-jwt-aspnetidentity-p4.html" />
+<meta property="og:url" content="/blazor/security/2020/04/27/blazor-wasm-jwt-aspnetidentity-p4.html" />
 <meta property="og:site_name" content="Blazor Developer Italiani" />
-<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-indentityserver-p4/blazor-wasm-jwt-indentityserver-p4.png" />
+<meta property="og:image" content="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p4/blazor-wasm-jwt-aspnetidentity-p4.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-27T01:00:00+02:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/27/blazor-wasm-jwt-indentityserver-p4.html"},"url":"/blazor/security/2020/04/27/blazor-wasm-jwt-indentityserver-p4.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e IdentityServer in Blazor - Parte 4","dateModified":"2020-04-27T01:00:00+02:00","datePublished":"2020-04-27T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-indentityserver-p4/blazor-wasm-jwt-indentityserver-p4.png","description":"Fin ora abbiamo visto come creare ed autenticare un utente, oltre che a recuperare la password e a confermare il proprio indirizzo e-mail. Passiamo adesso alla gestione dei ruoli su Identy Framework, visto che per l’applicazione è necessario distinguere i vari livelli di accesso.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/security/2020/04/27/blazor-wasm-jwt-aspnetidentity-p4.html"},"url":"/blazor/security/2020/04/27/blazor-wasm-jwt-aspnetidentity-p4.html","author":{"@type":"Person","name":"Gianluca Gentile"},"headline":"Autenticazione JWT e ASP.NET Identity in Blazor - Parte 4","dateModified":"2020-04-27T01:00:00+02:00","datePublished":"2020-04-27T01:00:00+02:00","image":"/assets/articoli/blazor-wasm-jwt-aspnetidentity-p4/blazor-wasm-jwt-aspnetidentity-p4.png","description":"Fin ora abbiamo visto come creare ed autenticare un utente, oltre che a recuperare la password e a confermare il proprio indirizzo e-mail. Passiamo adesso alla gestione dei ruoli su Identy Framework, visto che per l’applicazione è necessario distinguere i vari livelli di accesso.","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -66,11 +66,11 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h3 class="post-subtitle">Gestire autenticazione e sicurezza in Blazor WASM</h3>
-    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e IdentityServer in Blazor - Parte 4</h1>
+    <h3 class="post-subtitle">Autenticazione e sicurezza in Blazor WASM</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Autenticazione JWT e ASP.NET Identity in Blazor - Parte 4</h1>
     <h4>Data pubblicazione: 27-04-2020 - Autore: Gianluca Gentile</h4>
   </header><figure>
-      <img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p4/blazor-wasm-jwt-indentityserver-p4.png" alt="Autenticazione JWT e IdentityServer in Blazor - Parte 4" />
+      <img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p4/blazor-wasm-jwt-aspnetidentity-p4.png" alt="Autenticazione JWT e ASP.NET Identity in Blazor - Parte 4" />
   </figure><div class="post-content e-content" itemprop="articleBody">
     <p>Fin ora abbiamo visto come creare ed autenticare un utente, oltre che a recuperare la password e a confermare il proprio indirizzo e-mail. Passiamo adesso alla gestione dei ruoli su Identy Framework, visto che per l’applicazione è necessario distinguere i vari livelli di accesso.</p>
 
@@ -107,7 +107,7 @@
 
 <p>In questo modo l’interfaccia risulta sicuramente più ordinata:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p4/image001.png" alt="Lagin Area" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p4/image001.png" alt="Lagin Area" /></p>
 
 <h2 id="gestione-ruoli">Gestione Ruoli</h2>
 
@@ -217,7 +217,7 @@
     <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Questa classe ha solo due proprietà, che ci consentono di mappare le corrispondenti proprietà del modello IdentityRole che viene usato da Identity Server. Gli alti due modelli sono <code class="highlighter-rouge">EditRoleRequest</code> e <code class="highlighter-rouge">EditRoleResponse</code>, che utilizzeremo per le richieste di creazione e modifica provenienti dal front-end e gestite dal back-end.</p>
+<p>Questa classe ha solo due proprietà, che ci consentono di mappare le corrispondenti proprietà del modello IdentityRole che viene usato da ASP.NET Identity. Gli alti due modelli sono <code class="highlighter-rouge">EditRoleRequest</code> e <code class="highlighter-rouge">EditRoleResponse</code>, che utilizzeremo per le richieste di creazione e modifica provenienti dal front-end e gestite dal back-end.</p>
 
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">EditRoleRequest</span>
 <span class="p">{</span>
@@ -419,11 +419,11 @@ private readonly RoleManager<IdentityRole> _roleManager;</IdentityRole></RolesCo
 
 <p>Il risultato finale è una pagina che ci consente di gestire al meglio le roles:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p4/image002.png" alt="Gestione ruoli" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p4/image002.png" alt="Gestione ruoli" /></p>
 
 <p>E’ possibile vedere i ruoli presenti, aggiungerne di nuovi e soprattutto è possibile aggiungere utenti ad una role attraverso l’autocomplete che compare solo se ci sono utenti non inseriti già nella role selezionata:</p>
 
-<p><img src="/assets/articoli/blazor-wasm-jwt-indentityserver-p4/image003.png" alt="Gestione utente a ruolo" /></p>
+<p><img src="/assets/articoli/blazor-wasm-jwt-aspnetidentity-p4/image003.png" alt="Gestione utente a ruolo" /></p>
 
 <p>Dopo aver associato all’utente le roles di competenza, andremo a mostrare tale link (con relativa impostazione sulla pagina) solo all’utente con role <code class="highlighter-rouge">Admin</code>. Ecco la <code class="highlighter-rouge">LoginDisplay.razor</code>:</p>
 
@@ -463,7 +463,7 @@ private readonly RoleManager<IdentityRole> _roleManager;</IdentityRole></RolesCo
 
 <p>Finito! Da questo momento abbiamo vincolato l’accesso alle pagine alla gestione dei ruoli.</p>
 
-  </div><a class="u-url" href="/blazor/security/2020/04/27/blazor-wasm-jwt-indentityserver-p4.html" hidden></a>
+  </div><a class="u-url" href="/blazor/security/2020/04/27/blazor-wasm-jwt-aspnetidentity-p4.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
