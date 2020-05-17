@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Componenti Generici in Blazor - Parte 1 | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Componenti Generici in Blazor - Parte 1" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Nella serie di articoli base su come creare una Single Page Application abbiamo visto come generalizzare un componente attraverso i parametri, ma per poterli riutilizzare in contesti differenti è necessario spingersi un po’ più in là con l’astrazione. Se vogliamo ad esempio generalizzare la griglia che abbiamo creato, dobbiamo poter passare una collezione di oggetti qualsiasi in modo da poterla riutilizzare in qualsiasi contesto." />
+<meta property="og:description" content="Nella serie di articoli base su come creare una Single Page Application abbiamo visto come generalizzare un componente attraverso i parametri, ma per poterli riutilizzare in contesti differenti è necessario spingersi un po’ più in là con l’astrazione. Se vogliamo ad esempio generalizzare la griglia che abbiamo creato, dobbiamo poter passare una collezione di oggetti qualsiasi in modo da poterla riutilizzare in qualsiasi contesto." />
+<link rel="canonical" href="/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html" />
+<meta property="og:url" content="/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/componenti-blazor-generici-p1/griglia-generica-con-formattazione.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-17T01:00:00+02:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html"},"url":"/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Componenti Generici in Blazor - Parte 1","dateModified":"2020-05-17T01:00:00+02:00","datePublished":"2020-05-17T01:00:00+02:00","image":"/assets/articoli/componenti-blazor-generici-p1/griglia-generica-con-formattazione.png","description":"Nella serie di articoli base su come creare una Single Page Application abbiamo visto come generalizzare un componente attraverso i parametri, ma per poterli riutilizzare in contesti differenti è necessario spingersi un po’ più in là con l’astrazione. Se vogliamo ad esempio generalizzare la griglia che abbiamo creato, dobbiamo poter passare una collezione di oggetti qualsiasi in modo da poterla riutilizzare in qualsiasi contesto.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Generalizzare i componenti per il riutilizzo</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Componenti Generici in Blazor - Parte 1</h1>
+    <h4>Data pubblicazione: 17-05-2020 - Autore: Michele Aponte</h4>
+  </header><figure>
+      <img src="/assets/articoli/componenti-blazor-generici-p1/griglia-generica-con-formattazione.png" alt="Componenti Generici in Blazor - Parte 1" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Nella serie di articoli base su come creare una Single Page Application abbiamo visto come generalizzare un componente attraverso i parametri, ma per poterli riutilizzare in contesti differenti è necessario spingersi un po’ più in là con l’astrazione. Se vogliamo ad esempio generalizzare la griglia che abbiamo creato, dobbiamo poter passare una collezione di oggetti qualsiasi in modo da poterla riutilizzare in qualsiasi contesto.</p>
+
+<p>A tale scopo Blazor offre vari strumenti di cui oggi analizziamo il più semplice, che in realtà non è offerto da Blazor nello specifico, ma dalla possibilità di poter usare la Reflection di .NET Core anche in WebAssembly.</p>
+
+<h2 id="creare-una-griglia-generica">Creare una griglia generica</h2>
+
+<p>Partiamo dal progetto dell’articolo su come creare un  <a href="/blazor/advanced/2020/05/03/creare-una-libreria-di-componenti.html">libreria di componenti</a>, che abbiamo poi esteso con l’uso della <a href="/blazor/advanced/2020/05/10/dependency-injection-net-core.html">Dependency Injection</a>. La pagina <code class="highlighter-rouge">FetchData</code> mostra una tabella con intestazioni fisse e righe basate sul tipo <code class="highlighter-rouge">WeatherForecast</code>: estraiamo un componente griglia da questo codice e generalizziamolo.</p>
+
+<p>Nel progetto <code class="highlighter-rouge">LibreriaComponenti</code>, creiamo un cartella <code class="highlighter-rouge">Components</code> (ricordatevi di aggiungere la <code class="highlighter-rouge">using</code> nel file <code class="highlighter-rouge">_Imports.cs</code>) con dentro un file <code class="highlighter-rouge">Grid.razor</code> e copiamo al suo interno la <code class="highlighter-rouge">&lt;table&gt;</code> della pagina <code class="highlighter-rouge">FetchData</code>. Aggiungiamo poi alla cartella <code class="highlighter-rouge">Models</code> una nuova classe C# che chiamaremo <code class="highlighter-rouge">GridModel</code>, così definita:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">GridModel</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">Columns</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">Rows</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Questo oggetto ci servirà per poter specificare le intestazioni di colonna che vogliamo visualizzare e le righe, che come potete notare sono modellate come array di <code class="highlighter-rouge">object</code>. Utilizzando questo modello come tipo per il parametro del componente griglia, possiamo sfruttare la Reflection di .NET Core per recuperare i valori delle proprietà dagli oggetti:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            @foreach (var col in Model.Columns)
+            {
+                <span class="nt">&lt;th&gt;</span>@col<span class="nt">&lt;/th&gt;</span>
+            }
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/thead&gt;</span>
+    <span class="nt">&lt;tbody&gt;</span>
+        @foreach (var row in Model.Rows)
+        {
+            <span class="nt">&lt;tr&gt;</span>
+                @foreach (var prop in row.GetType().GetProperties())
+                {
+                    <span class="nt">&lt;td&gt;</span>@prop.GetValue(row)<span class="nt">&lt;/td&gt;</span>   
+                }
+            <span class="nt">&lt;/tr&gt;</span>
+        }
+    <span class="nt">&lt;/tbody&gt;</span>
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> 
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> 
+    <span class="k">public</span> <span class="n">GridModel</span> <span class="n">Model</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>La pagina <code class="highlighter-rouge">Fetch</code> a questo punto deve istanziare il nostro modello, definire le intestazioni di colonna e recuperare le righe come già faceva:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@page "/fetchdata"
+@inject IWeatherForecastService WeatherForecastService
+
+<span class="nt">&lt;h1&gt;</span>Weather forecast<span class="nt">&lt;/h1&gt;</span>
+
+<span class="nt">&lt;p&gt;</span>This component demonstrates fetching data from the server.<span class="nt">&lt;/p&gt;</span>
+
+@if (WeatherForecasModel.Rows == null)
+{
+    <span class="nt">&lt;p&gt;&lt;em&gt;</span>Loading...<span class="nt">&lt;/em&gt;&lt;/p&gt;</span>
+}
+else
+{
+    <span class="nt">&lt;Grid</span> <span class="na">Model=</span><span class="s">"WeatherForecasModel"</span> <span class="nt">/&gt;</span>
+}</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> 
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">GridModel</span> <span class="n">WeatherForecasModel</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">GridModel</span><span class="p">();</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnInitializedAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Columns</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">"Date"</span><span class="p">,</span> <span class="s">"Temp. (C)"</span><span class="p">,</span> <span class="s">"Temp. (F)"</span><span class="p">,</span> <span class="s">"Summary"</span> <span class="p">};</span>
+        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Rows</span> <span class="p">=</span> <span class="k">await</span> <span class="n">WeatherForecastService</span><span class="p">.</span><span class="nf">GetForecastAsync</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Eseguendo il codice otteremo il seguente risultato:</p>
+
+<p><img src="/assets/articoli/componenti-blazor-generici-p1/griglia-generica-senza-formattazione.png" alt="Griglia generica senza formattazione" /></p>
+
+<p>Notiamo subito che la data non è formattata, come invece lo era nella griglia originale, che utilizzava il metodo <code class="highlighter-rouge">forecast.Date.ToShortDateString()</code> durante il rendering del valore. Modifichiamo quindi la definizione delle colonne per poter specificare anche la formattazione:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">GridModel</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">GridColumn</span><span class="p">[]</span> <span class="n">Columns</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">Rows</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">GridColumn</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Caption</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Il codice della pagina Fetch diventa:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> 
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">GridModel</span> <span class="n">WeatherForecasModel</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">GridModel</span><span class="p">();</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnInitializedAsync</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Columns</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">[]</span> 
+            <span class="p">{</span> 
+                <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Date"</span><span class="p">,</span> <span class="n">Format</span> <span class="p">=</span> <span class="s">"{0:d}"</span> <span class="p">},</span>
+                <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Temp. (C)"</span> <span class="p">},</span>
+                <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Temp. (F)"</span> <span class="p">},</span> 
+                <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Summary"</span> <span class="p">}</span>
+            <span class="p">};</span>
+        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Rows</span> <span class="p">=</span> <span class="k">await</span> <span class="n">WeatherForecastService</span><span class="p">.</span><span class="nf">GetForecastAsync</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>A questo punto trasformiamo il <code class="highlighter-rouge">foreach</code> dei valori delle righe in un <code class="highlighter-rouge">for</code> e utilizziamo l’indice per accedere alla colonna e recuperare il formato da applicare (se c’è):</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            @foreach (var col in Model.Columns)
+            {
+                <span class="nt">&lt;th&gt;</span>@col.Caption<span class="nt">&lt;/th&gt;</span>
+            }
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/thead&gt;</span>
+    <span class="nt">&lt;tbody&gt;</span>
+        @foreach (var row in Model.Rows)
+        {
+            var properties = row.GetType().GetProperties();
+            <span class="nt">&lt;tr&gt;</span>  
+                @for (int i = 0; i <span class="nt">&lt;</span> <span class="nt">properties</span><span class="err">.</span><span class="na">Length</span><span class="err">;</span> <span class="na">i</span><span class="err">++)</span>
+                <span class="err">{</span>
+                    <span class="err">@</span><span class="na">if</span><span class="err">(</span><span class="na">string</span><span class="err">.</span><span class="na">IsNullOrEmpty</span><span class="err">(</span><span class="na">Model</span><span class="err">.</span><span class="na">Columns</span><span class="err">[</span><span class="na">i</span><span class="err">].</span><span class="na">Format</span><span class="err">))</span>
+                    <span class="err">{</span>
+                        <span class="err">&lt;</span><span class="na">td</span><span class="nt">&gt;</span>@properties[i].GetValue(row)<span class="nt">&lt;/td&gt;</span>
+                    }
+                    else
+                    {
+                        <span class="nt">&lt;td&gt;</span>@String.Format(
+                            Model.Columns[i].Format,
+                            properties[i].GetValue(row))<span class="nt">&lt;/td&gt;</span>
+                    }
+                }
+            <span class="nt">&lt;/tr&gt;</span>
+        }
+    <span class="nt">&lt;/tbody&gt;</span>
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<p>In questo modo possiamo formattare le nostre colonne:</p>
+
+<p><img src="/assets/articoli/componenti-blazor-generici-p1/griglia-generica-con-formattazione.png" alt="Griglia generica senza formattazione" /></p>
+
+<p>Nella definizione della colonna possiamo a questo punto mettere tutte le informazioni che vogliamo, ad esempio un valore che ci dice se la colonna è ordinabile, se è visibile o se magari vogliamo quale stile particolare.</p>
+
+<p>Abbiamo però dato per scontato che il modello che stiamo usando sia esattamente coincidente con quello che vogliamo visualizzare, cosa che dovrebbe essere vera se l’oggetto utilizzato è un ViewModel, una classe (Model) cioè pensata ad uso e consumo della nostra Pagina (View). Abbiamo anche assunto che l’ordine con cui il metodo <code class="highlighter-rouge">row.GetType().GetProperties()</code> ci restituisce le proprietà coincida con l’ordine di definizione delle righe.</p>
+
+<p>A questo punto l’idea potrebbe essere: se ho creato effettivamente un ViewModel a uso e consumo della mia pagina, perchè non sfruttarlo anche per fornire i metedati di visualizzazione della griglia?</p>
+
+<h2 id="usare-le-annotazioni-per-i-metadati">Usare le annotazioni per i metadati</h2>
+
+<p>Come programamtori .NET sappiamo bene che il nostro framework ha gli attributi! Sì, anche in quel senso, ma in questo caso intendo letteralmente: possiamo creare delle classi da applicare come attributi alle proprietà per definirne un <strong><em>aspetto</em></strong> esterno, senza doverle implementare nel codice della proprietà stessa. Per farlo basta creare una classe che estenda la classe base <code class="highlighter-rouge">System.Attribute</code>, ma nel nostro caso meglio non reinvetare la ruota visto che abbiamo già le DataAnnotation che usiamo con ASP.NET MVC.</p>
+
+<p>Aggiungiamo quindi al nostro modello le annotazioni che ci servono:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.ComponentModel.DataAnnotations</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">LibreriaComponenti.Models</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">WeatherForecast</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="nf">DisplayFormat</span><span class="p">(</span><span class="n">DataFormatString</span><span class="p">=</span><span class="s">"{0:d}"</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Date</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="p">[</span><span class="nf">Display</span><span class="p">(</span><span class="n">ShortName</span> <span class="p">=</span> <span class="s">"Temp. (C)"</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">TemperatureC</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="p">[</span><span class="nf">Display</span><span class="p">(</span><span class="n">ShortName</span> <span class="p">=</span> <span class="s">"Temp. (F)"</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">TemperatureF</span> <span class="p">=&gt;</span> <span class="m">32</span> <span class="p">+</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">TemperatureC</span> <span class="p">/</span> <span class="m">0.5556</span><span class="p">);</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Summary</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Assumiamo che nel caso non sia stato specificato l’attributo Display, debba essere utilizzato il nome della proprietà come intestazione di colonna. Per mantenere entrambe le implementazioni che abbiamo fatto, aggiungiamo un valore booleano a <code class="highlighter-rouge">GridModel</code> dove specificare se usare o no le annotazioni:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">GridModel</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">GridColumn</span><span class="p">[]</span> <span class="n">Columns</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">object</span><span class="p">[]</span> <span class="n">Rows</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">bool</span> <span class="n">UseAnnotations</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> 
+<span class="p">}</span></code></pre></figure>
+
+<p>Semplifichiamo il markup del nostro componente spostando l’utilizzo della reflection nella sezione di codice, riempiendo due array di appoggio per le intestazioni di colonne e i valori delle righe:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            @foreach (var col in columns)
+            {
+                <span class="nt">&lt;th&gt;</span>@col<span class="nt">&lt;/th&gt;</span>
+            }
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/thead&gt;</span>
+    <span class="nt">&lt;tbody&gt;</span>
+        @for(int row = 0; row <span class="nt">&lt;</span> <span class="nt">rows</span><span class="err">.</span><span class="na">GetLength</span><span class="err">(</span><span class="na">0</span><span class="err">);</span> <span class="na">row</span><span class="err">++)</span>
+        <span class="err">{</span>
+            <span class="err">&lt;</span><span class="na">tr</span><span class="nt">&gt;</span>
+            @for(int col = 0; col <span class="nt">&lt;</span> <span class="nt">rows</span><span class="err">.</span><span class="na">GetLength</span><span class="err">(</span><span class="na">1</span><span class="err">);</span> <span class="na">col</span><span class="err">++)</span>
+            <span class="err">{</span>
+                <span class="err">&lt;</span><span class="na">td</span><span class="nt">&gt;</span>@rows[row, col]<span class="nt">&lt;/td&gt;</span>
+            }
+            <span class="nt">&lt;/tr&gt;</span>
+        }
+    <span class="nt">&lt;/tbody&gt;</span>
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> 
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> 
+    <span class="k">public</span> <span class="n">GridModel</span> <span class="n">Model</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">columns</span><span class="p">;</span>
+    <span class="k">private</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">displayFormat</span><span class="p">;</span>
+    <span class="k">private</span> <span class="kt">string</span><span class="p">[,]</span> <span class="n">rows</span><span class="p">;</span>
+
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnParametersSet</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">properties</span> <span class="p">=</span> <span class="n">Model</span><span class="p">.</span><span class="n">Rows</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="nf">GetElementType</span><span class="p">().</span><span class="nf">GetProperties</span><span class="p">();</span>
+        <span class="nf">loadColumns</span><span class="p">(</span><span class="n">properties</span><span class="p">);</span>
+        <span class="nf">loadRows</span><span class="p">(</span><span class="n">properties</span><span class="p">);</span>            
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">loadColumns</span><span class="p">(</span><span class="n">PropertyInfo</span><span class="p">[]</span> <span class="n">properties</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">columns</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[</span><span class="n">properties</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+        <span class="n">displayFormat</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[</span><span class="n">properties</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">Model</span><span class="p">.</span><span class="n">UseAnnotations</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">col</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">col</span> <span class="p">&lt;</span> <span class="n">properties</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">col</span><span class="p">++)</span>
+            <span class="p">{</span>  
+                <span class="kt">var</span> <span class="n">display</span> <span class="p">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                    <span class="p">.</span><span class="nf">GetCustomAttributes</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">DisplayAttribute</span><span class="p">),</span> <span class="k">false</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">FirstOrDefault</span><span class="p">()</span> <span class="k">as</span> <span class="n">DisplayAttribute</span><span class="p">;</span>
+
+                <span class="kt">var</span> <span class="n">format</span> <span class="p">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                    <span class="p">.</span><span class="nf">GetCustomAttributes</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">DisplayFormatAttribute</span><span class="p">),</span> <span class="k">false</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">FirstOrDefault</span><span class="p">()</span> <span class="k">as</span> <span class="n">DisplayFormatAttribute</span><span class="p">;</span>
+
+                <span class="n">columns</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="p">=</span> <span class="n">display</span> <span class="p">==</span> <span class="k">null</span> <span class="p">?</span> <span class="n">properties</span><span class="p">[</span><span class="n">col</span><span class="p">].</span><span class="n">Name</span> <span class="p">:</span> <span class="n">display</span><span class="p">.</span><span class="n">ShortName</span><span class="p">;</span>
+                <span class="n">displayFormat</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="p">=</span> <span class="n">format</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">?</span> <span class="n">format</span><span class="p">.</span><span class="n">DataFormatString</span>  <span class="p">:</span> <span class="k">null</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">columns</span> <span class="p">=</span> <span class="n">Model</span><span class="p">.</span><span class="n">Columns</span><span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Caption</span><span class="p">).</span><span class="nf">ToArray</span><span class="p">();</span>
+            <span class="n">displayFormat</span> <span class="p">=</span> <span class="n">Model</span><span class="p">.</span><span class="n">Columns</span><span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Format</span><span class="p">).</span><span class="nf">ToArray</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">loadRows</span><span class="p">(</span><span class="n">PropertyInfo</span><span class="p">[]</span> <span class="n">properties</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">rows</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[</span><span class="n">Model</span><span class="p">.</span><span class="n">Rows</span><span class="p">.</span><span class="n">Length</span><span class="p">,</span> <span class="n">properties</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">row</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">row</span> <span class="p">&lt;</span> <span class="n">Model</span><span class="p">.</span><span class="n">Rows</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">row</span><span class="p">++)</span>
+        <span class="p">{</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">col</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">col</span> <span class="p">&lt;</span> <span class="n">properties</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">col</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">rows</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="p">=</span> <span class="n">displayFormat</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="p">==</span> <span class="k">null</span> 
+                    <span class="p">?</span> <span class="n">properties</span><span class="p">[</span><span class="n">col</span><span class="p">].</span><span class="nf">GetValue</span><span class="p">(</span><span class="n">Model</span><span class="p">.</span><span class="n">Rows</span><span class="p">[</span><span class="n">row</span><span class="p">]).</span><span class="nf">ToString</span><span class="p">()</span>
+                    <span class="p">:</span> <span class="n">String</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="n">displayFormat</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">properties</span><span class="p">[</span><span class="n">col</span><span class="p">].</span><span class="nf">GetValue</span><span class="p">(</span><span class="n">Model</span><span class="p">.</span><span class="n">Rows</span><span class="p">[</span><span class="n">row</span><span class="p">]));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Come potete vedere dal codice sono stati aggiunti due metodi, <code class="highlighter-rouge">loadColumns()</code> e <code class="highlighter-rouge">loadRows</code>, invocati nel metodo <code class="highlighter-rouge">OnParametersSet()</code> che, come ricorderete, viene richiamato ogni volta che un parametro viene impostato. Con l’istruzione <code class="highlighter-rouge">Model.Rows.GetType().GetElementType().GetProperties()</code> recuperiamo le proprietà del tipo contentuto nell’array, che poi passiamo ai metodi di caricamento. Durante il caricamento delle colonne, se è stato richiesto l’uso delle Data Annotations per recuperare i metadati, utilizziamo il metodo <code class="highlighter-rouge">GetCustomAttributes(Type attributeType, bool inherit)</code> per recuperare gli attributi custom, che nel nostro caso sono <code class="highlighter-rouge">DisplayFormatAttribute</code> per le intestazioni di colonna e <code class="highlighter-rouge">DisplayFormatAttribute</code> per il formato dei valori. Il tutto viene poi messo in variabili di appoggio che utilizziamo nel markup.</p>
+
+<p>Potete scaricare il codice e provarlo voi stessi dal <a href="https://github.com/blazordevita/LibreriaComponenti">repository della community</a>: provare per credere!</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>In questo articolo abbiamo visto come poter generalizzare un componente griglia, sfruttando la Reflection di .NET Core e un array di tipo <code class="highlighter-rouge">object</code>. Nei prossimi articoli ci spingeremo più in là, utilizzando i Generics e capendo come sia possibile <em>proiettare</em> del markup all’interno dei nostri componenti.</p>
+
+  </div><a class="u-url" href="/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
