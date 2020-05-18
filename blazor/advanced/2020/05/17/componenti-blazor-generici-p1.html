@@ -34,7 +34,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-17T01:00:00+02:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html"},"url":"/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Componenti Generici in Blazor - Parte 1","dateModified":"2020-05-17T01:00:00+02:00","datePublished":"2020-05-17T01:00:00+02:00","image":"/assets/articoli/componenti-blazor-generici-p1/griglia-generica-con-formattazione.png","description":"Nella serie di articoli base su come creare una Single Page Application abbiamo visto come generalizzare un componente attraverso i parametri, ma per poterli riutilizzare in contesti differenti è necessario spingersi un po’ più in là con l’astrazione. Se vogliamo ad esempio generalizzare la griglia che abbiamo creato, dobbiamo poter passare una collezione di oggetti qualsiasi in modo da poterla riutilizzare in qualsiasi contesto.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html"},"author":{"@type":"Person","name":"Michele Aponte"},"url":"/blazor/advanced/2020/05/17/componenti-blazor-generici-p1.html","headline":"Componenti Generici in Blazor - Parte 1","dateModified":"2020-05-17T01:00:00+02:00","datePublished":"2020-05-17T01:00:00+02:00","image":"/assets/articoli/componenti-blazor-generici-p1/griglia-generica-con-formattazione.png","description":"Nella serie di articoli base su come creare una Single Page Application abbiamo visto come generalizzare un componente attraverso i parametri, ma per poterli riutilizzare in contesti differenti è necessario spingersi un po’ più in là con l’astrazione. Se vogliamo ad esempio generalizzare la griglia che abbiamo creato, dobbiamo poter passare una collezione di oggetti qualsiasi in modo da poterla riutilizzare in qualsiasi contesto.","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -127,23 +127,23 @@
 
 <span class="nt">&lt;p&gt;</span>This component demonstrates fetching data from the server.<span class="nt">&lt;/p&gt;</span>
 
-@if (WeatherForecasModel.Rows == null)
+@if (WeatherForecastModel.Rows == null)
 {
     <span class="nt">&lt;p&gt;&lt;em&gt;</span>Loading...<span class="nt">&lt;/em&gt;&lt;/p&gt;</span>
 }
 else
 {
-    <span class="nt">&lt;Grid</span> <span class="na">Model=</span><span class="s">"WeatherForecasModel"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;Grid</span> <span class="na">Model=</span><span class="s">"WeatherForecastModel"</span> <span class="nt">/&gt;</span>
 }</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> 
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">GridModel</span> <span class="n">WeatherForecasModel</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">GridModel</span><span class="p">();</span>
+    <span class="k">private</span> <span class="n">GridModel</span> <span class="n">WeatherForecastModel</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">GridModel</span><span class="p">();</span>
 
     <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnInitializedAsync</span><span class="p">()</span>
     <span class="p">{</span>
-        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Columns</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">"Date"</span><span class="p">,</span> <span class="s">"Temp. (C)"</span><span class="p">,</span> <span class="s">"Temp. (F)"</span><span class="p">,</span> <span class="s">"Summary"</span> <span class="p">};</span>
-        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Rows</span> <span class="p">=</span> <span class="k">await</span> <span class="n">WeatherForecastService</span><span class="p">.</span><span class="nf">GetForecastAsync</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+        <span class="n">WeatherForecastModel</span><span class="p">.</span><span class="n">Columns</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">"Date"</span><span class="p">,</span> <span class="s">"Temp. (C)"</span><span class="p">,</span> <span class="s">"Temp. (F)"</span><span class="p">,</span> <span class="s">"Summary"</span> <span class="p">};</span>
+        <span class="n">WeatherForecastModel</span><span class="p">.</span><span class="n">Rows</span> <span class="p">=</span> <span class="k">await</span> <span class="n">WeatherForecastService</span><span class="p">.</span><span class="nf">GetForecastAsync</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
@@ -169,18 +169,18 @@ else
 
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span> 
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">GridModel</span> <span class="n">WeatherForecasModel</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">GridModel</span><span class="p">();</span>
+    <span class="k">private</span> <span class="n">GridModel</span> <span class="n">WeatherForecastModel</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">GridModel</span><span class="p">();</span>
 
     <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnInitializedAsync</span><span class="p">()</span>
     <span class="p">{</span>
-        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Columns</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">[]</span> 
+        <span class="n">WeatherForecastModel</span><span class="p">.</span><span class="n">Columns</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">[]</span> 
             <span class="p">{</span> 
                 <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Date"</span><span class="p">,</span> <span class="n">Format</span> <span class="p">=</span> <span class="s">"{0:d}"</span> <span class="p">},</span>
                 <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Temp. (C)"</span> <span class="p">},</span>
                 <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Temp. (F)"</span> <span class="p">},</span> 
                 <span class="k">new</span> <span class="n">GridColumn</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="s">"Summary"</span> <span class="p">}</span>
             <span class="p">};</span>
-        <span class="n">WeatherForecasModel</span><span class="p">.</span><span class="n">Rows</span> <span class="p">=</span> <span class="k">await</span> <span class="n">WeatherForecastService</span><span class="p">.</span><span class="nf">GetForecastAsync</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+        <span class="n">WeatherForecastModel</span><span class="p">.</span><span class="n">Rows</span> <span class="p">=</span> <span class="k">await</span> <span class="n">WeatherForecastService</span><span class="p">.</span><span class="nf">GetForecastAsync</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
@@ -226,11 +226,11 @@ else
 
 <p>Abbiamo però dato per scontato che il modello che stiamo usando sia esattamente coincidente con quello che vogliamo visualizzare, cosa che dovrebbe essere vera se l’oggetto utilizzato è un ViewModel, una classe (Model) cioè pensata ad uso e consumo della nostra Pagina (View). Abbiamo anche assunto che l’ordine con cui il metodo <code class="highlighter-rouge">row.GetType().GetProperties()</code> ci restituisce le proprietà coincida con l’ordine di definizione delle righe.</p>
 
-<p>A questo punto l’idea potrebbe essere: se ho creato effettivamente un ViewModel a uso e consumo della mia pagina, perchè non sfruttarlo anche per fornire i metedati di visualizzazione della griglia?</p>
+<p>A questo punto l’idea potrebbe essere: se ho creato effettivamente un ViewModel a uso e consumo della mia pagina, perchè non sfruttarlo anche per fornire i metadati di visualizzazione della griglia?</p>
 
 <h2 id="usare-le-annotazioni-per-i-metadati">Usare le annotazioni per i metadati</h2>
 
-<p>Come programamtori .NET sappiamo bene che il nostro framework ha gli attributi! Sì, anche in quel senso, ma in questo caso intendo letteralmente: possiamo creare delle classi da applicare come attributi alle proprietà per definirne un <strong><em>aspetto</em></strong> esterno, senza doverle implementare nel codice della proprietà stessa. Per farlo basta creare una classe che estenda la classe base <code class="highlighter-rouge">System.Attribute</code>, ma nel nostro caso meglio non reinvetare la ruota visto che abbiamo già le DataAnnotation che usiamo con ASP.NET MVC.</p>
+<p>Come programmatori .NET sappiamo bene che il nostro framework ha gli attributi! Sì, anche in quel senso, ma in questo caso intendo letteralmente: possiamo creare delle classi da applicare come attributi alle proprietà per definirne un <strong><em>aspetto</em></strong> esterno, senza doverle implementare nel codice della proprietà stessa. Per farlo basta creare una classe che estenda la classe base <code class="highlighter-rouge">System.Attribute</code>, ma nel nostro caso meglio non reinvetare la ruota visto che abbiamo già le DataAnnotation che usiamo con ASP.NET MVC.</p>
 
 <p>Aggiungiamo quindi al nostro modello le annotazioni che ci servono:</p>
 
@@ -348,7 +348,7 @@ else
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Come potete vedere dal codice sono stati aggiunti due metodi, <code class="highlighter-rouge">loadColumns()</code> e <code class="highlighter-rouge">loadRows</code>, invocati nel metodo <code class="highlighter-rouge">OnParametersSet()</code> che, come ricorderete, viene richiamato ogni volta che un parametro viene impostato. Con l’istruzione <code class="highlighter-rouge">Model.Rows.GetType().GetElementType().GetProperties()</code> recuperiamo le proprietà del tipo contentuto nell’array, che poi passiamo ai metodi di caricamento. Durante il caricamento delle colonne, se è stato richiesto l’uso delle Data Annotations per recuperare i metadati, utilizziamo il metodo <code class="highlighter-rouge">GetCustomAttributes(Type attributeType, bool inherit)</code> per recuperare gli attributi custom, che nel nostro caso sono <code class="highlighter-rouge">DisplayFormatAttribute</code> per le intestazioni di colonna e <code class="highlighter-rouge">DisplayFormatAttribute</code> per il formato dei valori. Il tutto viene poi messo in variabili di appoggio che utilizziamo nel markup.</p>
+<p>Come potete vedere dal codice sono stati aggiunti due metodi, <code class="highlighter-rouge">loadColumns()</code> e <code class="highlighter-rouge">loadRows</code>, invocati nel metodo <code class="highlighter-rouge">OnParametersSet()</code> che, come ricorderete, viene richiamato ogni volta che un parametro viene impostato. Con l’istruzione <code class="highlighter-rouge">Model.Rows.GetType().GetElementType().GetProperties()</code> recuperiamo le proprietà del tipo contenuto nell’array, che poi passiamo ai metodi di caricamento. Durante il caricamento delle colonne, se è stato richiesto l’uso delle Data Annotations per recuperare i metadati, utilizziamo il metodo <code class="highlighter-rouge">GetCustomAttributes(Type attributeType, bool inherit)</code> per recuperare gli attributi custom, che nel nostro caso sono <code class="highlighter-rouge">DisplayFormatAttribute</code> per le intestazioni di colonna e <code class="highlighter-rouge">DisplayFormatAttribute</code> per il formato dei valori. Il tutto viene poi messo in variabili di appoggio che utilizziamo nel markup.</p>
 
 <p>Potete scaricare il codice e provarlo voi stessi dal <a href="https://github.com/blazordevita/LibreriaComponenti">repository della community</a>: provare per credere!</p>
 
