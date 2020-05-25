@@ -34,7 +34,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-25T01:00:00+02:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/05/25/componenti-blazor-generici-p2.html"},"url":"/blazor/advanced/2020/05/25/componenti-blazor-generici-p2.html","author":{"@type":"Person","name":"Michele Aponte"},"headline":"Componenti Generici in Blazor - Parte 2","dateModified":"2020-05-25T01:00:00+02:00","datePublished":"2020-05-25T01:00:00+02:00","image":"/assets/articoli/componenti-blazor-generici-p2/componenti-blazor-generici-p2.png","description":"Nell’articolo precedente abbiamo visto come creare una griglia generica sfruttando la Reflection di .NET Core, uno strumento potente che ci capiterà spesso di usare quando dobbiamo generalizzare i comportamenti dei nostri componenti. Quando però la nostra esigenza è quella di fornire all’utente un meccanismo per personlizzare il markup con cui viene visualizzato una parte del contenuto nel nostro compontente, la Reflection non ci basta. Facciamo un esempio.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/05/25/componenti-blazor-generici-p2.html"},"author":{"@type":"Person","name":"Michele Aponte"},"url":"/blazor/advanced/2020/05/25/componenti-blazor-generici-p2.html","headline":"Componenti Generici in Blazor - Parte 2","dateModified":"2020-05-25T01:00:00+02:00","datePublished":"2020-05-25T01:00:00+02:00","image":"/assets/articoli/componenti-blazor-generici-p2/componenti-blazor-generici-p2.png","description":"Nell’articolo precedente abbiamo visto come creare una griglia generica sfruttando la Reflection di .NET Core, uno strumento potente che ci capiterà spesso di usare quando dobbiamo generalizzare i comportamenti dei nostri componenti. Quando però la nostra esigenza è quella di fornire all’utente un meccanismo per personlizzare il markup con cui viene visualizzato una parte del contenuto nel nostro compontente, la Reflection non ci basta. Facciamo un esempio.","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -257,7 +257,7 @@ else
     <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span><span class="k">public</span> <span class="n">EventCallback</span><span class="p">&lt;</span><span class="n">TItem</span><span class="p">&gt;</span> <span class="n">OnSave</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Come potete vedere il nostro parametro Item adesso è di tipo <code class="highlighter-rouge">TItem</code> e il nostro codice continua a funziona esattamente come prima.</p>
+<p>Come potete vedere il nostro parametro Item adesso è di tipo <code class="highlighter-rouge">TItem</code> e il nostro codice continua a funziona esattamente come prima: provate voi stessi scaricando il codice dal <a href="https://github.com/blazordevita/LibreriaComponenti">repository della community</a>.</p>
 
 <h2 id="conclusioni">Conclusioni</h2>
 
