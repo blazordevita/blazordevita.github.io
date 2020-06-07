@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Componenti Generici in Blazor - Parte 4 | Blazor Developer Italiani</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Componenti Generici in Blazor - Parte 4" />
+<meta name="author" content="Michele Aponte" />
+<meta property="og:locale" content="it" />
+<meta name="description" content="Dopo aver visto come gestire il contesto di un componente generico, facciamo un ulteriore passo concentrandoci su come funziona un componente form e come possiamo generalizzarlo per rendere uniforme la user experience della nostra applicazione." />
+<meta property="og:description" content="Dopo aver visto come gestire il contesto di un componente generico, facciamo un ulteriore passo concentrandoci su come funziona un componente form e come possiamo generalizzarlo per rendere uniforme la user experience della nostra applicazione." />
+<link rel="canonical" href="/blazor/advanced/2020/06/07/componenti-blazor-generici-p4.html" />
+<meta property="og:url" content="/blazor/advanced/2020/06/07/componenti-blazor-generici-p4.html" />
+<meta property="og:site_name" content="Blazor Developer Italiani" />
+<meta property="og:image" content="/assets/articoli/componenti-blazor-generici-p4/componenti-blazor-generici-p4.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-06-07T01:00:00+02:00" />
+<script type="application/ld+json">
+{"datePublished":"2020-06-07T01:00:00+02:00","headline":"Componenti Generici in Blazor - Parte 4","dateModified":"2020-06-07T01:00:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"/blazor/advanced/2020/06/07/componenti-blazor-generici-p4.html"},"image":"/assets/articoli/componenti-blazor-generici-p4/componenti-blazor-generici-p4.png","author":{"@type":"Person","name":"Michele Aponte"},"description":"Dopo aver visto come gestire il contesto di un componente generico, facciamo un ulteriore passo concentrandoci su come funziona un componente form e come possiamo generalizzarlo per rendere uniforme la user experience della nostra applicazione.","url":"/blazor/advanced/2020/06/07/componenti-blazor-generici-p4.html","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/site.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Blazor Developer Italiani" /><script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55415192-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-55415192-2');
+    </script>
+</head><body><header class="site-header">
+
+    <div class="wrapper"><img class="logo" src="/assets/img/blazordevita_logo.png" alt="logo blazor developer italiani" />
+      <a class="site-title" rel="author" href="/">Blazor Developer Italiani</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/chisiamo/">Chi Siamo</a><a class="page-link" href="/articoli/">Articoli</a><a class="page-link" href="/eventi/">Eventi</a><a class="page-link" href="/sponsor/">Sponsor</a></div>
+        </nav></div>
+  </header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h3 class="post-subtitle">Generalizzare i componenti per il riutilizzo</h3>
+    <h1 class="post-title p-name" itemprop="name headline">Componenti Generici in Blazor - Parte 4</h1>
+    <h4>Data pubblicazione: 07-06-2020 - Autore: Michele Aponte</h4>
+  </header><figure>
+      <img src="/assets/articoli/componenti-blazor-generici-p4/componenti-blazor-generici-p4.png" alt="Componenti Generici in Blazor - Parte 4" />
+  </figure><div class="post-content e-content" itemprop="articleBody">
+    <p>Dopo aver visto come gestire il contesto di un componente generico, facciamo un ulteriore passo concentrandoci su come funziona un componente form e come possiamo generalizzarlo per rendere uniforme la user experience della nostra applicazione.</p>
+
+<h2 id="uniformare-e-centralizzare-la-ux">Uniformare e centralizzare la UX</h2>
+
+<p>Se andiamo a riguardare la nostra form di dettaglio noteremo che vengono utilizzate le classi di Bootstrap per l’impaginazione:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;Details</span> <span class="na">TItem=</span><span class="s">"WeatherForecast"</span> <span class="na">Item=</span><span class="s">"newWeatherForecast"</span> <span class="na">OnCancel=</span><span class="s">"Cancel"</span> <span class="na">OnSave=</span><span class="s">"Save"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;FormFields</span> <span class="na">Context=</span><span class="s">"weather"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"Date"</span><span class="nt">&gt;</span>Date:<span class="nt">&lt;/label&gt;</span>
+            <span class="nt">&lt;InputDate</span> <span class="na">id=</span><span class="s">"Date"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.Date"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;ValidationMessage</span> <span class="na">For=</span><span class="s">"@(() =&gt; weather.Date)"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"Temperature"</span><span class="nt">&gt;</span>Temperature:<span class="nt">&lt;/label&gt;</span>
+            <span class="nt">&lt;InputNumber</span> <span class="na">id=</span><span class="s">"Temperature"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.TemperatureC"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;ValidationMessage</span> <span class="na">For=</span><span class="s">"@(() =&gt; weather.TemperatureC)"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"Summary"</span><span class="nt">&gt;</span>Summary:<span class="nt">&lt;/label&gt;</span>
+            <span class="nt">&lt;InputTextArea</span> <span class="na">id=</span><span class="s">"Summary"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.Summary"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;ValidationMessage</span> <span class="na">For=</span><span class="s">"@(() =&gt; weather.Summary)"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/FormFields&gt;</span>
+<span class="nt">&lt;/Details&gt;</span></code></pre></figure>
+
+<p>Si tratta di una scelta abbastanza comune, ma l’idea di base è che solitamente scelto o realizzato un insieme di regole CSS per l’impaginazione grafica, si tende ad usare sempre le stesse regole per mantenere uniforme l’aspetto della nostra applicazione. Inoltre stiamo utilizzando i componenti di Blazor per la gestione dei singoli campi di Input, ma questa scelta potrebbe cambiare. Se decidiamo ad esempio di usare una libreria di terze parti dovremo modificare tutte le form della nostra applicazione.</p>
+
+<p>Potremmo quindi crearci dei nostri componenti per i campi di Input in modo da centralizzare l’utilizzo di uno specifico componente e di determinate classi CSS. Nella cartella <code class="highlighter-rouge">Components</code> creiamo ad esempio un file <code class="highlighter-rouge">MyInputDate.razor</code>, in cui copiamo questo pezzo di markup:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"Date"</span><span class="nt">&gt;</span>Date:<span class="nt">&lt;/label&gt;</span>
+    <span class="nt">&lt;InputDate</span> <span class="na">id=</span><span class="s">"Date"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.Date"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;ValidationMessage</span> <span class="na">For=</span><span class="s">"@(() =&gt; weather.Date)"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></figure>
+
+<p>Esaminandolo è chiaro che dobbiamo parametrizzare il valore di <code class="highlighter-rouge">id</code>, l’etichetta utilizzata, il valore di <code class="highlighter-rouge">bind-Value</code> e l’espressione utilizzata nell’attributo <code class="highlighter-rouge">For</code> del componente <code class="highlighter-rouge">ValidationMessage</code>. Le prime due diventano dei semplici parametri di tipo stringa, mentre per le restanti possiamo fare qualcosa di più interessante.</p>
+
+<p>L’espressione <code class="highlighter-rouge">@bind-Value</code>, utilizzata per il binding bidirezionale con la proprietà <code class="highlighter-rouge">Value</code> di <code class="highlighter-rouge">InputDate</code>, non può essere utilizzata su qualsiasi elemento, ma è necessario che il componente esponga tre parametri:</p>
+
+<ul>
+  <li>Il <code class="highlighter-rouge">Value</code> con cui sarà eseguito il binding.</li>
+  <li>Un <code class="highlighter-rouge">EventCallback</code> chiamato <code class="highlighter-rouge">ValueChanged</code>, invocato quando il valore in binding viene modificato.</li>
+  <li>Una espressione chiamata <code class="highlighter-rouge">ValueExpression</code> di tipo <code class="highlighter-rouge">Expression&lt;Func&lt;T&gt;&gt;</code> che permette di invocare una funzione per recuperare il valore in binding.</li>
+</ul>
+
+<p>Il tipo gestito nel binding, e quindi il tipo di tutti e tre i pametri di binding, dipendono dal tipo del valore che vogliamo gestire: nel caso della data un <code class="highlighter-rouge">DateTime</code>. I componenti Input di Blazor fanno esattamente questo lavoro, anche se in maniera più generica, quindi possiamo rimappare questi parametri esattamente come sono, a patto di specificare il tipo su cui lavorare attraverso il generico <code class="highlighter-rouge">TValue</code>.</p>
+
+<p>Il nostro codice diventa quindi:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html">@using System.Linq.Expressions
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"@Id"</span><span class="nt">&gt;</span>@Label<span class="nt">&lt;/label&gt;</span>
+    <span class="nt">&lt;InputDate</span> <span class="na">id=</span><span class="s">"@Id"</span> 
+        <span class="na">TValue=</span><span class="s">"DateTime"</span> 
+        <span class="na">Value=</span><span class="s">"@Value"</span> 
+        <span class="na">ValueChanged=</span><span class="s">"@ValueChanged"</span> 
+        <span class="na">ValueExpression=</span><span class="s">"@ValueExpression"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;ValidationMessage</span> <span class="na">For=</span><span class="s">"@ValueExpression"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="n">@code</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> <span class="k">public</span> <span class="kt">string</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> <span class="k">public</span> <span class="kt">string</span> <span class="n">Label</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> <span class="k">public</span> <span class="n">EventCallback</span><span class="p">&lt;</span><span class="n">DateTime</span><span class="p">&gt;</span> <span class="n">ValueChanged</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">]</span> <span class="k">public</span> <span class="n">Expression</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">DateTime</span><span class="p">&gt;&gt;</span> <span class="n">ValueExpression</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Un fantastico effetto collaterale di questi parametri è che possiamo riutilizzare il <code class="highlighter-rouge">ValueExpression</code> anche sul componente <code class="highlighter-rouge">ValidationMessage</code>, in modo da bindare e validare il valore in un colpo solo: il <code class="highlighter-rouge">ValidationMessage</code> userà l’espressione per recuperare il messaggio di errore dalle DataAnnotation della proprietà in binding.</p>
+
+<p>Facendo un lavoro simile anche sugli altri tipi di Input, la nostra form di dettaglio diventa semplicissima:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;Details</span> <span class="na">TItem=</span><span class="s">"WeatherForecast"</span> <span class="na">Item=</span><span class="s">"newWeatherForecast"</span> <span class="na">OnCancel=</span><span class="s">"Cancel"</span> <span class="na">OnSave=</span><span class="s">"Save"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;FormFields</span> <span class="na">Context=</span><span class="s">"weather"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;MyInputDate</span> <span class="na">Id=</span><span class="s">"Date"</span> <span class="na">Label=</span><span class="s">"Date:"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.Date"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;MyInputNumber</span> <span class="na">Id=</span><span class="s">"Temperature"</span> <span class="na">Label=</span><span class="s">"Temperature:"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.TemperatureC"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;MyInputTextArea</span> <span class="na">Id=</span><span class="s">"Summary"</span> <span class="na">Label=</span><span class="s">"Summary:"</span> <span class="err">@</span><span class="na">bind-Value=</span><span class="s">"weather.Summary"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/FormFields&gt;</span>
+<span class="nt">&lt;/Details&gt;</span></code></pre></figure>
+
+<p>In questo modo abbiamo semplificato le nostre form e contemporaneamente anche centralizzato eventuali modifiche ai componenti di Input. Come sempre potete testare il codice completo sul <a href="https://github.com/blazordevita/LibreriaComponenti">repository della community</a>.</p>
+
+<h2 id="conclusioni">Conclusioni</h2>
+
+<p>In questo articolo abbiamo visto come funziona in Blazor il binding bidirezionale di componente form e come generalizzarlo per rendere uniforme la user experience della nostra applicazione. Questo ci ha portati a vedere più da vicino come un componente Input viene gestito, cosa che ci tornerà molto utile nel prossimo articolo, quando creeremo un componente personalizzato più complesso.</p>
+
+  </div><a class="u-url" href="/blazor/advanced/2020/06/07/componenti-blazor-generici-p4.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+    <h2 class="footer-heading">Blazor Developer Italiani</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blazor Developer Italiani</li>
+          <li>
+            <a class="u-email" href="mailto:blazordevita@hotmail.com"
+              >blazordevita@hotmail.com</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+          <li>
+            <a href="https://www.twitter.com/blazordevita"
+              ><svg class="svg-icon">
+                <use xlink:href="/assets/minima-social-icons.svg#twitter"></use>
+              </svg>
+              <span class="username">blazordevita</span></a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <div id="mc_embed_signup">
+            <form action="https://blazordev.us4.list-manage.com/subscribe/post?u=8f245a8c9245ef047e4b82346&amp;id=d5087d65ba" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">Newsletter:</label>&nbsp;
+                <input type="email" style="width:150px" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="indirizzo email" required>
+                <input type="submit" value="Iscriviti" name="subscribe" id="mc-embedded-subscribe" class="button">
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_8f245a8c9245ef047e4b82346_d5087d65ba" tabindex="-1" value=""></div>
+                <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <p>
+            La prima community italiana dedicata allo sviluppo di applicazioni con
+            Blazor, il framework Microsoft per la realizzazione di Single Page
+            Application con .NET Core, SignalR, WebAssembly e Razor
+          </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
